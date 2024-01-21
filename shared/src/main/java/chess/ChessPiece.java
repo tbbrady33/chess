@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.concurrent.BlockingDeque;
 
 /**
  * Represents a single chess piece
@@ -24,7 +25,8 @@ public class ChessPiece {
         BISHOP,
         KNIGHT,
         ROOK,
-        PAWN
+        PAWN,
+        None
     }
 
     /**
@@ -49,6 +51,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        switch (board.getPiece(myPosition)){
+            case(PieceType.QUEEN):
+                return
+            case(PieceType.KING):
+                break;
+            case(PieceType.ROOK):
+                break;
+            case(PieceType.BISHOP):
+                break;
+            case(PieceType.KNIGHT):
+                break;
+            case(PieceType.PAWN):
+                break;
+
+
+        }
+
     }
 }

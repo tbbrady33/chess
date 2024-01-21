@@ -8,14 +8,14 @@ package chess;
  */
 public class ChessMove {
 
-    public ChessPosition start;
-    public ChessPosition end;
-    public ChessPiece.PieceType promote;
+    public ChessPosition startPosition;
+    public ChessPosition endPosition;
+    public ChessPiece.PieceType promotionPiece;
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
-        start = startPosition;
-        end = endPosition;
-        promote = promotionPiece;
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.promotionPiece = promotionPiece;
 
     }
 
@@ -23,14 +23,14 @@ public class ChessMove {
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        return start;
+        return startPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        return end;
+        return endPosition;
     }
 
     /**
@@ -40,6 +40,6 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        return promote;
+        return promotionPiece;
     }
 }

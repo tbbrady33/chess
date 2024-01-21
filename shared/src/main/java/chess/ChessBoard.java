@@ -34,6 +34,10 @@ public class ChessBoard {
         return chessarray.get(position.getRow()).get(position.getColumn());
     }
 
+    public void removePiece(ChessPosition position, ChessPiece piece){
+        chessarray.get(position.getRow()).remove(position.getColumn());
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
