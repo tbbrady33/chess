@@ -39,6 +39,11 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        chessarray.clear();
+        // white pawns
+        for (int i = 0; i < 7; i++){
+
+        }
 
     }
 }
