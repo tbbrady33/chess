@@ -51,13 +51,13 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        switch (board.getPiece(myPosition)){
+        switch (board.getPiece(myPosition).getPieceType()){
             case(PieceType.QUEEN):
-                return
+                return;
             case(PieceType.KING):
                 break;
             case(PieceType.ROOK):
-                break;
+                return ChessMovement.;
             case(PieceType.BISHOP):
                 break;
             case(PieceType.KNIGHT):
