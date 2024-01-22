@@ -20,10 +20,20 @@ public class ChessMove {
     }
 
     /**
+     * overload the constructure in case you dont want a promotion
+     *
+     *
+     * @param startPosition
+     * @param endPosition
+     */
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+    /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        return startPosition;
+            return startPosition;
     }
 
     /**
@@ -43,3 +53,5 @@ public class ChessMove {
         return promotionPiece;
     }
 }
+
+
