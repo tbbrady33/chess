@@ -2,19 +2,20 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class PawnMove implements ChessMovement{
     public PawnMove(){
 
     }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        HashSet<ChessMove> moves = new HashSet<ChessMove>();
         // white pawn not moved yet
         if ((board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) && (myPosition.getRow() == 1)) {
-            if (board.getPiece(new ChessPosition(2, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(2, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(2, myPosition.getColumn())));
             }
-            if (board.getPiece(new ChessPosition(3, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(3, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(3, myPosition.getColumn())));
             }
             if (board.getPiece(new ChessPosition(2, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.BLACK) {
@@ -26,10 +27,10 @@ public class PawnMove implements ChessMovement{
         }
         // Black pawn not moved yet
         else if ((board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) && (myPosition.getRow() == 6)){
-            if (board.getPiece(new ChessPosition(5, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(5, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(5, myPosition.getColumn())));
             }
-            if (board.getPiece(new ChessPosition(4, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(4, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(4, myPosition.getColumn())));
             }
             if (board.getPiece(new ChessPosition(5, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -41,7 +42,7 @@ public class PawnMove implements ChessMovement{
         }
         //White piece that has moved position is less than the last rank
         else if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE && myPosition.getRow() < 6){
-            if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())));
             }
             if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -53,7 +54,7 @@ public class PawnMove implements ChessMovement{
         }
         // Black pawn that has moved position is less than the last rank
         else if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK && myPosition.getRow() > 1){
-            if (board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()-1, myPosition.getColumn())));
             }
             if (board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -65,7 +66,7 @@ public class PawnMove implements ChessMovement{
         }
         // white pawn is on the last rank
         else if(board.getPiece(myPosition).getTeamColor()== ChessGame.TeamColor.WHITE && myPosition.getRow() == 6){
-            if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()), ChessPiece.PieceType.KNIGHT));
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()), ChessPiece.PieceType.BISHOP));
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()), ChessPiece.PieceType.ROOK));
@@ -86,7 +87,7 @@ public class PawnMove implements ChessMovement{
 
         }
         else if(board.getPiece(myPosition).getTeamColor()== ChessGame.TeamColor.BLACK && myPosition.getRow() == 1){
-            if (board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn())).getPieceType() == ChessPiece.PieceType.None) {
+            if (board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn())).getPieceType() == null) {
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()), ChessPiece.PieceType.KNIGHT));
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()), ChessPiece.PieceType.BISHOP));
                 moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()), ChessPiece.PieceType.ROOK));

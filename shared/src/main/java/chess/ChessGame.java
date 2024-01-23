@@ -14,6 +14,11 @@ public class ChessGame {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
     /**
      * @return Which team's turn it is
      */

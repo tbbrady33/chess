@@ -17,7 +17,7 @@ public class BishopMoves implements ChessMovement {
         while (nomoresquares) {
             if (myPosition.getColumn() + i < 7 || myPosition.getRow() + i < 7) {
 
-                if (board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i)).getPieceType() == ChessPiece.PieceType.None) {
+                if (board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i)).getPieceType() == null) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i)));
                 } else if (board.getPiece(myPosition).getTeamColor() == board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i)).getTeamColor()) {
                     nomoresquares = true;
@@ -38,7 +38,7 @@ public class BishopMoves implements ChessMovement {
         while (nomoresquares) {
             if ((myPosition.getColumn() + i )< 7 || (myPosition.getRow() - i) >0) {
 
-                if (board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)).getPieceType() == ChessPiece.PieceType.None) {
+                if (board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)).getPieceType() == null) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)));
                 } else if (board.getPiece(myPosition).getTeamColor() == board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)).getTeamColor()) {
                     nomoresquares = true;
@@ -59,7 +59,7 @@ public class BishopMoves implements ChessMovement {
         while (nomoresquares) {
             if ((myPosition.getColumn() - i )> 0 || (myPosition.getRow() - i) >0) {
 
-                if (board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i)).getPieceType() == ChessPiece.PieceType.None) {
+                if (board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i)).getPieceType() == null) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i)));
                 } else if (board.getPiece(myPosition).getTeamColor() == board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i)).getTeamColor()) {
                     nomoresquares = true;
@@ -79,7 +79,7 @@ public class BishopMoves implements ChessMovement {
         while (nomoresquares) {
             if ((myPosition.getColumn() - i )< 7 || (myPosition.getRow() + i) >0) {
 
-                if (board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)).getPieceType() == ChessPiece.PieceType.None) {
+                if (board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)).getPieceType() == null) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)));
                 } else if (board.getPiece(myPosition).getTeamColor() == board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)).getTeamColor()) {
                     nomoresquares = true;

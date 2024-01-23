@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.BlockingDeque;
 
 /**
@@ -25,8 +26,7 @@ public class ChessPiece {
         BISHOP,
         KNIGHT,
         ROOK,
-        PAWN,
-        None
+        PAWN
     }
 
     /**
@@ -43,6 +43,16 @@ public class ChessPiece {
         return type;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -51,21 +61,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        switch (board.getPiece(myPosition).getPieceType()){
-            case(ChessPiece.PieceType.QUEEN):
+        ChessPiece.PieceType ptype = board.getPiece(myPosition).getPieceType();
+        switch (ptype){
+            case QUEEN:
                 return new QueenMoves().pieceMoves(board,myPosition);
-            case(PieceType.KING):
+            case KING:
                 return new KIngMoves().pieceMoves(board,myPosition);
-            case(PieceType.ROOK):
+            case ROOK:
                 return new RookMoves().pieceMoves(board,myPosition);
-            case(PieceType.BISHOP):
+            case BISHOP:
                 return new BishopMoves().pieceMoves(board,myPosition);
-            case(PieceType.KNIGHT):
+            case KNIGHT:
                 return new KnightMoves().pieceMoves(board,myPosition);
-            case(PieceType.PAWN):
+            case PAWN:
                 return new PawnMove().pieceMoves(board,myPosition);
-
-
+            default:
+                return null;
         }
 
     }

@@ -1,5 +1,7 @@
 package chess;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -7,7 +9,7 @@ import java.util.ArrayList;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ArrayList<ArrayList<ChessPiece>> chessarray = new ArrayList<ArrayList<ChessPiece>>();
+    private ChessPiece[][] chessarray = new ChessPiece[8][8];
     public ChessBoard() {
     }
 
@@ -18,8 +20,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-
-        chessarray.get(position.getRow()).add(position.getColumn(),piece);
+        chessarray[position.getRow() - 1 ][position.getColumn() - 1] = piece;
     }
 
     /**
@@ -31,26 +32,30 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
 
-        return chessarray.get(position.getRow()).get(position.getColumn());
+        return chessarray[position.getRow() - 1][position.getColumn() - 1];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessBoard that)) return false;
+        return Arrays.deepEquals(chessarray, that.chessarray);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+        return Arrays.deepHashCode(chessarray);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "ChessBoard{" +
+                "chessarray=" + Arrays.toString(chessarray) +
+                '}';
     }
 
     public void removePiece(ChessPosition position, ChessPiece piece){
-        chessarray.get(position.getRow()).remove(position.getColumn());
+        chessarray[position.getRow()][position.getColumn()] = null;
     }
 
     /**
@@ -58,50 +63,50 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        chessarray.clear();
+        ChessPiece[][] chessarray = new ChessPiece[8][8];
         // white pawns
-        for (int i = 0; i < 7; i++){
-            addPiece(new ChessPosition(1,i), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN));
+        for (int i = 1; i < 8; i++){
+            chessarray[0][i-1] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
         }
         // Black pawns
-        for (int i = 0; i < 7; i++){
-            addPiece(new ChessPosition(6,i), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN));
+        for (int i = 1; i < 8; i++){
+            chessarray[6][i-1] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN);
         }
         // White Rooks
-        addPiece(new ChessPosition(0,0), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(0,7), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK));
+        chessarray[0][0] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+        chessarray[0][7] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK);
 
         // Black Rooks
-        addPiece(new ChessPosition(7,0), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(7,7), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK));
+        chessarray[7][0] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK);
+        chessarray[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK);
 
         // White Knights
-        addPiece(new ChessPosition(0,1), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT));
-        addPiece(new ChessPosition(0,6), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT));
+        chessarray[0][1] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT);
+        chessarray[0][6] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT);
 
         // Black Knights
-        addPiece(new ChessPosition(7,1), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT));
-        addPiece(new ChessPosition(7,6), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT));
+        chessarray[7][1] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT);
+        chessarray[7][6] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT);
 
         //White Bishops
-        addPiece(new ChessPosition(0,2), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP));
-        addPiece(new ChessPosition(0,5), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP));
+        chessarray[0][2] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP);
+        chessarray[0][5] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP);
 
         //Black Bishops
-        addPiece(new ChessPosition(7,2), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP));
-        addPiece(new ChessPosition(7,5), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP));
+        chessarray[7][2] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP);
+        chessarray[7][5] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP);
 
         // White Queen
-        addPiece(new ChessPosition(0,3),new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.QUEEN));
+        chessarray[0][3] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.QUEEN);
 
         //Black Queen
-        addPiece(new ChessPosition(7,3), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.QUEEN));
+        chessarray[7][3] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.QUEEN);
 
         //White King
-        addPiece(new ChessPosition(0,4), new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KING));
+        chessarray[0][4] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KING);
 
         // Black King
-        addPiece(new ChessPosition(7,4), new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KING));
+        chessarray[7][4] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KING);
 
     }
 }
