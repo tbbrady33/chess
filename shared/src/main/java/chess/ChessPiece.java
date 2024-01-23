@@ -57,13 +57,13 @@ public class ChessPiece {
             case(PieceType.KING):
                 break;
             case(PieceType.ROOK):
-                return ChessMovement.;
+                return new RookMoves().pieceMoves(board,myPosition);
             case(PieceType.BISHOP):
-                break;
+                return new BishopMoves().pieceMoves(board,myPosition);
             case(PieceType.KNIGHT):
-                break;
+                return new KnightMoves().pieceMoves(board,myPosition);
             case(PieceType.PAWN):
-                break;
+                return new PawnMove().pieceMoves(board,myPosition);
 
 
         }

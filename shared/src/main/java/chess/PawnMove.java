@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class PawnMove implements ChessMovement{
-    private Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public PawnMove(){
+
+    }
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
         // white pawn not moved yet
         if ((board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) && (myPosition.getRow() == 1)) {

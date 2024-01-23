@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class RookMoves implements ChessMovement{
-    private Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public RookMoves(){
+    }
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
 
         // moves to the right
