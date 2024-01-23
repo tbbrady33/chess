@@ -52,10 +52,10 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         switch (board.getPiece(myPosition).getPieceType()){
-            case(PieceType.QUEEN):
-                return;
+            case(ChessPiece.PieceType.QUEEN):
+                return new QueenMoves().pieceMoves(board,myPosition);
             case(PieceType.KING):
-                break;
+                return new KIngMoves().pieceMoves(board,myPosition);
             case(PieceType.ROOK):
                 return new RookMoves().pieceMoves(board,myPosition);
             case(PieceType.BISHOP):

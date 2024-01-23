@@ -34,6 +34,21 @@ public class ChessBoard {
         return chessarray.get(position.getRow()).get(position.getColumn());
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     public void removePiece(ChessPosition position, ChessPiece piece){
         chessarray.get(position.getRow()).remove(position.getColumn());
     }
