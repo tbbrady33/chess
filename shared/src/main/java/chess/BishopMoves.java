@@ -24,6 +24,8 @@ public class BishopMoves implements ChessMovement {
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i)).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i)));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
@@ -45,6 +47,8 @@ public class BishopMoves implements ChessMovement {
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
@@ -66,6 +70,8 @@ public class BishopMoves implements ChessMovement {
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i)).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i)));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
@@ -80,12 +86,14 @@ public class BishopMoves implements ChessMovement {
             if ((myPosition.getColumn() - i ) > 0 && (myPosition.getRow() + i) <= 8) {
 
                 if (board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)) == null) {
-                    moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i)));
+                    moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)));
                 } else if (board.getPiece(myPosition).getTeamColor() == board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)).getTeamColor()) {
                     nomoresquares = false;
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i)));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;

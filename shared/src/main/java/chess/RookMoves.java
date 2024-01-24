@@ -23,6 +23,8 @@ public class RookMoves implements ChessMovement{
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow(), myPosition.getColumn() + i)).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), myPosition.getColumn() + i)));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
@@ -43,6 +45,8 @@ public class RookMoves implements ChessMovement{
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow(), myPosition.getColumn() - i)).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), myPosition.getColumn() - i)));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
@@ -63,6 +67,8 @@ public class RookMoves implements ChessMovement{
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow()+i, myPosition.getColumn())).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+i, myPosition.getColumn())));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
@@ -84,6 +90,8 @@ public class RookMoves implements ChessMovement{
                     break;
                 } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(myPosition.getRow()-i, myPosition.getColumn())).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-i, myPosition.getColumn())));
+                    nomoresquares = false;
+                    break;
                 }
             } else {
                 nomoresquares = false;
