@@ -12,7 +12,7 @@ public class KnightMoves implements ChessMovement {
         HashSet<ChessMove> moves = new HashSet<ChessMove>();
 
         // Up right move
-        if((myPosition.getRow() <= 5) && (myPosition.getColumn() <= 6) && (board.getPiece((new ChessPosition(myPosition.getRow() +2, myPosition.getColumn()+1))) == null ||
+        if((myPosition.getRow() <= 6) && (myPosition.getColumn() <= 7) && (board.getPiece((new ChessPosition(myPosition.getRow() +2, myPosition.getColumn()+1))) == null ||
                 board.getPiece(new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn()+1)).getTeamColor()
                         != board.getPiece(myPosition).getTeamColor())){
             moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+2, myPosition.getColumn()+1)));
@@ -27,7 +27,7 @@ public class KnightMoves implements ChessMovement {
 
 
         // Right Up move
-        if((myPosition.getRow() <= 6) && (myPosition.getColumn() <= 5) && (board.getPiece((new ChessPosition(myPosition.getRow() +1, myPosition.getColumn()+2))) == null ||
+        if((myPosition.getRow() <= 7) && (myPosition.getColumn() <= 6) && (board.getPiece((new ChessPosition(myPosition.getRow() +1, myPosition.getColumn()+2))) == null ||
                 board.getPiece(new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()+2)).getTeamColor()
                         != board.getPiece(myPosition).getTeamColor())){
             moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+2)));
@@ -41,7 +41,7 @@ public class KnightMoves implements ChessMovement {
         }
 
         // Down right move
-        if((myPosition.getRow() > 2) && (myPosition.getColumn() <= 6) && (board.getPiece((new ChessPosition(myPosition.getRow() -2, myPosition.getColumn()+1))) == null ||
+        if((myPosition.getRow() > 2) && (myPosition.getColumn() <= 7) && (board.getPiece((new ChessPosition(myPosition.getRow() -2, myPosition.getColumn()+1))) == null ||
                 board.getPiece(new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn()+1)).getTeamColor()
                         != board.getPiece(myPosition).getTeamColor())){
             moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()+1)));
@@ -65,7 +65,7 @@ public class KnightMoves implements ChessMovement {
 
 
         // Left up move
-        if((myPosition.getRow() <= 6) && (myPosition.getColumn() > 2) && (board.getPiece((new ChessPosition(myPosition.getRow() +1, myPosition.getColumn()-2))) == null ||
+        if((myPosition.getRow() <= 7) && (myPosition.getColumn() > 2) && (board.getPiece((new ChessPosition(myPosition.getRow() +1, myPosition.getColumn()-2))) == null ||
                 board.getPiece(new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()-2)).getTeamColor()
                         != board.getPiece(myPosition).getTeamColor())){
             moves.add(new ChessMove(myPosition,new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-2)));

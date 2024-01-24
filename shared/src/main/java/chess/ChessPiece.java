@@ -46,13 +46,15 @@ public class ChessPiece {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(pieceColor, type);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessPiece that)) return false;
+        return pieceColor == that.pieceColor && type == that.type;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 
     /**
