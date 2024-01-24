@@ -50,7 +50,7 @@ public class ChessBoard {
     @Override
     public String toString() {
         return "ChessBoard{" +
-                "chessarray=" + Arrays.toString(chessarray) +
+                "chessarray=" + Arrays.deepToString(chessarray) +
                 '}';
     }
 
@@ -63,13 +63,25 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        ChessPiece[][] chessarray = new ChessPiece[8][8];
         // white pawns
-        for (int i = 1; i < 8; i++){
-            chessarray[0][i-1] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
+        for (int i = 1; i <= 8; i++) {
+            chessarray[2][i - 1] = null;
+        }
+        for (int i = 1; i <= 8; i++) {
+            chessarray[3][i - 1] = null;
+        }
+        for (int i = 1; i <= 8; i++) {
+            chessarray[4][i - 1] = null;
+        }
+        for (int i = 1; i <= 8; i++) {
+            chessarray[5][i - 1] = null;
+        }
+
+        for (int i = 1; i <= 8; i++){
+            chessarray[1][i-1] = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
         }
         // Black pawns
-        for (int i = 1; i < 8; i++){
+        for (int i = 1; i <= 8; i++){
             chessarray[6][i-1] = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN);
         }
         // White Rooks
