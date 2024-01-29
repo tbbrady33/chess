@@ -109,10 +109,17 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition king = KingPos(teamColor);
+        Collection<ChessPosition> piecespos = allPieces(teamColor);
 
-        //Loop through valid moves of the oposite team to see if one of them has that position
+        for(ChessPosition pos: piecespos){
+            for(ChessMove move: validMoves(pos)){
+                if(move.getEndPosition() == king) {
+                    return true;
+                }
+            }
+        }
 
-        return null;
+        return false;
     }
 
     /**
@@ -140,8 +147,9 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        // call king pos
+        ChessPosition king = KingPos(teamColor);
         // if king has no valid moves return true else return false
+        return isInCheck(teamColor) && validMoves(king).isEmpty();
     }
 
     /**
@@ -161,7 +169,15 @@ public class ChessGame {
      * @return
      */
     public Collection<ChessPosition> allPieces(TeamColor teamColor){
-        // loop through all squares to see what team they are on and return the ones with the same teamColor
+        Collection<ChessPosition> pieces = new HashSet<>();
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++){
+                if(board.getPiece(new ChessPosition(i,j)) != null && board.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor){
+                        pieces.add(new ChessPosition(i,j));
+                    }
+            }
+        }
+        return pieces;
     }
 
     /**
