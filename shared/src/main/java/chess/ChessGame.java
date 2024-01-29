@@ -64,11 +64,17 @@ public class ChessGame {
             if(moves.isEmpty()){
                 return moves;
             }else{
+                Collection<ChessMove> toRemove = new HashSet<>();
                 for(ChessMove move:moves) {
-                    // remove king
-                    // add king to posible move
+                    otherboard.removePiece(startPosition,board.getPiece(startPosition));
+                    otherboard.addPiece(move.getEndPosition(),board.getPiece(startPosition));
+                    if(isInCheck(team)){
+                        toRemove.add(move);
+                    }
                     // if is in check add that to another list and subtract the two lists after the loop
                 }
+                moves.removeAll(toRemove);
+                return moves;
             }
         }else {
             return moves;
@@ -86,8 +92,13 @@ public class ChessGame {
         if(board.getPiece(move.getStartPosition()).getTeamColor() != team){
             throw new InvalidMoveException();
         }
-        // doesnt work throw expeption
-        ;
+        if(validMoves(move.getStartPosition()).contains(move)){
+            ChessPiece piece = board.getPiece(move.getStartPosition());
+            board.removePiece(move.getStartPosition(),piece);
+            board.addPiece(move.getEndPosition(),piece);
+        }else{
+            throw new InvalidMoveException();
+        }
     }
 
     /**
