@@ -161,6 +161,13 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         // if all the peices on a team have no moves return true only if it is their turn
+        Collection<ChessPosition> piecespos = allPieces(teamColor);
+        for(ChessPosition pos: piecespos){
+            if(!validMoves(pos).isEmpty()){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
