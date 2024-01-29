@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -55,9 +56,14 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        Collection<ChessMove> moves = new HashSet<ChessMove>();
+        moves = board.getPiece(startPosition).pieceMoves(board,startPosition);
+        // Find all the checks and remove them, loop through
+        if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){
 
-        // why cant I do this
-        ChessPiece.pieceMoves();
+        }else {
+
+        }
     }
 
     /**
@@ -67,11 +73,10 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        try{
-
-        }catch (InvalidMoveException){
-            throw InvalidMoveException;
+        if(board.getPiece(move.getStartPosition()).getTeamColor() != team){
+            throw new InvalidMoveException();
         }
+        // doesnt work throw expeption
         ;
     }
 
@@ -82,7 +87,19 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // Call King pos
+        //Loop through valid moves of the oposite team to see if one of them has that position
+
+        return null;
+    }
+
+    /**
+     * *Loop throught and find the king of the team in question and return the position
+     * @param teamColor
+     * @return
+     */
+    public ChessPosition KingPos(TeamColor teamColor){
+        return null;
     }
 
     /**
@@ -92,7 +109,8 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // call king pos
+        // if king has no valid moves return true else return false
     }
 
     /**
@@ -103,7 +121,16 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // if all the peices on a team have no moves return true only if it is their turn
+    }
+
+    /**
+     * Find all the peices accociated with team color
+     * @param teamColor
+     * @return
+     */
+    public Collection<ChessPosition> allPieces(TeamColor teamColor){
+        // loop through all squares to see what team they are on and return the ones with the same teamColor
     }
 
     /**

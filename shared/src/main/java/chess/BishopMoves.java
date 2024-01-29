@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class BishopMoves implements ChessMovement {
     public BishopMoves() {
@@ -9,7 +10,7 @@ public class BishopMoves implements ChessMovement {
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        HashSet<ChessMove> moves = new HashSet<ChessMove>();
 
         // Bishop up and to the right
         boolean nomoresquares = true;
