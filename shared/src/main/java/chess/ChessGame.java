@@ -60,8 +60,18 @@ public class ChessGame {
         moves = board.getPiece(startPosition).pieceMoves(board,startPosition);
         // Find all the checks and remove them, loop through
         if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){
-
+            ChessBoard otherboard = new ChessBoard();
+            if(moves.isEmpty()){
+                return moves;
+            }else{
+                for(ChessMove move:moves) {
+                    // remove king
+                    // add king to posible move
+                    // if is in check add that to another list and subtract the two lists after the loop
+                }
+            }
         }else {
+            return moves;
 
         }
     }
@@ -87,7 +97,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // Call King pos
+        ChessPosition king = KingPos(teamColor);
+
         //Loop through valid moves of the oposite team to see if one of them has that position
 
         return null;
@@ -99,6 +110,15 @@ public class ChessGame {
      * @return
      */
     public ChessPosition KingPos(TeamColor teamColor){
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++){
+                if(board.getPiece(new ChessPosition(i,j)) != null && board.getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING){
+                    if(board.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor){
+                        return new ChessPosition(i,j);
+                    }
+                }
+            }
+        }
         return null;
     }
 
