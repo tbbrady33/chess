@@ -220,6 +220,7 @@ public class ChessGame {
                         board.addPiece(move.getEndPosition(),newpiece);
                     }
                     if(!isInCheck(team)){
+                        board.copyBoard(otherboard);
                         return false;
                     }
                     board.copyBoard(otherboard);
