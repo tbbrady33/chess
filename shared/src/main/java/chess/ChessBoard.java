@@ -23,6 +23,15 @@ public class ChessBoard {
         chessarray[position.getRow() - 1 ][position.getColumn() - 1] = piece;
     }
 
+    public void coppyBoard(ChessBoard board){
+        for(int i = 1; i <= 8 ; i++){
+            for(int j = 1; j <= 8; j++){
+                ChessPiece piecetoadd = board.getPiece(new ChessPosition(i,j));
+                board.addPiece(new ChessPosition(i,j),piecetoadd);
+            }
+        }
+    }
+
     /**
      * Gets a chess piece on the chessboard
      *
@@ -55,7 +64,7 @@ public class ChessBoard {
     }
 
     public void removePiece(ChessPosition position, ChessPiece piece){
-        chessarray[position.getRow()][position.getColumn()] = null;
+        chessarray[position.getRow() - 1][position.getColumn() - 1] = null;
     }
 
     /**
