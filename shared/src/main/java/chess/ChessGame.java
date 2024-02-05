@@ -58,6 +58,31 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> moves = new HashSet<ChessMove>();
         moves = board.getPiece(startPosition).pieceMoves(board,startPosition);
+        //if king is in check only blocks
+        if(isInCheck(team)){
+            Collection<ChessMove> tomove = new HashSet<>();
+            for(ChessMove move: moves){
+                ChessBoard otherboard = new ChessBoard();
+                otherboard.copyBoard(board);
+                ChessPiece newpiece = board.getPiece(move.getStartPosition());
+                board.removePiece(move.getStartPosition(),newpiece);
+                if(move.getEndPosition() != null){
+                    board.removePiece(move.getEndPosition(),null);
+                }
+                if(move.getPromotionPiece() != null) {
+                    board.addPiece(move.getEndPosition(), new ChessPiece(team, move.getPromotionPiece()));
+                }
+                else{
+                    board.addPiece(move.getEndPosition(),newpiece);
+                }
+                if(isInCheck(team)){
+                    tomove.add(move);
+                }
+                board.copyBoard(otherboard);
+
+            }
+            moves.removeAll(tomove);
+        }
         // Find all the checks and remove them, loop through
         if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){
             ChessBoard otherboard = new ChessBoard();
@@ -113,6 +138,12 @@ public class ChessGame {
         }else{
             throw new InvalidMoveException();
         }
+        if(team == TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        }else if(team == TeamColor.BLACK){
+            setTeamTurn(TeamColor.WHITE);
+        }
+
     }
 
     /**
@@ -133,7 +164,7 @@ public class ChessGame {
         Collection<ChessPosition> piecespos = allPieces(otherteam);
 
         for(ChessPosition pos: piecespos){
-            for(ChessMove move:// get all possible moves{
+            for(ChessMove move:board.getPiece(pos).pieceMoves(board,pos)){
                 if(move.getEndPosition().equals(king)) {
                     return true;
                 }
