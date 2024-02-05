@@ -27,7 +27,7 @@ public class ChessBoard {
         for(int i = 1; i <= 8 ; i++){
             for(int j = 1; j <= 8; j++){
                 ChessPiece piecetoadd = board.getPiece(new ChessPosition(i,j));
-                board.addPiece(new ChessPosition(i,j),piecetoadd);
+                this.chessarray[i-1][j-1]=piecetoadd;
             }
         }
     }

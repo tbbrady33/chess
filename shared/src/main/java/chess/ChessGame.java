@@ -61,22 +61,19 @@ public class ChessGame {
         // Find all the checks and remove them, loop through
         if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){
             ChessBoard otherboard = new ChessBoard();
-            for(int i = 1; i <= 8 ; i++){
-                for(int j = 1; j <= 8; j++){
-                    ChessPiece piecetoadd = board.getPiece(new ChessPosition(i,j));
-                    otherboard.addPiece(new ChessPosition(i,j),piecetoadd);
-                }
-            }
+            otherboard.copyBoard(board);
             if(moves.isEmpty()){
                 return moves;
             }else{
                 Collection<ChessMove> toRemove = new HashSet<>();
                 for(ChessMove move:moves) {
-                    otherboard.removePiece(startPosition,board.getPiece(startPosition));
-                    otherboard.addPiece(move.getEndPosition(),board.getPiece(startPosition));
+                    ChessPiece piece = board.getPiece(startPosition);
+                    board.removePiece(startPosition,board.getPiece(startPosition));
+                    board.addPiece(move.getEndPosition(),piece);
                     if(isInCheck(team)){
                         toRemove.add(move);
                     }
+                    board.copyBoard(otherboard);
                     // if is in check add that to another list and subtract the two lists after the loop
                 }
                 moves.removeAll(toRemove);
@@ -136,7 +133,7 @@ public class ChessGame {
         Collection<ChessPosition> piecespos = allPieces(otherteam);
 
         for(ChessPosition pos: piecespos){
-            for(ChessMove move:new ChessPiece(board.getPiece(pos).getTeamColor(),board.getPiece(pos).getPieceType()).pieceMoves(board,pos)){
+            for(ChessMove move:// get all possible moves{
                 if(move.getEndPosition().equals(king)) {
                     return true;
                 }
