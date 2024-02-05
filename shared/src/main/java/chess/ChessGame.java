@@ -104,6 +104,9 @@ public class ChessGame {
         if(validMoves(move.getStartPosition()).contains(move)){
             ChessPiece piece = board.getPiece(move.getStartPosition());
             board.removePiece(move.getStartPosition(),piece);
+            if(move.getEndPosition() != null){
+                board.removePiece(move.getEndPosition(),null);
+            }
             if(move.getPromotionPiece() != null) {
                 board.addPiece(move.getEndPosition(), new ChessPiece(team, move.getPromotionPiece()));
             }
@@ -171,20 +174,30 @@ public class ChessGame {
         ChessPosition king = KingPos(teamColor);
         // if king has no valid moves return true else return false
         ChessBoard otherboard = new ChessBoard();
-        for(int i = 1; i <= 8 ; i++){
-            for(int j = 1; j <= 8; j++){
-                ChessPiece piecetoadd = board.getPiece(new ChessPosition(i,j));
-                otherboard.addPiece(new ChessPosition(i,j),piecetoadd);
-            }
-        }
+        otherboard.copyBoard(board);
         // make all possible moves and see if we are still in check if no theen return false otherwise return true
         Collection<ChessPosition> mypieces = allPieces(teamColor);
         if (validMoves(king).isEmpty()) {
             for (ChessPosition piece : mypieces) {
                 for (ChessMove move : validMoves(piece)) {
-
+                    ChessPiece newpiece = board.getPiece(move.getStartPosition());
+                    board.removePiece(move.getStartPosition(),newpiece);
+                    if(move.getEndPosition() != null){
+                        board.removePiece(move.getEndPosition(),null);
+                    }
+                    if(move.getPromotionPiece() != null) {
+                        board.addPiece(move.getEndPosition(), new ChessPiece(team, move.getPromotionPiece()));
+                    }
+                    else{
+                        board.addPiece(move.getEndPosition(),newpiece);
+                    }
+                    if(!isInCheck(team)){
+                        return false;
+                    }
+                    board.copyBoard(otherboard);
                 }
             }
+            return true;
         } else{
             return false;
         }

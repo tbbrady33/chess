@@ -23,7 +23,7 @@ public class ChessBoard {
         chessarray[position.getRow() - 1 ][position.getColumn() - 1] = piece;
     }
 
-    public void coppyBoard(ChessBoard board){
+    public void copyBoard(ChessBoard board){
         for(int i = 1; i <= 8 ; i++){
             for(int j = 1; j <= 8; j++){
                 ChessPiece piecetoadd = board.getPiece(new ChessPosition(i,j));
