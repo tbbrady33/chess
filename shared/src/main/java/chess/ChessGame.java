@@ -58,31 +58,32 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> moves = new HashSet<ChessMove>();
         moves = board.getPiece(startPosition).pieceMoves(board,startPosition);
+        ChessGame.TeamColor curteam = board.getPiece(startPosition).getTeamColor();
         //if king is in check only blocks
-        if(isInCheck(team)){
-            Collection<ChessMove> tomove = new HashSet<>();
-            for(ChessMove move: moves){
-                ChessBoard otherboard = new ChessBoard();
-                otherboard.copyBoard(board);
-                ChessPiece newpiece = board.getPiece(move.getStartPosition());
-                board.removePiece(move.getStartPosition(),newpiece);
-                if(move.getEndPosition() != null){
-                    board.removePiece(move.getEndPosition(),null);
-                }
-                if(move.getPromotionPiece() != null) {
-                    board.addPiece(move.getEndPosition(), new ChessPiece(team, move.getPromotionPiece()));
-                }
-                else{
-                    board.addPiece(move.getEndPosition(),newpiece);
-                }
-                if(isInCheck(team)){
-                    tomove.add(move);
-                }
-                board.copyBoard(otherboard);
-
+        Collection<ChessMove> tomove = new HashSet<>();
+        for(ChessMove move: moves){
+            ChessBoard otherboard = new ChessBoard();
+            otherboard.copyBoard(board);
+            ChessPiece newpiece = board.getPiece(move.getStartPosition());
+            board.removePiece(move.getStartPosition(),newpiece);
+            if(move.getEndPosition() != null){
+                board.removePiece(move.getEndPosition(),null);
             }
-            moves.removeAll(tomove);
+            if(move.getPromotionPiece() != null) {
+                board.addPiece(move.getEndPosition(), new ChessPiece(team, move.getPromotionPiece()));
+            }
+            else{
+                board.addPiece(move.getEndPosition(),newpiece);
+            }
+            if(isInCheck(curteam)){
+                tomove.add(move);
+            }
+            board.copyBoard(otherboard);
+
         }
+        moves.removeAll(tomove);
+        // if a move causes check remove it
+
         // Find all the checks and remove them, loop through
         if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){
             ChessBoard otherboard = new ChessBoard();
@@ -95,7 +96,7 @@ public class ChessGame {
                     ChessPiece piece = board.getPiece(startPosition);
                     board.removePiece(startPosition,board.getPiece(startPosition));
                     board.addPiece(move.getEndPosition(),piece);
-                    if(isInCheck(team)){
+                    if(isInCheck(curteam)){
                         toRemove.add(move);
                     }
                     board.copyBoard(otherboard);
