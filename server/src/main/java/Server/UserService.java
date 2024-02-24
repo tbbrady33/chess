@@ -1,5 +1,7 @@
 package Server;
 
+import DataAccess.UserInterfaceTests;
+
 public class UserService {
     private registerRequest request;
 
@@ -8,6 +10,8 @@ public class UserService {
     }
 
     public registerResponce register() {
+        // how do I use the data access interface
+        if()
         return new registerResponce("hi","000879");
     }
 }
