@@ -11,37 +11,25 @@ public class memoryUserDAO implements userDAO{
     public Vector<UserData> data = new Vector<>();
     @Override
     public void clear() throws DataAccessException {
-        try {
-            data.clear();
-        }
-        catch (Exception e){
-            throw new DataAccessException("failed to clear user data");
-        }
+        data.clear();
     }
 
     @Override
     public void insertUser(UserData user) throws DataAccessException {
-        try {
-            data.add(user);
-        }
-        catch (Exception e){
-            throw new DataAccessException("Failed to insert user");
-        }
+
+        data.add(user);
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        try {
-            for(UserData user: data){
-                if (user.username().equals(username)){
-                    return user;
-                }
+
+        for(UserData user: data){
+            if (user.username().equals(username)){
+                return user;
             }
-            return null;
         }
-        catch (Exception e){
-            throw new DataAccessException("Failed to find a user");
-        }
+        return null;
+
     }
 
     @Override

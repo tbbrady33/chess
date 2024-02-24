@@ -1,6 +1,7 @@
 package DataAccess;
 
 import Server.UserData;
+import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,18 +16,61 @@ public class UserInterfaceTests {
     public void setUp(){
         objec = new memoryUserDAO();
         expected = new Vector<>();
+        expected.clear();
     }
     @Test
     public void addclearset(){
-        objec.insertUser(new UserData("HI","Hi","Hi"));
-        objec.insertUser(new UserData("NO","NO","NO"));
-        assertEquals(objec.data, expected);
+        try {
+            objec.insertUser(new UserData("HI","Hi","Hi"));
+            objec.insertUser(new UserData("NO","NO","NO"));
+            objec.clear();
+        }
+        catch (dataAccess.DataAccessException e ){
+            System.out.println("Data acess error");
+        }
+
+        assertEquals(objec.data, expected, "Could not clear");
     }
 
     @Test
     public void addtovec(){
-        objec.insertUser(new UserData("HI","HI","HI"));
+        try{
+            objec.insertUser(new UserData("HI","HI","HI"));
+        }
+        catch (dataAccess.DataAccessException e){
+            System.out.println("Data acess error");
+        }
         expected.add(new UserData("HI","HI","HI"));
-        assertEquals(objec.data,expected);
+        assertEquals(objec.data,expected, "couldnt add");
+    }
+
+    @Test
+    public void finduse(){
+        try {
+            objec.insertUser(new UserData("HI","HI","HI"));
+            objec.insertUser(new UserData("NO","NO","NO"));
+            UserData result = objec.getUser("NO");
+
+            expected.add(new UserData("NO","NO","NO"));
+            assertEquals(result,expected.elementAt(0), "failed to find user");
+        }
+        catch (dataAccess.DataAccessException e){
+            System.out.println("Data acess error");
+        }
+
+    }
+    @Test
+    public void nulluse(){
+        try {
+            objec.insertUser(new UserData("HI","HI","HI"));
+            objec.insertUser(new UserData("NO","NO","NO"));
+            UserData result = objec.getUser("ys");
+
+            expected.add(null);
+            assertEquals(result,expected.elementAt(0), "failed to find user");
+        }
+        catch (dataAccess.DataAccessException e){
+            System.out.println("Data acess error");
+        }
     }
 }
