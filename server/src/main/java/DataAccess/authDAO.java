@@ -1,4 +1,14 @@
 package DataAccess;
 
+import Server.AuthData;
+
 public interface authDAO {
+    void clear() throws dataAccess.DataAccessException;
+
+    String createAuth(String username) throws dataAccess.DataAccessException;
+
+    AuthData getAuth(String authToken) throws dataAccess.DataAccessException;
+
+    void deleteAuth(String authToken) throws dataAccess.DataAccessException;
+
 }

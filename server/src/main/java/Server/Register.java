@@ -10,6 +10,6 @@ public class Register {
         var serializer = new Gson();
 
         registerRequest data = serializer.fromJson(Req.body(), registerRequest.class);
-        return new Gson().toJson(new UserService(data).register());
+        return new Gson().toJson(new UserService().register(data));
     }
 }
