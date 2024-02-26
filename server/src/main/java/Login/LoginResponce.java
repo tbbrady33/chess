@@ -1,8 +1,8 @@
-package Server;
+package Login;
 
 import java.util.Objects;
 
-public record LoginResponce(String username, String authtoken) {
+public record LoginResponce(String username, String authtoken, String message) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

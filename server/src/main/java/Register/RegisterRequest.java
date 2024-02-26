@@ -1,14 +1,14 @@
-package Server;
+package Register;
 
 import java.util.Objects;
 
-public record registerRequest(String username,
+public record RegisterRequest(String username,
                               String password,
                               String email) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof registerRequest that)) return false;
+        if (!(o instanceof RegisterRequest that)) return false;
         return Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(email, that.email);
     }
 

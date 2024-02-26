@@ -1,6 +1,12 @@
 package Server;
 
 import DataAccess.*;
+import Login.LoginRequest;
+import Login.LoginResponce;
+import Logout.LogoutRequest;
+import Logout.LogoutResponce;
+import Register.RegisterRequest;
+import Register.RegisterResponce;
 
 public class UserService {
 
@@ -8,7 +14,7 @@ public class UserService {
     public UserService() {
     }
 
-    public registerResponce register(registerRequest request) {
+    public RegisterResponce register(RegisterRequest request) {
         userDAO thing = new memoryUserDAO();
         authDAO auth = new MemoryAuthDAO();
 
@@ -19,13 +25,12 @@ public class UserService {
             }
             else {
                 exists = true;
-                //throw(Exception);
-                // how do I deal with errors
+                return new RegisterResponce(null,null,"Error: already taken");
             }
             thing.insertUser(new UserData(request.username(),request.password(),request.email()));
-            auth.createAuth(request.username());
-            AuthData token = auth.getAuth(request.username());
-            return new registerResponce(token.username(),token.authToken());
+
+            String token = auth.createAuth(request.username());
+            return new RegisterResponce(request.username(),token,null);
 
         }
         catch (dataAccess.DataAccessException e){
@@ -51,7 +56,7 @@ public class UserService {
         if(isrightPass(request.password(),user.password())){
             try {
                 String token = auth.createAuth(request.username());
-                return new LoginResponce(user.username(),token);
+                return new LoginResponce(user.username(),token,null);
             }
             catch (dataAccess.DataAccessException e){
                 // didnt work
@@ -61,6 +66,22 @@ public class UserService {
         else{
             // problem exit now
         }
+        return null;
+    }
+
+    public LogoutResponce logout(LogoutRequest request){
+        authDAO auth = new MemoryAuthDAO();
+        if(isinAuth(request.authtoken())){
+            try {
+                AuthData data = auth.getAuth(request.authtoken());
+                auth.deleteAuth(data.authToken());
+                return new LogoutResponce("Success",null);
+            }
+            catch (dataAccess.DataAccessException e){
+                System.out.println("Data access");
+            }
+        }
+
         return null;
     }
     private boolean isinUser(String username){
@@ -80,6 +101,7 @@ public class UserService {
         return false;
     }
 
+
     private boolean isinAuth(String authtoken){
         authDAO auth = new MemoryAuthDAO();
         try{
@@ -98,7 +120,7 @@ public class UserService {
         return false;
     }
 
-    private boolean isrightPass(String reqpass, String password){{
+    private boolean isrightPass(String reqpass, String password){
         userDAO pass = new memoryUserDAO();
         if(reqpass.equals(password)){
             return true;
