@@ -14,6 +14,6 @@ public class GameService {
     }
 
     private Boolean getAuth(String authToken){
-
+        return false;
     }
 }

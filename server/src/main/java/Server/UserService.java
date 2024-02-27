@@ -10,24 +10,26 @@ import Register.RegisterResponce;
 
 public class UserService {
 
+    userDAO user;
+    authDAO auth;
 
-    public UserService() {
+    public UserService(userDAO user, authDAO auth) {
+        this.user = user;
+        this.auth = auth;
     }
 
     public RegisterResponce register(RegisterRequest request) {
-        userDAO thing = new memoryUserDAO();
-        authDAO auth = new MemoryAuthDAO();
 
         boolean exists = false;
         try {
-            if (thing.getUser(request.username()) == null){
+            if (user.getUser(request.username()) == null){
 
             }
             else {
                 exists = true;
                 return new RegisterResponce(null,null,"Error: already taken");
             }
-            thing.insertUser(new UserData(request.username(),request.password(),request.email()));
+            user.insertUser(new UserData(request.username(),request.password(),request.email()));
 
             String token = auth.createAuth(request.username());
             return new RegisterResponce(request.username(),token,null);
@@ -39,13 +41,11 @@ public class UserService {
         return null;
     }
     public LoginResponce login(LoginRequest request){
-        userDAO thing = new memoryUserDAO();
-        authDAO auth = new MemoryAuthDAO();
         boolean  exists = false;
-        UserData user = null;
+        UserData nuser = null;
         if(isinUser(request.username())){
             try {
-                user = thing.getUser(request.username());
+                nuser = user.getUser(request.username());
             }
             catch (dataAccess.DataAccessException e){
                 System.out.println("Data access error");
@@ -53,10 +53,10 @@ public class UserService {
         }else {
             return new LoginResponce(null,null,"Error: unauthorized");
         }
-        if(isrightPass(request.password(),user.password())){
+        if(isrightPass(request.password(),nuser.password())){
             try {
                 String token = auth.createAuth(request.username());
-                return new LoginResponce(user.username(),token,null);
+                return new LoginResponce(nuser.username(),token,null);
             }
             catch (dataAccess.DataAccessException e){
                 System.out.println("Data access error");
@@ -69,13 +69,13 @@ public class UserService {
         return null;
     }
 
+
     public LogoutResponce logout(LogoutRequest request){
-        authDAO auth = new MemoryAuthDAO();
         if(isinAuth(request.authtoken())){
             try {
                 AuthData data = auth.getAuth(request.authtoken());
                 auth.deleteAuth(data.authToken());
-                return new LogoutResponce("Success",null);
+                return new LogoutResponce("Success");
             }
             catch (dataAccess.DataAccessException e){
                 System.out.println("Data access");
@@ -85,9 +85,8 @@ public class UserService {
         return null;
     }
     private boolean isinUser(String username){
-        userDAO thing = new memoryUserDAO();
         try{
-            if(thing.getUser(username) != null){
+            if(user.getUser(username) != null){
                 return true;
             }
             else{
@@ -103,7 +102,6 @@ public class UserService {
 
 
     private boolean isinAuth(String authtoken){
-        authDAO auth = new MemoryAuthDAO();
         try{
             if(auth.getAuth(authtoken) != null){
                 return true;
@@ -121,7 +119,6 @@ public class UserService {
     }
 
     private boolean isrightPass(String reqpass, String password){
-        userDAO pass = new memoryUserDAO();
         if(reqpass.equals(password)){
             return true;
         }
