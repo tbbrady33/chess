@@ -1,5 +1,6 @@
 package Server;
 
+import ListGames.ListGames;
 import Login.Login;
 import Logout.Logout;
 import Register.Register;
@@ -19,7 +20,7 @@ public class Server {
         Spark.post("/user",(req,res) -> new Register().register(req,res));
         Spark.post("/session" , (req,res) -> new Login().login(req, res));
         Spark.delete("/session", (req, res) -> new Logout().logout(req, res));
-        Spark.get("/game", (req, res) -> new listGames(req, res));
+        Spark.get("/game", (req, res) -> new ListGames().listGames(req, res));
         Spark.post("/game", (req, res) -> new createGame(req,res));
         Spark.put("/game", (req, res) -> new joinGame(req, res));
 

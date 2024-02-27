@@ -48,10 +48,10 @@ public class UserService {
                 user = thing.getUser(request.username());
             }
             catch (dataAccess.DataAccessException e){
-                // this is a data access error
+                System.out.println("Data access error");
             }
         }else {
-            //we have an error exit code
+            return new LoginResponce(null,null,"Error: unauthorized");
         }
         if(isrightPass(request.password(),user.password())){
             try {
@@ -59,12 +59,12 @@ public class UserService {
                 return new LoginResponce(user.username(),token,null);
             }
             catch (dataAccess.DataAccessException e){
-                // didnt work
+                System.out.println("Data access error");
             }
 
         }
         else{
-            // problem exit now
+            return new LoginResponce(null, null, "Error: unauthorized");
         }
         return null;
     }
