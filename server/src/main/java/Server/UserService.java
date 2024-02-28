@@ -20,6 +20,10 @@ public class UserService {
 
     public RegisterResponce register(RegisterRequest request) {
 
+        if(request.username() == null || request.password() == null){
+            return new RegisterResponce(null,null,"Error: bad request");
+        }
+
         boolean exists = false;
         try {
             if (user.getUser(request.username()) == null){
@@ -82,7 +86,7 @@ public class UserService {
             }
         }
 
-        return null;
+        return new LogoutResponce("Error: unauthorized");
     }
     private boolean isinUser(String username){
         try{

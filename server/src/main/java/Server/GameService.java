@@ -38,6 +38,9 @@ public class GameService {
                 GameData ngame = game.createGame(body.gameName());
                 return new CreateGameResponce(ngame.gameID(),null);
             }
+            else{
+                return new CreateGameResponce(null,"Error: unauthorized");
+            }
         }
         catch (dataAccess.DataAccessException e){
             System.out.println("Data access");
@@ -46,16 +49,23 @@ public class GameService {
     }
     public JoinGameResponce joinGame(JoinGameRequest body, String header){
         try {
+            if(!hasAccess(header)){
+                return new JoinGameResponce("Error: unauthorized");
+            }
             if(gameExists(body.gameID(), header)){
                 GameData oldGame = game.getGame(body.gameID());
                 AuthData player = auth.getAuth(header);
-                if(body.playerColor().equals(ChessGame.TeamColor.WHITE)){
-                    GameData newGame = new GameData(body.gameID(), player.username(), oldGame.blackUsername(), oldGame.gameName(),oldGame.game());
+                if((body.playerColor() == ChessGame.TeamColor.BLACK && oldGame.blackUsername() != null)
+                ||( body.playerColor() == ChessGame.TeamColor.WHITE && oldGame.whiteUsername() != null)){
+                    return new JoinGameResponce("Error: already taken");
                 }
-                if(body.playerColor().equals(ChessGame.TeamColor.BLACK)){
-                    GameData newGame = new GameData(body.gameID(), oldGame.whiteUsername(), player.username(), oldGame.gameName(),oldGame.game());
+                if(body.playerColor() != null) {
+                    game.changeUsername(body.gameID(), player.username(), body.playerColor());
                 }
                 return new JoinGameResponce("Success");
+            }
+            else{
+                return new JoinGameResponce("Error: bad request");
             }
         }
         catch (dataAccess.DataAccessException e){

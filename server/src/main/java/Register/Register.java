@@ -18,6 +18,8 @@ public class Register {
         String json = new Gson().toJson(object);
         if (object.message() != null && object.message().equals("Error: already taken")){
             res.status(403);
+        } else if (object.message() != null && object.message().equals("Error: bad request")) {
+            res.status(400);
         }
         return json;
     }

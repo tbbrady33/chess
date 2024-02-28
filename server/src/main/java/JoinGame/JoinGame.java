@@ -17,6 +17,15 @@ public class JoinGame {
         res.status(200);
         JoinGameResponce object = new GameService(auth,game).joinGame(data,stri);
         String json = new Gson().toJson(object);
+        if(object.message() != null && object.message().equals("Error: bad request")){
+            res.status(400);
+        }
+        if(object.message() != null && object.message().equals("Error: unauthorized")){
+            res.status(401);
+        }
+        if(object.message() != null && object.message().equals("Error: already taken")){
+            res.status(403);
+        }
         return json;
     }
 }

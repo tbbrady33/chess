@@ -12,7 +12,10 @@ public class Logout {
         var serializer = new Gson();
         String data = req.headers("authorization");
         LogoutResponce object = new UserService(user,auth).logout(data);
-
+        if(object.message() != null && object.message().equals("Error: unauthorized")){
+            res.status(401);
+        }
         return new Gson().toJson(object);
+
     }
 }

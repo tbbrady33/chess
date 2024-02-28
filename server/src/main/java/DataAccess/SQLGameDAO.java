@@ -1,6 +1,7 @@
 package DataAccess;
 
 import Server.GameData;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 
 import java.util.Collection;
@@ -25,5 +26,10 @@ public class SQLGameDAO implements gameDAO{
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
         return null;
+    }
+
+    @Override
+    public void changeUsername(int gameID, String username, ChessGame.TeamColor teamColor) throws DataAccessException {
+
     }
 }

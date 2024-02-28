@@ -6,6 +6,7 @@ import chess.ChessGame;
 import dataAccess.DataAccessException;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Vector;
 import java.util.Random;
 
@@ -56,5 +57,25 @@ public class MemoryGameDAO implements gameDAO{
             }
         }
         return null;
+    }
+
+    @Override
+    public void  changeUsername(int gameID, String username, ChessGame.TeamColor teamColor) throws DataAccessException{
+        GameData newGame;
+        for(int i = 0; i < data.size(); i++){
+            if(data.elementAt(i).gameID() == gameID){
+                if(teamColor == ChessGame.TeamColor.BLACK) {
+                    newGame = new GameData(gameID,data.elementAt(i).whiteUsername(),username,data.elementAt(i).gameName(),data.elementAt(i).game());
+                    data.remove(data.elementAt(i));
+                    data.add(newGame);
+                    break;
+                } else if (teamColor == ChessGame.TeamColor.WHITE){
+                    newGame = new GameData(gameID,username,data.elementAt(i).blackUsername(),data.elementAt(i).gameName(),data.elementAt(i).game());
+                    data.remove(data.elementAt(i));
+                    data.add(newGame);
+                    break;
+                }
+            }
+        }
     }
 }
