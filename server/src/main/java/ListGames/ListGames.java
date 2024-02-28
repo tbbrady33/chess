@@ -16,6 +16,9 @@ public class ListGames {
         res.status(200);
         ListGamesResponce object = new GameService(auth,game).listGames(data);
         String json = new Gson().toJson(object);
+        if(object.message() != null && object.message().equals("Error: unauthorized")){
+            res.status(401);
+        }
         return json;
     }
 }

@@ -25,6 +25,9 @@ public class GameService {
             if(hasAccess(request)){
                 return new ListGamesResponce(game.listGames(request),null);
             }
+            else {
+                return new ListGamesResponce(null,"Error: unauthorized");
+            }
         }
         catch (dataAccess.DataAccessException e){
             System.out.println("Data access");
