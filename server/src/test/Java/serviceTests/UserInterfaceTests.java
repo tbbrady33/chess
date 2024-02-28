@@ -1,8 +1,7 @@
-package MyTest;
+package serviceTests;
 
 import DataAccess.memoryUserDAO;
 import Server.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

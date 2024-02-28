@@ -1,4 +1,4 @@
-package MyTest;
+package serviceTests;
 
 import DataAccess.MemoryAuthDAO;
 import Server.UserData;
