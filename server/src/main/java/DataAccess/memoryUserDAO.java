@@ -1,9 +1,8 @@
 package DataAccess;
 
-import Server.UserData;
+import server.UserData;
 import dataAccess.DataAccessException;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Vector;
 

@@ -1,7 +1,6 @@
 package DataAccess;
 
-import Server.AuthData;
-import Server.UserData;
+import server.AuthData;
 import dataAccess.DataAccessException;
 
 import java.util.UUID;

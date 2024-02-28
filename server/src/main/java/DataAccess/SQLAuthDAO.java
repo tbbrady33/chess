@@ -1,6 +1,6 @@
 package DataAccess;
 
-import Server.AuthData;
+import server.AuthData;
 import dataAccess.DataAccessException;
 
 public class SQLAuthDAO implements authDAO{

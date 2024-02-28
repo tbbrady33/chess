@@ -1,10 +1,8 @@
 package JoinGame;
 
-import CreateGame.CreateGameRequest;
-import CreateGame.CreateGameResponce;
 import DataAccess.authDAO;
 import DataAccess.gameDAO;
-import Server.GameService;
+import server.GameService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;

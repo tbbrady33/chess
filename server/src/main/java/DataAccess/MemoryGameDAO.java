@@ -1,12 +1,10 @@
 package DataAccess;
 
-import Server.GameData;
-import Server.UserData;
+import server.GameData;
 import chess.ChessGame;
 import dataAccess.DataAccessException;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Vector;
 import java.util.Random;
 

@@ -2,7 +2,7 @@ package Logout;
 
 import DataAccess.authDAO;
 import DataAccess.userDAO;
-import Server.UserService;
+import server.UserService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;

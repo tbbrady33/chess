@@ -1,7 +1,7 @@
 package serviceTests;
 
 import DataAccess.MemoryGameDAO;
-import Server.GameData;
+import server.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

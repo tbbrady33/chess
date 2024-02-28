@@ -1,6 +1,6 @@
 package DataAccess;
 
-import Server.GameData;
+import server.GameData;
 import chess.ChessGame;
 
 import java.util.Collection;

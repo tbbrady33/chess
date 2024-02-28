@@ -1,6 +1,6 @@
 package DataAccess;
 
-import Server.UserData;
+import server.UserData;
 import dataAccess.DataAccessException;
 
 public class SQLUserDAO implements userDAO{

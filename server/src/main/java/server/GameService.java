@@ -1,15 +1,12 @@
-package Server;
+package server;
 
-import CreateGame.CreateGame;
 import CreateGame.CreateGameRequest;
 import CreateGame.CreateGameResponce;
 import DataAccess.authDAO;
 import DataAccess.gameDAO;
 import JoinGame.JoinGameRequest;
 import JoinGame.JoinGameResponce;
-import ListGames.ListGamesRequest;
 import ListGames.ListGamesResponce;
-import Register.RegisterResponce;
 import chess.ChessGame;
 
 public class GameService {

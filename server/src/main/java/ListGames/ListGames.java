@@ -2,9 +2,7 @@ package ListGames;
 
 import DataAccess.authDAO;
 import DataAccess.gameDAO;
-import Login.LoginRequest;
-import Server.GameService;
-import Server.UserService;
+import server.GameService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;

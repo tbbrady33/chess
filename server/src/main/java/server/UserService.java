@@ -1,9 +1,8 @@
-package Server;
+package server;
 
 import DataAccess.*;
 import Login.LoginRequest;
 import Login.LoginResponce;
-import Logout.LogoutRequest;
 import Logout.LogoutResponce;
 import Register.RegisterRequest;
 import Register.RegisterResponce;

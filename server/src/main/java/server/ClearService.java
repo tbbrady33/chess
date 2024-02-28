@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import ClearApp.ClearAppResponce;
 import DataAccess.authDAO;

@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import ClearApp.ClearApp;
 import CreateGame.CreateGame;
@@ -11,9 +11,9 @@ import Register.Register;
 import spark.*;
 
 
-public class Server {
+public class server {
     public static void main(String args[]){
-        new Server().run(8080);
+        new server().run(8080);
     }
 
     public int run(int desiredPort) {

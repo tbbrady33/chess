@@ -1,6 +1,6 @@
 package DataAccess;
 
-import Server.AuthData;
+import server.AuthData;
 
 public interface authDAO {
     void clear() throws dataAccess.DataAccessException;
