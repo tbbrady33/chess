@@ -53,7 +53,7 @@ public class UserService {
         }else {
             return new LoginResponce(null,null,"Error: unauthorized");
         }
-        if(isrightPass(request.password(),nuser.password())){
+        if(nuser != null && isrightPass(request.password(),nuser.password())){
             try {
                 String token = auth.createAuth(request.username());
                 return new LoginResponce(nuser.username(),token,null);
@@ -70,10 +70,10 @@ public class UserService {
     }
 
 
-    public LogoutResponce logout(LogoutRequest request){
-        if(isinAuth(request.authtoken())){
+    public LogoutResponce logout(String request){
+        if(isinAuth(request)){
             try {
-                AuthData data = auth.getAuth(request.authtoken());
+                AuthData data = auth.getAuth(request);
                 auth.deleteAuth(data.authToken());
                 return new LogoutResponce("Success");
             }

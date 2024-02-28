@@ -1,6 +1,9 @@
 package Server;
 
+import ClearApp.ClearApp;
+import CreateGame.CreateGame;
 import DataAccess.*;
+import JoinGame.JoinGame;
 import ListGames.ListGames;
 import Login.Login;
 import Logout.Logout;
@@ -22,13 +25,13 @@ public class Server {
         gameDAO game = new MemoryGameDAO();
 
         // all the endpoints, the new classes are the handler classes
-        Spark.delete("/db", (req,res) -> new clearApp(req, res));
+        Spark.delete("/db", (req,res) -> new ClearApp().clearApp(req, res,user,auth,game));
         Spark.post("/user",(req,res) -> new Register().register(req,res,user,auth));
         Spark.post("/session" , (req,res) -> new Login().login(req, res,user,auth));
         Spark.delete("/session", (req, res) -> new Logout().logout(req, res,user,auth));
-        Spark.get("/game", (req, res) -> new ListGames().listGames(req, res));
-        Spark.post("/game", (req, res) -> new createGame(req,res));
-        Spark.put("/game", (req, res) -> new joinGame(req, res));
+        Spark.get("/game", (req, res) -> new ListGames().listGames(req, res,auth,game));
+        Spark.post("/game", (req, res) -> new CreateGame().createGame(req,res,auth,game));
+        Spark.put("/game", (req, res) -> new JoinGame().joinGame(req, res,auth,game));
 
 
         Spark.awaitInitialization();

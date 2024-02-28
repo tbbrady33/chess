@@ -1,4 +1,9 @@
 package ListGames;
 
-public record ListGamesResponce(int gameID, String whiteUsername, String blackUsername, String gameName, String message) {
+import Server.GameData;
+
+import java.util.Collection;
+import java.util.Vector;
+
+public record ListGamesResponce(Collection<GameData> games, String message) {
 }

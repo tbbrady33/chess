@@ -11,14 +11,14 @@ import java.util.Random;
 
 public class MemoryGameDAO implements gameDAO{
 
-    Vector<GameData> data = new Vector<>();
+    public Vector<GameData> data = new Vector<>();
     @Override
     public void clear() throws DataAccessException {
         data.clear();
     }
 
     @Override
-    public Collection<GameData> listGames() throws DataAccessException {
+    public Collection<GameData> listGames(String authToken) throws DataAccessException {
         return data;
     }
 
@@ -29,14 +29,23 @@ public class MemoryGameDAO implements gameDAO{
         int ID = 0;
         while (notSame){
             ID = rand.nextInt(10000);
-            for(GameData game: data){
-                if(game.gameID() != ID){
-                    notSame = false;
-                    break;
+            if (data.size() >= 1) {
+                for (GameData game : data) {
+                    if (game.gameID() != ID) {
+                        notSame = false;
+                        break;
+                    }
                 }
             }
+            else {
+                GameData objec = new GameData(ID,null,null,gameName,new ChessGame());
+                data.add(objec);
+                return objec;
+            }
         }
-        return new GameData(ID,null,null,gameName,new ChessGame());
+        GameData objec = new GameData(ID,null,null,gameName,new ChessGame());
+        data.add(objec);
+        return objec;
     }
 
     @Override

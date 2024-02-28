@@ -11,6 +11,6 @@ public interface gameDAO {
 
     GameData getGame(int gameID) throws dataAccess.DataAccessException;
 
-    Collection<GameData> listGames() throws dataAccess.DataAccessException;
+    Collection<GameData> listGames(String authToken) throws dataAccess.DataAccessException;
 
 }

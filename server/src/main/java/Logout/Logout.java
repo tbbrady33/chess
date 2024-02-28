@@ -10,7 +10,9 @@ import spark.Response;
 public class Logout {
     public String logout(Request req, Response res, userDAO user, authDAO auth){
         var serializer = new Gson();
-        LogoutRequest data = serializer.fromJson(req.headers("authorization"), LogoutRequest.class);
-        return new Gson().toJson(new UserService(user,auth).logout(data));
+        String data = req.headers("authorization");
+        LogoutResponce object = new UserService(user,auth).logout(data);
+
+        return new Gson().toJson(object);
     }
 }
