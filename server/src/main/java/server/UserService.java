@@ -9,10 +9,10 @@ import Register.RegisterResponce;
 
 public class UserService {
 
-    userDAO user;
-    authDAO auth;
+    UserDAO user;
+    AuthDAO auth;
 
-    public UserService(userDAO user, authDAO auth) {
+    public UserService(UserDAO user, AuthDAO auth) {
         this.user = user;
         this.auth = auth;
     }

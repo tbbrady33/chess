@@ -1,14 +1,14 @@
 package Login;
 
-import DataAccess.authDAO;
-import DataAccess.userDAO;
+import DataAccess.AuthDAO;
+import DataAccess.UserDAO;
 import server.UserService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
 public class Login {
-    public String login(Request req, Response res, userDAO user, authDAO auth){
+    public String login(Request req, Response res, UserDAO user, AuthDAO auth){
         var serializer = new Gson();
         LoginRequest data = serializer.fromJson(req.body(), LoginRequest.class);
         res.status(200);

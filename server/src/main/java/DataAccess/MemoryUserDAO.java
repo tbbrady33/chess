@@ -6,7 +6,7 @@ import dataAccess.DataAccessException;
 import java.util.Objects;
 import java.util.Vector;
 
-public class memoryUserDAO implements userDAO{
+public class MemoryUserDAO implements UserDAO {
     public Vector<UserData> data = new Vector<>();
     @Override
     public void clear() throws DataAccessException {
@@ -34,7 +34,7 @@ public class memoryUserDAO implements userDAO{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof memoryUserDAO that)) return false;
+        if (!(o instanceof MemoryUserDAO that)) return false;
         return Objects.equals(data, that.data);
     }
 

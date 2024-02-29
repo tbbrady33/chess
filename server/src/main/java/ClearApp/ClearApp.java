@@ -1,15 +1,15 @@
 package ClearApp;
 
-import DataAccess.authDAO;
-import DataAccess.gameDAO;
-import DataAccess.userDAO;
+import DataAccess.AuthDAO;
+import DataAccess.GameDAO;
+import DataAccess.UserDAO;
 import server.ClearService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
 public class ClearApp {
-    public String clearApp(Request req, Response res, userDAO user, authDAO auth, gameDAO game){
+    public String clearApp(Request req, Response res, UserDAO user, AuthDAO auth, GameDAO game){
         var serializer = new Gson();
         ClearAppResponce object = new ClearService(auth,game,user).clear();
         String json = new Gson().toJson(object);

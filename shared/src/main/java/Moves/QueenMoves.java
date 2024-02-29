@@ -1,6 +1,7 @@
-package chess;
+package Moves;
 
-import java.util.ArrayList;
+import chess.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 

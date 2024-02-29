@@ -154,7 +154,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition king = KingPos(teamColor);
+        ChessPosition king = kingPos(teamColor);
         TeamColor otherteam = null;
         if(teamColor == TeamColor.BLACK){
             otherteam = TeamColor.WHITE;
@@ -180,7 +180,7 @@ public class ChessGame {
      * @param teamColor
      * @return
      */
-    public ChessPosition KingPos(TeamColor teamColor){
+    public ChessPosition kingPos(TeamColor teamColor){
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++){
                 if(board.getPiece(new ChessPosition(i,j)) != null && board.getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING){
@@ -200,7 +200,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        ChessPosition king = KingPos(teamColor);
+        ChessPosition king = kingPos(teamColor);
         // if king has no valid moves return true else return false
         ChessBoard otherboard = new ChessBoard();
         otherboard.copyBoard(board);

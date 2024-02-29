@@ -5,7 +5,7 @@ import chess.ChessGame;
 
 import java.util.Collection;
 
-public interface gameDAO {
+public interface GameDAO {
     void clear() throws dataAccess.DataAccessException;
 
     GameData createGame(String gameName) throws dataAccess.DataAccessException;

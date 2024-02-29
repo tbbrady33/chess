@@ -20,9 +20,9 @@ public class Server {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
         //data access stuff
-        authDAO auth = new MemoryAuthDAO();
-        userDAO user = new memoryUserDAO();
-        gameDAO game = new MemoryGameDAO();
+        AuthDAO auth = new MemoryAuthDAO();
+        UserDAO user = new MemoryUserDAO();
+        GameDAO game = new MemoryGameDAO();
 
         // all the endpoints, the new classes are the handler classes
         Spark.delete("/db", (req,res) -> new ClearApp().clearApp(req, res,user,auth,game));

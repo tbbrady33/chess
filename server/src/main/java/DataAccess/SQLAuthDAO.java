@@ -3,7 +3,7 @@ package DataAccess;
 import server.AuthData;
 import dataAccess.DataAccessException;
 
-public class SQLAuthDAO implements authDAO{
+public class SQLAuthDAO implements AuthDAO {
     @Override
     public void clear() throws DataAccessException {
 

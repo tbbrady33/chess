@@ -6,7 +6,7 @@ import dataAccess.DataAccessException;
 import java.util.UUID;
 import java.util.Vector;
 
-public class MemoryAuthDAO implements authDAO{
+public class MemoryAuthDAO implements AuthDAO {
     public Vector<AuthData> data = new Vector<>();
     @Override
     public void clear() throws DataAccessException {

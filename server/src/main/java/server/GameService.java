@@ -2,17 +2,17 @@ package server;
 
 import CreateGame.CreateGameRequest;
 import CreateGame.CreateGameResponce;
-import DataAccess.authDAO;
-import DataAccess.gameDAO;
+import DataAccess.AuthDAO;
+import DataAccess.GameDAO;
 import JoinGame.JoinGameRequest;
 import JoinGame.JoinGameResponce;
 import ListGames.ListGamesResponce;
 import chess.ChessGame;
 
 public class GameService {
-    authDAO auth;
-    gameDAO game;
-    public GameService(authDAO auth, gameDAO game){
+    AuthDAO auth;
+    GameDAO game;
+    public GameService(AuthDAO auth, GameDAO game){
         this.auth = auth;
         this.game = game;
     }

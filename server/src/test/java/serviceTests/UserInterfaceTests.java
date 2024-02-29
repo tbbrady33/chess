@@ -1,6 +1,6 @@
 package serviceTests;
 
-import DataAccess.memoryUserDAO;
+import DataAccess.MemoryUserDAO;
 import server.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,11 +10,11 @@ import java.util.Vector;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserInterfaceTests {
-    memoryUserDAO objec;
+    MemoryUserDAO objec;
     Vector<UserData> expected;
     @BeforeEach
     public void setUp(){
-        objec = new memoryUserDAO();
+        objec = new MemoryUserDAO();
         expected = new Vector<>();
         expected.clear();
     }

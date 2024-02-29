@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Vector;
 import java.util.Random;
 
-public class MemoryGameDAO implements gameDAO{
+public class MemoryGameDAO implements GameDAO {
 
     public Vector<GameData> data = new Vector<>();
     @Override
@@ -25,24 +25,24 @@ public class MemoryGameDAO implements gameDAO{
     public GameData createGame(String gameName) throws DataAccessException {
         Boolean notSame = true;
         Random rand = new Random();
-        int ID = 0;
+        int iD = 0;
         while (notSame){
-            ID = rand.nextInt(10000);
+            iD = rand.nextInt(10000);
             if (data.size() >= 1) {
                 for (GameData game : data) {
-                    if (game.gameID() != ID) {
+                    if (game.gameID() != iD) {
                         notSame = false;
                         break;
                     }
                 }
             }
             else {
-                GameData objec = new GameData(ID,null,null,gameName,new ChessGame());
+                GameData objec = new GameData(iD,null,null,gameName,new ChessGame());
                 data.add(objec);
                 return objec;
             }
         }
-        GameData objec = new GameData(ID,null,null,gameName,new ChessGame());
+        GameData objec = new GameData(iD,null,null,gameName,new ChessGame());
         data.add(objec);
         return objec;
     }

@@ -1,14 +1,14 @@
 package JoinGame;
 
-import DataAccess.authDAO;
-import DataAccess.gameDAO;
+import DataAccess.AuthDAO;
+import DataAccess.GameDAO;
 import server.GameService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
 public class JoinGame {
-    public String joinGame(Request req, Response res, authDAO auth, gameDAO game){
+    public String joinGame(Request req, Response res, AuthDAO auth, GameDAO game){
         var serializer = new Gson();
         String stri = req.headers("authorization");
         JoinGameRequest data = serializer.fromJson(req.body(), JoinGameRequest.class);

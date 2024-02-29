@@ -6,7 +6,7 @@ import dataAccess.DataAccessException;
 
 import java.util.Collection;
 
-public class SQLGameDAO implements gameDAO{
+public class SQLGameDAO implements GameDAO {
 
     @Override
     public void clear() throws DataAccessException {

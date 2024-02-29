@@ -1,8 +1,9 @@
 package chess;
 
+import Moves.*;
+
 import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.BlockingDeque;
 
 /**
  * Represents a single chess piece

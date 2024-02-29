@@ -2,7 +2,7 @@ package DataAccess;
 
 import server.AuthData;
 
-public interface authDAO {
+public interface AuthDAO {
     void clear() throws dataAccess.DataAccessException;
 
     String createAuth(String username) throws dataAccess.DataAccessException;

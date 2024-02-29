@@ -2,7 +2,7 @@ package DataAccess;
 
 import server.UserData;
 
-public interface userDAO {
+public interface UserDAO {
     void clear() throws dataAccess.DataAccessException;
 
     void insertUser(UserData user) throws dataAccess.DataAccessException;

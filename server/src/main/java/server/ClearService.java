@@ -1,16 +1,16 @@
 package server;
 
 import ClearApp.ClearAppResponce;
-import DataAccess.authDAO;
-import DataAccess.gameDAO;
-import DataAccess.userDAO;
+import DataAccess.AuthDAO;
+import DataAccess.GameDAO;
+import DataAccess.UserDAO;
 
 public class ClearService {
-    authDAO auth;
-    gameDAO game;
-    userDAO user;
+    AuthDAO auth;
+    GameDAO game;
+    UserDAO user;
 
-    public ClearService(authDAO auth, gameDAO game, userDAO user){
+    public ClearService(AuthDAO auth, GameDAO game, UserDAO user){
         this.auth = auth;
         this.game = game;
         this.user = user;

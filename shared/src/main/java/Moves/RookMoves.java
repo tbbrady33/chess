@@ -1,10 +1,15 @@
-package chess;
+package Moves;
+
+import chess.ChessBoard;
+import chess.ChessMove;
+import chess.ChessMovement;
+import chess.ChessPosition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class RookMoves implements ChessMovement{
+public class RookMoves implements ChessMovement {
     public RookMoves(){
     }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {

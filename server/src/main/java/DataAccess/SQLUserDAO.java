@@ -3,7 +3,7 @@ package DataAccess;
 import server.UserData;
 import dataAccess.DataAccessException;
 
-public class SQLUserDAO implements userDAO{
+public class SQLUserDAO implements UserDAO {
     @Override
     public void clear() throws DataAccessException {
 
