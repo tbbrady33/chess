@@ -1,8 +1,8 @@
 package ClearApp;
 
-import DataAccess.AuthDAO;
-import DataAccess.GameDAO;
-import DataAccess.UserDAO;
+import dataAccess.AuthDAO;
+import dataAccess.GameDAO;
+import dataAccess.UserDAO;
 import server.ClearService;
 import com.google.gson.Gson;
 import spark.Request;

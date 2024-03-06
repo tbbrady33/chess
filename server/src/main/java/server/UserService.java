@@ -1,6 +1,6 @@
 package server;
 
-import DataAccess.*;
+import dataAccess.*;
 import Login.LoginRequest;
 import Login.LoginResponce;
 import Logout.LogoutResponce;

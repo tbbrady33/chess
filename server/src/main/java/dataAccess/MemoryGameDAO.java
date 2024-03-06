@@ -1,8 +1,7 @@
-package DataAccess;
+package dataAccess;
 
 import server.GameData;
 import chess.ChessGame;
-import dataAccess.DataAccessException;
 
 import java.util.Collection;
 import java.util.Vector;

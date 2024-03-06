@@ -2,7 +2,7 @@ package server;
 
 import ClearApp.ClearApp;
 import CreateGame.CreateGame;
-import DataAccess.*;
+import dataAccess.*;
 import JoinGame.JoinGame;
 import ListGames.ListGames;
 import Login.Login;
@@ -20,8 +20,8 @@ public class Server {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
         //data access stuff
-        AuthDAO auth = new MemoryAuthDAO();
-        UserDAO user = new MemoryUserDAO();
+        AuthDAO auth = new SQLAuthDAO();
+        UserDAO user = new SQLUserDAO();
         GameDAO game = new MemoryGameDAO();
 
         // all the endpoints, the new classes are the handler classes

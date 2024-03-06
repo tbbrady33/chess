@@ -1,7 +1,6 @@
-package DataAccess;
+package dataAccess;
 
 import server.UserData;
-import dataAccess.DataAccessException;
 
 import java.util.Objects;
 import java.util.Vector;

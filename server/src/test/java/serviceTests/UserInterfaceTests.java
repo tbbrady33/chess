@@ -1,6 +1,6 @@
 package serviceTests;
 
-import DataAccess.MemoryUserDAO;
+import dataAccess.MemoryUserDAO;
 import server.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
