@@ -22,7 +22,7 @@ public class Server {
         //data access stuff
         AuthDAO auth = new SQLAuthDAO();
         UserDAO user = new SQLUserDAO();
-        GameDAO game = new MemoryGameDAO();
+        GameDAO game = new SQLGameDAO();
 
         // all the endpoints, the new classes are the handler classes
         Spark.delete("/db", (req,res) -> new ClearApp().clearApp(req, res,user,auth,game));
