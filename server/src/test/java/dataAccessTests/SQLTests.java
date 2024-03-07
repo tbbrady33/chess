@@ -2,10 +2,13 @@ package dataAccessTests;
 
 import CreateGame.CreateGameResponce;
 import dataAccess.*;
+import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import server.AuthData;
 import server.GameData;
+import server.UserData;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -224,4 +227,61 @@ public class SQLTests {
             System.out.println("Data access");
         }
     }
+
+    @Test
+    public void goodInsertUser(){
+        try{
+
+            user.insertUser(new UserData("Hi","sup","email"));
+            UserData actuals = user.getUser("Hi");
+            UserData expected = new UserData("Hi","sup","email");
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badInsertUser(){
+        try{
+
+            user.insertUser(new UserData("","",""));
+            UserData actuals = user.getUser("");
+            UserData expected = new UserData("","","");
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void goodGetUser(){
+        try{
+
+            user.insertUser(new UserData("Hi","sup","email"));
+            UserData actuals = user.getUser("Hi");
+            UserData expected = new UserData("Hi","sup","email");
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+    @Test
+    public void badGetUser(){
+        try{
+
+            user.insertUser(new UserData("","",""));
+            UserData actuals = user.getUser("");
+            UserData expected = new UserData("","","");
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+
 }
