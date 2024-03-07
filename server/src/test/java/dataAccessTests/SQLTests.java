@@ -88,9 +88,23 @@ public class SQLTests {
             GameData game3 = game.createGame("AS");
             Collection<GameData> actual = new HashSet<>(game.listGames("idk"));
             Collection<GameData> expected = new HashSet<>();
-            expected.add(new GameData(1,null,null,"sup",game1.game()));
+            GameData thing = new GameData(1,null,null,"sup",game1.game());
+            System.out.println(game1.game().toString() + thing.game().toString());
+            expected.add(thing);
             expected.add(new GameData(2,null,null,"hi",game2.game()));
             expected.add(new GameData(3,null,null,"AS",game3.game()));
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badListGames(){
+        try{
+            Collection<GameData> actual = new HashSet<>(game.listGames("idk"));
+            Collection<GameData> expected = new HashSet<>();
+
             assertEquals(expected,actual,"IDK");
         }catch (DataAccessException e){
             System.out.println("Data access");
