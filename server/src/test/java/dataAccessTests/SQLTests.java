@@ -110,4 +110,30 @@ public class SQLTests {
             System.out.println("Data access");
         }
     }
+
+    @Test
+    public void goodCreateGame(){
+        try{
+            GameData actual = game.createGame("Sup");
+            GameData expected = new GameData(1,null,null,"sup",actual.game());
+
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badCreateGame(){
+        try{
+            GameData actual = game.createGame("");
+            GameData expected = new GameData(1,null,null,"",actual.game());
+
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
 }

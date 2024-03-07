@@ -93,6 +93,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
+
         String json = new Gson().toJson(new ChessGame());
         var statment = "INSERT into game (gameName,game) VALUES (?,?)";
         int iD = executeUpdate(statment,gameName,json);
