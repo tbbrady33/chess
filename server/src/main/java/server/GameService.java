@@ -34,7 +34,7 @@ public class GameService {
     }
     public CreateGameResponce createGame(CreateGameRequest body, String header){
         try {
-            if(hasAccess(header)){
+            if(hasAccess(header) && body.gameName() != null){
                 GameData ngame = game.createGame(body.gameName());
                 return new CreateGameResponce(ngame.gameID(),null);
             }

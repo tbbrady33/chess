@@ -6,6 +6,7 @@ import Login.LoginResponce;
 import Logout.LogoutResponce;
 import Register.RegisterRequest;
 import Register.RegisterResponce;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserService {
 
@@ -32,7 +33,13 @@ public class UserService {
                 exists = true;
                 return new RegisterResponce(null,null,"Error: already taken");
             }
-            user.insertUser(new UserData(request.username(),request.password(),request.email()));
+
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String hashedPassword = encoder.encode(request.password());
+
+            // write the hashed password in database along with the user's other information
+            user.insertUser(new UserData(request.username(),hashedPassword,request.email()));
 
             String token = auth.createAuth(request.username());
             return new RegisterResponce(request.username(),token,null);
@@ -56,7 +63,11 @@ public class UserService {
         }else {
             return new LoginResponce(null,null,"Error: unauthorized");
         }
-        if(nuser != null && isrightPass(request.password(),nuser.password())){
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        boolean pass = encoder.matches(request.password(), nuser.password());
+
+        if(pass){
             try {
                 String token = auth.createAuth(request.username());
                 return new LoginResponce(nuser.username(),token,null);
