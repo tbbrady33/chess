@@ -115,7 +115,7 @@ public class SQLTests {
     public void goodCreateGame(){
         try{
             GameData actual = game.createGame("Sup");
-            GameData expected = new GameData(1,null,null,"sup",actual.game());
+            GameData expected = new GameData(1,null,null,"Sup",actual.game());
 
 
             assertEquals(expected,actual,"IDK");
@@ -132,6 +132,94 @@ public class SQLTests {
 
 
             assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+    @Test
+    public void goodCreateAuth(){
+        try{
+            String actual = auth.createAuth("Hi");
+            String expected = actual;
+
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badCreateAuth(){
+        try{
+            String actual = auth.createAuth("");
+            String expected = actual;
+
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+
+    @Test
+    public void goodGetAuth(){
+        try{
+
+            String actual = auth.createAuth("sup");
+            AuthData actuals = auth.getAuth(actual);
+            AuthData expected = new AuthData(actual,"sup");
+
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badGetAuth(){
+        try{
+
+            String actual = auth.createAuth("");
+            AuthData actuals = auth.getAuth("actual");
+            AuthData expected = null;
+
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void goodDeleteAuth(){
+        try{
+
+            String actual = auth.createAuth("Hi");
+            auth.deleteAuth(actual);
+            AuthData actuals = auth.getAuth(actual);
+            AuthData expected = null;
+
+
+            assertEquals(expected,actuals,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badDeleteAuth(){
+        try{
+
+            String actual = auth.createAuth("Hi");
+            auth.deleteAuth("actual");
+            AuthData actuals = auth.getAuth(actual);
+            AuthData expected = new AuthData(actual,"Hi");
+
+
+            assertEquals(expected,actuals,"IDK");
         }catch (DataAccessException e){
             System.out.println("Data access");
         }
