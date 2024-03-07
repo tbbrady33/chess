@@ -1,6 +1,7 @@
 package dataAccessTests;
 
 import CreateGame.CreateGameResponce;
+import chess.ChessGame;
 import dataAccess.*;
 import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.BeforeEach;
@@ -283,5 +284,52 @@ public class SQLTests {
         }
     }
 
+    @Test
+    public void goodChangeUsername(){
+        try{
+
+            GameData game1 = game.createGame("hi");
+            game.changeUsername(1,"hi", ChessGame.TeamColor.BLACK);
+            Collection<GameData> actual = new HashSet<>(game.listGames("idk"));
+            Collection<GameData> expected = new HashSet<>();
+            expected.add(new GameData(1,null,"hi","hi",game1.game()));
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void badChangeName(){
+        try{
+
+            GameData game1 = game.createGame("hi");
+            game.changeUsername(1,"hi",null);
+            Collection<GameData> actual = new HashSet<>(game.listGames("idk"));
+            Collection<GameData> expected = new HashSet<>();
+            expected.add(new GameData(1,null,null,"hi",game1.game()));
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
+
+    @Test
+    public void clearGames(){
+        try{
+
+            GameData game1 = game.createGame("hi");
+            GameData game2 = game.createGame("sup");
+            game.clear();
+            Collection<GameData> actual = new HashSet<>(game.listGames("idk"));
+            Collection<GameData> expected = new HashSet<>();
+
+            assertEquals(expected,actual,"IDK");
+        }catch (DataAccessException e){
+            System.out.println("Data access");
+        }
+    }
 
 }
