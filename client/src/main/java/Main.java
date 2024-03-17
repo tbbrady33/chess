@@ -10,15 +10,23 @@ import java.util.Collection;
 public class Main {
     public static void main(String[] args) {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        //server.run
         System.out.println("♕ 240 Chess Client: " + piece);
+        System.out.println();
+        System.out.println("Welcome type, \"Help\" to see the options");
+
+
+
+    }
+
+    private static void printBoard(String[][] board){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
-        String[][] board = intialBoard(new String[8][8]);
+
 
         MakeBoard chess = new MakeBoard(board);
         chess.MakeHeader(out);
         chess.drawBoard(out);
-
     }
 
     private static String[][] intialBoard(String[][] chessarray){
