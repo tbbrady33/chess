@@ -1,6 +1,7 @@
 import chess.*;
 import ui.EscapeSequences;
 import ui.MakeBoard;
+import ui.UserInterface;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +16,8 @@ public class Main {
         System.out.println();
         System.out.println("Welcome type, \"Help\" to see the options");
 
-
+        UserInterface inter = new UserInterface(false);
+        inter.request();
 
     }
 

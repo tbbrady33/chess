@@ -14,6 +14,7 @@ import ListGames.ListGamesRequest;
 import ListGames.ListGamesResponce;
 import Login.LoginRequest;
 import Login.LoginResponce;
+import Logout.LogoutRequest;
 import Logout.LogoutResponce;
 import Register.RegisterRequest;
 import Register.RegisterResponce;
@@ -38,7 +39,7 @@ public class ServerFacade {
         return this.makeRequest("POST", path, req, LoginResponce.class);
     }
 
-    public LogoutResponce logout(LogoutResponce req) throws DataAccessException{
+    public LogoutResponce logout(LogoutRequest req) throws DataAccessException{
         var path = "/session";
         return this.makeRequest("DELETE", path, req, LogoutResponce.class);
     }
