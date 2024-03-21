@@ -1,5 +1,7 @@
 package ui;
 
+import CreateGame.CreateGameRequest;
+import CreateGame.CreateGameResponce;
 import JoinGame.JoinGameRequest;
 import JoinGame.JoinGameResponce;
 import ListGames.ListGamesRequest;
@@ -56,6 +58,9 @@ public class UserInterface {
                 case "Logout":
                     logout(server);
                     break;
+                case "CreateGame":
+                    createGame(server);
+                    break;
                 case "ListGames":
                     listGames(server);
                     break;
@@ -70,6 +75,16 @@ public class UserInterface {
 
             }
 
+        }
+    }
+    private void createGame(ServerFacade server){
+        try{
+            Scanner input = new Scanner(System.in);
+            System.out.print("Give me a game name: ");
+            String name = input.nextLine();
+            CreateGameResponce create = server.createGame(new CreateGameRequest(name));
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
         }
     }
     private void joinObserver(ServerFacade server){
@@ -94,9 +109,33 @@ public class UserInterface {
                 if (team.equals("Black")){
 
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID));
+                    String[][] board = new String[8][8];
+                    intialBoard(board);
+                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                    out.print(EscapeSequences.ERASE_SCREEN);
+
+
+                    MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+                    chess.MakeHeader(out);
+                    chess.drawBoard(out);
+                    MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+                    chess1.MakeHeader(out);
+                    chess1.drawBoard(out);
 
                 } else if (team.equals("White")){
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID));
+                    String[][] board = new String[8][8];
+                    intialBoard(board);
+                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                    out.print(EscapeSequences.ERASE_SCREEN);
+
+
+                    MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+                    chess.MakeHeader(out);
+                    chess.drawBoard(out);
+                    MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+                    chess1.MakeHeader(out);
+                    chess1.drawBoard(out);
                 } else{
                     System.out.print("not a team color your gonna have to try agian");
                 }
@@ -117,7 +156,7 @@ public class UserInterface {
             if(authtoken != null) {
                 ListGamesResponce list = server.listGames(new ListGamesRequest(authtoken));
                 games = list.games();
-                System.out.print(list.games());
+                System.out.println(list.games());
             }
             else {
                 throw new Exception("Not authorized");
@@ -184,5 +223,63 @@ public class UserInterface {
         }catch (DataAccessException ex){
             System.out.println("Data access exeption, quiting the program");
         }
+    }
+    private static String[][] intialBoard(String[][] chessarray){
+        for (int i = 1; i <= 8; i++) {
+            chessarray[2][i - 1] = " ";
+        }
+        for (int i = 1; i <= 8; i++) {
+            chessarray[3][i - 1] = " ";
+        }
+        for (int i = 1; i <= 8; i++) {
+            chessarray[4][i - 1] = " ";
+        }
+        for (int i = 1; i <= 8; i++) {
+            chessarray[5][i - 1] = " ";
+        }
+
+        for (int i = 1; i <= 8; i++){
+            chessarray[1][i-1] = "P White";
+        }
+        // Black pawns
+        for (int i = 1; i <= 8; i++){
+            chessarray[6][i-1] = "P Black";
+        }
+        // White Rooks
+        chessarray[0][0] = "R White";
+        chessarray[0][7] = "R White";
+
+        // Black Rooks
+        chessarray[7][0] = "R Black";
+        chessarray[7][7] = "R Black";
+
+        // White Knights
+        chessarray[0][1] = "N White";
+        chessarray[0][6] = "N White";
+
+        // Black Knights
+        chessarray[7][1] ="N Black";
+        chessarray[7][6] = "N Black";
+
+        //White Bishops
+        chessarray[0][2] = "B White";
+        chessarray[0][5] = "B White";
+
+        //Black Bishops
+        chessarray[7][2] = "B Black";
+        chessarray[7][5] = "B Black";
+
+        // White Queen
+        chessarray[0][3] = "Q White";
+
+        //Black Queen
+        chessarray[7][3] = "Q Black";
+
+        //White King
+        chessarray[0][4] = "K White";
+
+        // Black King
+        chessarray[7][4] = "K Black";
+        return chessarray;
     }
 }

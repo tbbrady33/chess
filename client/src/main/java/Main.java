@@ -16,9 +16,8 @@ public class Main {
         System.out.println();
         System.out.println("Welcome type, \"Help\" to see the options");
         String[][] board = new String[8][8];
-        printBoard(intialBoard(board), ChessGame.TeamColor.WHITE);
-        //UserInterface inter = new UserInterface(false);
-        //inter.request();
+        UserInterface inter = new UserInterface(false);
+        inter.request();
 
     }
 
