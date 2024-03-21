@@ -6,6 +6,7 @@ import java.net.URL;
 import java.io.*;
 import java.net.*;
 
+import ClearApp.ClearAppResponce;
 import CreateGame.CreateGameRequest;
 import CreateGame.CreateGameResponce;
 import JoinGame.JoinGameRequest;
@@ -33,6 +34,8 @@ public class ServerFacade {
         var path = "/user";
         return this.makeRequest("POST", path, req, RegisterResponce.class);
     }
+
+    public ClearAppResponce clear()
 
     public LoginResponce login(LoginRequest req) throws DataAccessException{
         var path = "/session";
@@ -69,24 +72,21 @@ public class ServerFacade {
             http.connect();
             throwIFNotSuccess(http);
             return readBody(http, responseClass);
-        }catch (Exception ex) {
-        throw new DataAccessException("Didnt work");
-
-
+        }catch (IOException | URISyntaxException ex) {
+            throw new DataAccessException(ex.getMessage());
         }
-
     }
 
     private void throwIFNotSuccess(HttpURLConnection http) throws IOException, DataAccessException {
         var status = http.getResponseCode();
         if (status != 200) {
-            throw new DataAccessException("didnt work");
+            throw new DataAccessException(readError(http));
         }
     }
 
     private static void writeBody(Object request, HttpURLConnection http) throws IOException{
         if(request != null){
-            http.addRequestProperty("Content-Type", "applicatio/json");
+            http.addRequestProperty("Content-Type", "application/json");
             String reqData = new Gson().toJson(request);
             try(OutputStream reqBody = http.getOutputStream()) {
                 reqBody.write(reqData.getBytes());
@@ -107,6 +107,29 @@ public class ServerFacade {
             }
         }
         return response;
+    }
+
+    private static String readError(HttpURLConnection http) throws IOException{
+        String response = null;
+        if (http.getContentLength() < 0) { // This might be reversed I am not sure yet
+            try (InputStream respBody = http.getErrorStream()) {
+                InputStreamReader reader = new InputStreamReader(respBody);
+
+                response = readString(respBody);
+
+            }
+        }
+        return response;
+    }
+    protected static String readString(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        InputStreamReader sr = new InputStreamReader(is);
+        char[] buf = new char[1024];
+        int len;
+        while ((len = sr.read(buf)) > 0) {
+            sb.append(buf, 0, len);
+        }
+        return sb.toString();
     }
 
 }

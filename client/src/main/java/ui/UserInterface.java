@@ -96,7 +96,7 @@ public class UserInterface {
             LogoutResponce logout = server.logout(new LogoutRequest(authtoken));
             System.out.format("%s: type help for your new options", logout.message());
         }catch (DataAccessException ex){
-            System.out.println("Data access exeption, quiting the program");
+            ex.printStackTrace();
         }
     }
 

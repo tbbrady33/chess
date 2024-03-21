@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerFacadeTests {
 
-    private static Server server;
+    static Server server;
     static ServerFacade facade;
 
     @BeforeAll
@@ -22,6 +22,13 @@ public class ServerFacadeTests {
         var port = new Server().run(8080);
         System.out.println("Started test HTTP server on " + port);
        facade = new ServerFacade("http://localhost:8080/");
+    }
+
+    @BeforeEach
+    public static void clearServer(){
+        try{
+            var Clear = facade.clear()
+        }
     }
 
     @AfterAll
@@ -37,6 +44,7 @@ public class ServerFacadeTests {
             assertTrue(authData.authToken().length() > 10);
         }
         catch (DataAccessException ex){
+            ex.printStackTrace();
             System.out.print("Didnt work");
             assertEquals(1,2);
         }
