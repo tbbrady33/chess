@@ -1,5 +1,7 @@
 package ui;
 
+import JoinGame.JoinGameRequest;
+import JoinGame.JoinGameResponce;
 import ListGames.ListGamesRequest;
 import ListGames.ListGamesResponce;
 import Login.LoginRequest;
@@ -8,6 +10,7 @@ import Logout.LogoutRequest;
 import Logout.LogoutResponce;
 import Register.RegisterRequest;
 import Register.RegisterResponce;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import server.GameData;
 
@@ -73,6 +76,40 @@ public class UserInterface {
 
     }
     private void joinGame(ServerFacade server){
+        try {
+            Scanner input = new Scanner(System.in);
+            System.out.print("What is the Game ID of the game you want to join: ");
+            int ID = Integer.parseInt(input.nextLine());
+
+            boolean exists = false;
+            for(GameData game: games){
+                if (game.gameID() == ID){
+                    exists = true;
+                }
+            }
+
+            if (exists){
+                System.out.print("What team do you want to be on? Say either \"Black\" or \"White\": ");
+                String team = input.nextLine();
+                if (team.equals("Black")){
+
+                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID));
+
+                } else if (team.equals("White")){
+                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID));
+                } else{
+                    System.out.print("not a team color your gonna have to try agian");
+                }
+
+
+            }
+            else {
+                System.out.print("Game doesnt exist your gonna have to try agian");
+            }
+
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
+        }
 
     }
     private void listGames(ServerFacade server){
