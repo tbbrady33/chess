@@ -15,18 +15,19 @@ public class Main {
         System.out.println("♕ 240 Chess Client: " + piece);
         System.out.println();
         System.out.println("Welcome type, \"Help\" to see the options");
-
-        UserInterface inter = new UserInterface(false);
-        inter.request();
+        String[][] board = new String[8][8];
+        printBoard(intialBoard(board), ChessGame.TeamColor.WHITE);
+        //UserInterface inter = new UserInterface(false);
+        //inter.request();
 
     }
 
-    private static void printBoard(String[][] board){
+    private static void printBoard(String[][] board, ChessGame.TeamColor team){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
 
 
-        MakeBoard chess = new MakeBoard(board);
+        MakeBoard chess = new MakeBoard(board, team);
         chess.MakeHeader(out);
         chess.drawBoard(out);
     }

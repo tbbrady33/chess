@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import chess.ChessPiece;
 
 import java.io.PrintStream;
@@ -13,14 +14,51 @@ public class MakeBoard {
 
     private static final int Board_Size = 8;
     private static final int Square_Size = 3;
+    private static ChessGame.TeamColor team;
     private static final String Black_King = EscapeSequences.SET_TEXT_COLOR_BLACK + "K";
-    public MakeBoard(String[][] board){
-        this.board = board;
+    public MakeBoard(String[][] board, ChessGame.TeamColor team){
+
+        if (team == ChessGame.TeamColor.BLACK){
+            for(int j = 0; j < board.length; j++){
+                for(int i = 0; i < board.length / 2; i++) {
+                    String temp = board[j][i];
+                    board[j][i] = board[j][board.length - i -1];
+                    board[j][board.length - i - 1] = temp;
+                }
+            }
+            this.board = board;
+        } else if (team == ChessGame.TeamColor.WHITE) {
+
+            this.board = board;
+        }
+        this.team = team;
     }
 
     public void MakeHeader(PrintStream out){
         setGrey(out);
-        String[] headers = {" ","A", "B", "C", "D", "E", "F", "G", "H"};
+
+        String[] headers = new String[9];
+        if (team == ChessGame.TeamColor.BLACK) {
+            headers[0] = " ";
+            headers[1] = "H";
+            headers[2] = "G";
+            headers[3] = "F";
+            headers[4] = "E";
+            headers[5] = "D";
+            headers[6] = "C";
+            headers[7] = "B";
+            headers[8] = "A";
+        } else if (team == ChessGame.TeamColor.WHITE) {
+            headers[0] = " ";
+            headers[1] = "A";
+            headers[2] = "B";
+            headers[3] = "C";
+            headers[4] = "D";
+            headers[5] = "E";
+            headers[6] = "F";
+            headers[7] = "G";
+            headers[8] = "H";
+        }
         for(int boardCol = 0; boardCol < Board_Size +1; boardCol++){
             int prefixLength = 2;
             int suffixLength = 2;
@@ -48,9 +86,18 @@ public class MakeBoard {
             out.print(SET_TEXT_BOLD);
             out.print(SET_TEXT_COLOR_WHITE);
             out.print("  ");
-            out.print(boardRow);
+            if (team == ChessGame.TeamColor.WHITE) {
+                out.print(8 -boardRow);
+            } else if (team == ChessGame.TeamColor.BLACK) {
+                out.print(boardRow + 1);
+            }
             out.print("  ");
-            drawRow(out,boardRow);
+            if(team == ChessGame.TeamColor.WHITE){
+                drawRow(out,7 -boardRow);
+            } else if (team == ChessGame.TeamColor.BLACK) {
+                drawRow(out,boardRow);
+            }
+
             out.println();
         }
     }
@@ -58,15 +105,26 @@ public class MakeBoard {
     private void drawRow(PrintStream out, int row){
         int count = 0;
         for (int boardCol = 0; boardCol < Board_Size/2; boardCol++){
-            if (row % 2 != 0) {
-                printBlackSquare(out, row, count);
-                printWhiteSquare(out, row, count+1);
+            if(team == ChessGame.TeamColor.BLACK) {
+                if (row % 2 != 0) {
+                    printBlackSquare(out, row, count);
+                    printWhiteSquare(out, row, count + 1);
+                } else {
+                    printWhiteSquare(out, row, count);
+                    printBlackSquare(out, row, count + 1);
+                }
+                count += 2;
+            } else if (team == ChessGame.TeamColor.WHITE) {
+                if (row % 2 == 0) {
+                    printBlackSquare(out, row, count);
+                    printWhiteSquare(out, row, count + 1);
+                } else {
+                    printWhiteSquare(out, row, count);
+                    printBlackSquare(out, row, count + 1);
+                }
+                count += 2;
+                
             }
-            else{
-                printWhiteSquare(out, row, count);
-                printBlackSquare(out, row, count+1);
-            }
-            count+=2;
         }
         out.print(SET_BG_COLOR_BLACK);
     }

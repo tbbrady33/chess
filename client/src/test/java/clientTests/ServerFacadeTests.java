@@ -25,9 +25,11 @@ public class ServerFacadeTests {
     }
 
     @BeforeEach
-    public static void clearServer(){
+    public void clearServer(){
         try{
-            var Clear = facade.clear()
+            var Clear = facade.clear();
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
         }
     }
 
@@ -57,7 +59,7 @@ public class ServerFacadeTests {
             assertTrue(autData.authToken() == null);
         }
         catch (DataAccessException ex){
-            System.out.print("Didnt work");
+            ex.printStackTrace();
             assertEquals(1,2);
         }
     }
@@ -65,6 +67,7 @@ public class ServerFacadeTests {
     @Test
     public void loginGood(){
         try {
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var logData = facade.login(new LoginRequest("player1", "password"));
             assertTrue(logData.authToken().length() > 10);
         }
@@ -77,6 +80,7 @@ public class ServerFacadeTests {
     @Test
     public void loginBad(){
         try{
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var logData = facade.login((new LoginRequest("dfds", "sdf")));
             assertNull(logData.authToken());
         }
@@ -89,12 +93,12 @@ public class ServerFacadeTests {
     @Test
     public void logoutGood(){
         try{
-            var data = facade.login(new LoginRequest("player1", "password"));
-            var logoutData = facade.logout(new LogoutRequest(data.authToken()));
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var logoutData = facade.logout(new LogoutRequest(authData.authToken()));
             assertTrue(logoutData.message().equals("Success"));
         }
         catch (DataAccessException ex){
-            System.out.print("Didnt work");
+            ex.printStackTrace();
             assertEquals(1,2);
 
         }
@@ -103,7 +107,7 @@ public class ServerFacadeTests {
     @Test
     public void logoutBad(){
         try{
-            var data = facade.login(new LoginRequest("player1", "password"));
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var logoutData = facade.logout(new LogoutRequest("data.authToken())"));
             assertEquals(logoutData.message(),"Failed");
         }

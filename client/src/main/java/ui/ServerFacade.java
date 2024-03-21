@@ -35,7 +35,10 @@ public class ServerFacade {
         return this.makeRequest("POST", path, req, RegisterResponce.class);
     }
 
-    public ClearAppResponce clear()
+    public ClearAppResponce clear() throws DataAccessException{
+        var path = "/db";
+        return this.makeRequest("DELETE", path,null, ClearAppResponce.class);
+    }
 
     public LoginResponce login(LoginRequest req) throws DataAccessException{
         var path = "/session";
@@ -70,30 +73,25 @@ public class ServerFacade {
             http.setDoOutput(true);
             writeBody(request, http);
             http.connect();
-            throwIFNotSuccess(http);
+            var status = http.getResponseCode();
+            if (status != 200){
+                return readError(http,responseClass);
+            }
             return readBody(http, responseClass);
         }catch (IOException | URISyntaxException ex) {
             throw new DataAccessException(ex.getMessage());
         }
     }
 
-    private void throwIFNotSuccess(HttpURLConnection http) throws IOException, DataAccessException {
-        var status = http.getResponseCode();
-        if (status != 200) {
-            throw new DataAccessException(readError(http));
-        }
-    }
 
-    private static void writeBody(Object request, HttpURLConnection http) throws IOException{
-        if(request != null){
+    private static void writeBody(Object request, HttpURLConnection http) throws IOException {
+        if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
             String reqData = new Gson().toJson(request);
-            try(OutputStream reqBody = http.getOutputStream()) {
+            try (OutputStream reqBody = http.getOutputStream()) {
                 reqBody.write(reqData.getBytes());
             }
-
         }
-
     }
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException{
@@ -109,13 +107,13 @@ public class ServerFacade {
         return response;
     }
 
-    private static String readError(HttpURLConnection http) throws IOException{
-        String response = null;
+    private static <T> T readError(HttpURLConnection http, Class<T> responseClass) throws IOException{
+        T response = null;
         if (http.getContentLength() < 0) { // This might be reversed I am not sure yet
             try (InputStream respBody = http.getErrorStream()) {
                 InputStreamReader reader = new InputStreamReader(respBody);
 
-                response = readString(respBody);
+                response = new Gson().fromJson(reader, responseClass);
 
             }
         }
