@@ -27,24 +27,16 @@ public class UserInterface {
     public boolean LoggedIN;
     public String authtoken;
     public String username;
-    public String port;
     public Collection<GameData> games;
-    public UserInterface(boolean loggedIN, String port){
+    public UserInterface(boolean loggedIN){
         this.LoggedIN = loggedIN;
-        this.port = port;
     }
 
     public void request(){
         // Case statement and do the stuff that the user would like
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         boolean go = true;
-        String url = "http://localhost:";
-        if(port != null) {
-             url += port + "/";
-        }
-        else{
-            url += "8080/";
-        }
+        String url = "http://localhost:" + "8080/";
         ServerFacade server = new ServerFacade(url);
         while(go) {
             Scanner input = new Scanner(System.in);
@@ -98,7 +90,33 @@ public class UserInterface {
         }
     }
     private void joinObserver(ServerFacade server){
+        try {
+            Scanner input = new Scanner(System.in);
+            System.out.print("What is the Game ID of the game you want to join: ");
+            int ID = Integer.parseInt(input.nextLine());
 
+            boolean exists = false;
+            for (GameData game : games) {
+                if (game.gameID() == ID) {
+                    exists = true;
+                }
+            }
+            JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, ID), authtoken);
+            String[][] board = new String[8][8];
+            intialBoard(board);
+            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+            out.print(EscapeSequences.ERASE_SCREEN);
+
+
+            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+            chess.MakeHeader(out);
+            chess.drawBoard(out);
+            MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+            chess1.MakeHeader(out);
+            chess1.drawBoard(out);
+        }catch(DataAccessException ex){
+
+        }
     }
     private void joinGame(ServerFacade server){
         try {
@@ -116,36 +134,44 @@ public class UserInterface {
             if (exists){
                 System.out.print("What team do you want to be on? Say either \"Black\" or \"White\": ");
                 String team = input.nextLine();
+
                 if (team.equals("Black")){
-
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
-                    String[][] board = new String[8][8];
-                    intialBoard(board);
-                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-                    out.print(EscapeSequences.ERASE_SCREEN);
+                    if(join.message().isEmpty()){
+                        String[][] board = new String[8][8];
+                        intialBoard(board);
+                        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                        out.print(EscapeSequences.ERASE_SCREEN);
 
 
-                    MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.BLACK);
-                    chess.MakeHeader(out);
-                    chess.drawBoard(out);
-                    MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.WHITE);
-                    chess1.MakeHeader(out);
-                    chess1.drawBoard(out);
+                        MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+                        chess.MakeHeader(out);
+                        chess.drawBoard(out);
+                        MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+                        chess1.MakeHeader(out);
+                        chess1.drawBoard(out);
+                    }
+
 
                 } else if (team.equals("White")){
+
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
-                    String[][] board = new String[8][8];
-                    intialBoard(board);
-                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-                    out.print(EscapeSequences.ERASE_SCREEN);
+                    if (join.message().isEmpty()) {
+                        String[][] board = new String[8][8];
+                        intialBoard(board);
+                        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                        out.print(EscapeSequences.ERASE_SCREEN);
 
 
-                    MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
-                    chess.MakeHeader(out);
-                    chess.drawBoard(out);
-                    MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
-                    chess1.MakeHeader(out);
-                    chess1.drawBoard(out);
+                        MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+                        chess.MakeHeader(out);
+                        chess.drawBoard(out);
+                        MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+                        chess1.MakeHeader(out);
+                        chess1.drawBoard(out);
+                    }
+
+
                 } else{
                     System.out.print("not a team color your gonna have to try agian");
                 }

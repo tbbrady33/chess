@@ -99,6 +99,7 @@ public class MakeBoard {
             }
 
             out.println();
+            out.print(SET_BG_COLOR_LIGHT_GREY);
         }
     }
 
