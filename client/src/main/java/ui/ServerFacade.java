@@ -54,9 +54,9 @@ public class ServerFacade {
         return this.makeRequest("DELETE", path, req, LogoutResponce.class, req.authtoken());
     }
 
-    public ListGamesResponce listGames(ListGamesRequest req, String authToken) throws DataAccessException{
+    public ListGamesResponce listGames(ListGamesRequest req) throws DataAccessException{
         var path = "/game";
-        return this.makeRequest("GET", path, req, ListGamesResponce.class, authToken);
+        return this.makeRequest("GET", path, req, ListGamesResponce.class, req.authToken());
     }
 
     public CreateGameResponce createGame(CreateGameRequest req, String authToken) throws DataAccessException{
@@ -74,8 +74,17 @@ public class ServerFacade {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
-            http.setDoOutput(true);
-            writeBody(request, http, authToken);
+            if (method.equals("GET")){
+                if(authToken != null) {
+                    http.addRequestProperty("Authorization",authToken);
+                }
+            }
+            else {
+                http.setDoOutput(true);
+                writeBody(request, http, authToken);
+            }
+
+
             http.connect();
             var status = http.getResponseCode();
             if (status != 200){

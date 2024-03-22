@@ -155,7 +155,7 @@ public class UserInterface {
     private void listGames(ServerFacade server){
         try{
             if(authtoken != null) {
-                ListGamesResponce list = server.listGames(new ListGamesRequest(authtoken), authtoken);
+                ListGamesResponce list = server.listGames(new ListGamesRequest(authtoken));
                 games = list.games();
                 System.out.println(list.games());
             }
@@ -163,7 +163,7 @@ public class UserInterface {
                 throw new Exception("Not authorized");
             }
         }catch (DataAccessException ex){
-            System.out.println("Data access exeption, quiting the program");
+            System.out.println("Data access exception, quiting the program");
         }catch (Exception e){
             System.out.println("Not authorized, quiting the program");
         }
@@ -172,6 +172,8 @@ public class UserInterface {
         try{
             LogoutResponce logout = server.logout(new LogoutRequest(authtoken));
             System.out.format("%s: type help for your new options", logout.message());
+            System.out.println();
+            LoggedIN = false;
         }catch (DataAccessException ex){
             ex.printStackTrace();
         }

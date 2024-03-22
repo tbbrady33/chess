@@ -126,7 +126,7 @@ public class ServerFacadeTests {
         try {
             var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var game = facade.createGame(new CreateGameRequest("Hi"), authData.authToken());
-            var list = facade.listGames(new ListGamesRequest(authData.authToken()), authData.authToken());
+            var list = facade.listGames(new ListGamesRequest(authData.authToken()));
             assertTrue(!list.games().isEmpty());
         }catch (DataAccessException ex){
             ex.printStackTrace();
@@ -140,7 +140,7 @@ public class ServerFacadeTests {
         try{
             var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var game = facade.createGame(new CreateGameRequest("Hi"), authData.authToken());
-            var list = facade.listGames(new ListGamesRequest("authData.authToken()"), authData.authToken());
+            var list = facade.listGames(new ListGamesRequest("authData.authToken()"));
             assertTrue(list.games().isEmpty());
         }catch (DataAccessException ex){
             ex.printStackTrace();
