@@ -27,16 +27,25 @@ public class UserInterface {
     public boolean LoggedIN;
     public String authtoken;
     public String username;
+    public String port;
     public Collection<GameData> games;
-    public UserInterface(boolean loggedIN){
+    public UserInterface(boolean loggedIN, String port){
         this.LoggedIN = loggedIN;
+        this.port = port;
     }
 
     public void request(){
         // Case statement and do the stuff that the user would like
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         boolean go = true;
-        ServerFacade server = new ServerFacade("http://localhost:8080/");
+        String url = "http://localhost:";
+        if(port != null) {
+             url += port + "/";
+        }
+        else{
+            url += "8080/";
+        }
+        ServerFacade server = new ServerFacade(url);
         while(go) {
             Scanner input = new Scanner(System.in);
             String request = input.nextLine();
