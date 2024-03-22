@@ -21,6 +21,10 @@ import Register.RegisterRequest;
 import Register.RegisterResponce;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class ServerFacade {
 
@@ -32,46 +36,46 @@ public class ServerFacade {
 
     public RegisterResponce register(RegisterRequest req) throws DataAccessException{
         var path = "/user";
-        return this.makeRequest("POST", path, req, RegisterResponce.class);
+        return this.makeRequest("POST", path, req, RegisterResponce.class, null);
     }
 
     public ClearAppResponce clear() throws DataAccessException{
         var path = "/db";
-        return this.makeRequest("DELETE", path,null, ClearAppResponce.class);
+        return this.makeRequest("DELETE", path,null, ClearAppResponce.class, null);
     }
 
     public LoginResponce login(LoginRequest req) throws DataAccessException{
         var path = "/session";
-        return this.makeRequest("POST", path, req, LoginResponce.class);
+        return this.makeRequest("POST", path, req, LoginResponce.class, null);
     }
 
     public LogoutResponce logout(LogoutRequest req) throws DataAccessException{
         var path = "/session";
-        return this.makeRequest("DELETE", path, req, LogoutResponce.class);
+        return this.makeRequest("DELETE", path, req, LogoutResponce.class, req.authtoken());
     }
 
-    public ListGamesResponce listGames(ListGamesRequest req) throws DataAccessException{
+    public ListGamesResponce listGames(ListGamesRequest req, String authToken) throws DataAccessException{
         var path = "/game";
-        return this.makeRequest("GET", path, req, ListGamesResponce.class);
+        return this.makeRequest("GET", path, req, ListGamesResponce.class, authToken);
     }
 
-    public CreateGameResponce createGame(CreateGameRequest req) throws DataAccessException{
+    public CreateGameResponce createGame(CreateGameRequest req, String authToken) throws DataAccessException{
         var path = "/game";
-        return this.makeRequest("POST", path, req, CreateGameResponce.class);
+        return this.makeRequest("POST", path, req, CreateGameResponce.class,authToken);
     }
 
-    public JoinGameResponce joinGame(JoinGameRequest req) throws DataAccessException{
+    public JoinGameResponce joinGame(JoinGameRequest req, String authToken) throws DataAccessException{
         var path = "/game";
-        return this.makeRequest("PUT",path, req, JoinGameResponce.class);
+        return this.makeRequest("PUT",path, req, JoinGameResponce.class, authToken);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException{
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws DataAccessException{
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
-            writeBody(request, http);
+            writeBody(request, http, authToken);
             http.connect();
             var status = http.getResponseCode();
             if (status != 200){
@@ -84,10 +88,14 @@ public class ServerFacade {
     }
 
 
-    private static void writeBody(Object request, HttpURLConnection http) throws IOException {
+
+    private static void writeBody(Object request, HttpURLConnection http, String authToken) throws IOException {
         if (request != null) {
-            http.addRequestProperty("Content-Type", "application/json");
+
             String reqData = new Gson().toJson(request);
+            if(authToken != null) {
+                http.addRequestProperty("Authorization",authToken);
+            }
             try (OutputStream reqBody = http.getOutputStream()) {
                 reqBody.write(reqData.getBytes());
             }

@@ -1,8 +1,12 @@
 package clientTests;
 
+import CreateGame.CreateGameRequest;
+import JoinGame.JoinGameRequest;
+import ListGames.ListGamesRequest;
 import Login.LoginRequest;
 import Logout.LogoutRequest;
 import Register.RegisterRequest;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -109,10 +113,87 @@ public class ServerFacadeTests {
         try{
             var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var logoutData = facade.logout(new LogoutRequest("data.authToken())"));
-            assertEquals(logoutData.message(),"Failed");
+            assertEquals(logoutData.message(),"Error: unauthorized");
         }
         catch (DataAccessException ex){
             System.out.print("Didnt work");
+            assertEquals(1,2);
+        }
+    }
+
+    @Test
+    public void listGamesGood(){
+        try {
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var game = facade.createGame(new CreateGameRequest("Hi"), authData.authToken());
+            var list = facade.listGames(new ListGamesRequest(authData.authToken()), authData.authToken());
+            assertTrue(!list.games().isEmpty());
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
+            assertEquals(1,2);
+        }
+
+    }
+
+    @Test
+    public void listGamesBad(){
+        try{
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var game = facade.createGame(new CreateGameRequest("Hi"), authData.authToken());
+            var list = facade.listGames(new ListGamesRequest("authData.authToken()"), authData.authToken());
+            assertTrue(list.games().isEmpty());
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
+            assertEquals(1,2);
+        }
+    }
+
+    @Test
+    public void createGameGood(){
+        try{
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var game = facade.createGame(new CreateGameRequest("Hi"), authData.authToken());
+            assertTrue(game.gameID() != null);
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
+            assertEquals(1,2);
+        }
+    }
+
+    @Test
+    public void createGameBad(){
+        try{
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var game = facade.createGame(new CreateGameRequest(null), authData.authToken());
+            assertTrue(game.gameID() == null);
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
+            assertEquals(1,2);
+        }
+    }
+
+    @Test
+    public void joinGameGood(){
+        try{
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var game = facade.createGame(new CreateGameRequest("hi"), authData.authToken());
+            var join = facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,1), authData.authToken());
+            assertEquals(join.message(), "Success");
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
+            assertEquals(1,2);
+        }
+    }
+    @Test
+    public void joinGameBad(){
+        try{
+            var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
+            var game = facade.createGame(new CreateGameRequest("hi"), authData.authToken());
+            var join = facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,1), authData.authToken());
+            var join2 = facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,1), authData.authToken());
+            assertNotEquals(join2.message(), "Success");
+        }catch (DataAccessException ex){
+            ex.printStackTrace();
             assertEquals(1,2);
         }
     }

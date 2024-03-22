@@ -82,7 +82,8 @@ public class UserInterface {
             Scanner input = new Scanner(System.in);
             System.out.print("Give me a game name: ");
             String name = input.nextLine();
-            CreateGameResponce create = server.createGame(new CreateGameRequest(name));
+            CreateGameResponce create = server.createGame(new CreateGameRequest(name), authtoken);
+            System.out.println(create.message());
         }catch (DataAccessException ex){
             ex.printStackTrace();
         }
@@ -108,7 +109,7 @@ public class UserInterface {
                 String team = input.nextLine();
                 if (team.equals("Black")){
 
-                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID));
+                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
                     String[][] board = new String[8][8];
                     intialBoard(board);
                     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -123,7 +124,7 @@ public class UserInterface {
                     chess1.drawBoard(out);
 
                 } else if (team.equals("White")){
-                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID));
+                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
                     String[][] board = new String[8][8];
                     intialBoard(board);
                     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -154,7 +155,7 @@ public class UserInterface {
     private void listGames(ServerFacade server){
         try{
             if(authtoken != null) {
-                ListGamesResponce list = server.listGames(new ListGamesRequest(authtoken));
+                ListGamesResponce list = server.listGames(new ListGamesRequest(authtoken), authtoken);
                 games = list.games();
                 System.out.println(list.games());
             }
