@@ -141,7 +141,7 @@ public class ServerFacadeTests {
             var authData = facade.register(new RegisterRequest("player1", "password", "p1@email.com"));
             var game = facade.createGame(new CreateGameRequest("Hi"), authData.authToken());
             var list = facade.listGames(new ListGamesRequest("authData.authToken()"));
-            assertTrue(list.games().isEmpty());
+            assertTrue(list.games()== null);
         }catch (DataAccessException ex){
             ex.printStackTrace();
             assertEquals(1,2);
