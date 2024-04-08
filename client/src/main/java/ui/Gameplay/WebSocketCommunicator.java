@@ -48,9 +48,9 @@ public class WebSocketCommunicator {
     }
 
     // just send the join and stuff like that here then I will take care of the messages in the server
-    public void Join_Player(int gameID, ChessGame.TeamColor playerColor, String authToken) throws DataAccessException{
+    public void Join_Player() throws DataAccessException{
         try{
-            var action = new webSocketMessages.userCommands.UserGameCommand(UserGameCommand.CommandType.JOIN_PLAYER, authToken);
+            var action = new JOIN_PLAYER;
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex){
             ex.printStackTrace();
@@ -68,15 +68,33 @@ public class WebSocketCommunicator {
         }
     }
 
-    public void Make_Move(int gameID){
-
+    public void Make_Move(int gameID, String authToken) throws DataAccessException{
+        try{
+            var action = new webSocketMessages.userCommands.UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authToken);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex){
+            ex.printStackTrace();
+            throw new DataAccessException(ex.getMessage());
+        }
     }
 
-    public void Leave(int gameID){
-
+    public void Leave(int gameID, String authToken) throws  DataAccessException{
+        try{
+            var action = new webSocketMessages.userCommands.UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex){
+            ex.printStackTrace();
+            throw new DataAccessException(ex.getMessage());
+        }
     }
 
-    public void Resign(int gameID){
-
+    public void Resign(int gameID, String authToken) throws DataAccessException{
+        try{
+            var action = new webSocketMessages.userCommands.UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex){
+            ex.printStackTrace();
+            throw new DataAccessException(ex.getMessage());
+        }
     }
 }
