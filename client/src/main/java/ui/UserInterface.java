@@ -12,9 +12,16 @@ import Logout.LogoutRequest;
 import Logout.LogoutResponce;
 import Register.RegisterRequest;
 import Register.RegisterResponce;
+import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessPiece;
+import com.sun.tools.javac.Main;
 import dataAccess.DataAccessException;
 import server.GameData;
+import ui.Gameplay.ServerMessageHandler;
+import ui.Gameplay.WebSocketCommunicator;
+import userCommands.Join_Observer;
+import webSocketMessages.userCommands.UserGameCommand;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -22,63 +29,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Scanner;
 
-public class UserInterface {
+public class UserInterface implements ServerMessageHandler {
 
     public boolean LoggedIN;
     public String authtoken;
     public String username;
+
+    private WebSocketCommunicator websocket;
+
+
+    private String url = "http://localhost:" + "8080/";
+
     public Collection<GameData> games;
     public UserInterface(boolean loggedIN){
+        try {
+            this.websocket = new WebSocketCommunicator(url, this);
+        }catch (DataAccessException e){
+            System.out.print(e.getMessage());
+        }
         this.LoggedIN = loggedIN;
     }
 
-    public void request(){
-        // Case statement and do the stuff that the user would like
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        boolean go = true;
-        String url = "http://localhost:" + "8080/";
-        ServerFacade server = new ServerFacade(url);
-        while(go) {
-            Scanner input = new Scanner(System.in);
-            String request = input.nextLine();
-            switch (request) {
-                case "Help":
-                    help(out);
-                    break;
-                case "Quit":
-                    go = false;
-                    break;
-
-                case "Login":
-                    login(server);
-                    break;
-
-                case "Register":
-                    register(server);
-                    break;
-                case "Logout":
-                    logout(server);
-                    break;
-                case "CreateGame":
-                    createGame(server);
-                    break;
-                case "ListGames":
-                    listGames(server);
-                    break;
-                case "JoinGame":
-                    joinGame(server);
-                    break;
-                case "JoinObserver":
-                    joinObserver(server);
-                    break;
-                default:
-                    System.out.println("Not an option, type \"Help\" for a list of options");
-
-            }
-
-        }
-    }
-    private void createGame(ServerFacade server){
+    public void createGame(ServerFacade server){
         try{
             Scanner input = new Scanner(System.in);
             System.out.print("Give me a game name: ");
@@ -89,7 +61,7 @@ public class UserInterface {
             ex.printStackTrace();
         }
     }
-    private void joinObserver(ServerFacade server){
+    public void joinObserver(ServerFacade server){
         try {
             Scanner input = new Scanner(System.in);
             System.out.print("What is the Game ID of the game you want to join: ");
@@ -101,24 +73,28 @@ public class UserInterface {
                     exists = true;
                 }
             }
-            JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, ID), authtoken);
-            String[][] board = new String[8][8];
-            intialBoard(board);
-            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-            out.print(EscapeSequences.ERASE_SCREEN);
-
-
-            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.BLACK);
-            chess.MakeHeader(out);
-            chess.drawBoard(out);
-            MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.WHITE);
-            chess1.MakeHeader(out);
-            chess1.drawBoard(out);
+            if (exists == false){
+                System.out.println("That didnt work sorry, that game doesnt exist");
+            }
+           websocket.Join_Observer(UserGameCommand.CommandType.JOIN_OBSERVER, ID, authtoken);
+//            JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, ID), authtoken);
+//            ChessBoard board = new ChessBoard();
+//            board.resetBoard();
+//            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//            out.print(EscapeSequences.ERASE_SCREEN);
+//
+//
+//            MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
+//            chess.MakeHeader(out);
+//            chess.drawBoard(out);
+//            MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
+//            chess1.MakeHeader(out);
+//            chess1.drawBoard(out);
         }catch(DataAccessException ex){
 
         }
     }
-    private void joinGame(ServerFacade server){
+    public void joinGame(ServerFacade server){
         try {
             Scanner input = new Scanner(System.in);
             System.out.print("What is the Game ID of the game you want to join: ");
@@ -138,16 +114,16 @@ public class UserInterface {
                 if (team.equals("Black")){
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
                     if(join.message().isEmpty()){
-                        String[][] board = new String[8][8];
-                        intialBoard(board);
+                        ChessBoard board = new ChessBoard();
+                        board.resetBoard();
                         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
                         out.print(EscapeSequences.ERASE_SCREEN);
 
 
-                        MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+                        MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
                         chess.MakeHeader(out);
                         chess.drawBoard(out);
-                        MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+                        MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
                         chess1.MakeHeader(out);
                         chess1.drawBoard(out);
                     }
@@ -157,16 +133,16 @@ public class UserInterface {
 
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
                     if (join.message().isEmpty()) {
-                        String[][] board = new String[8][8];
-                        intialBoard(board);
+                        ChessBoard board = new ChessBoard();
+                        board.resetBoard();
                         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
                         out.print(EscapeSequences.ERASE_SCREEN);
 
 
-                        MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+                        MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
                         chess.MakeHeader(out);
                         chess.drawBoard(out);
-                        MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+                        MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
                         chess1.MakeHeader(out);
                         chess1.drawBoard(out);
                     }
@@ -187,7 +163,7 @@ public class UserInterface {
         }
 
     }
-    private void listGames(ServerFacade server){
+    public void listGames(ServerFacade server){
         try{
             if(authtoken != null) {
                 ListGamesResponce list = server.listGames(new ListGamesRequest(authtoken));
@@ -203,7 +179,7 @@ public class UserInterface {
             System.out.println("Not authorized, quiting the program");
         }
     }
-    private void logout(ServerFacade server){
+    public void logout(ServerFacade server){
         try{
             LogoutResponce logout = server.logout(new LogoutRequest(authtoken));
             System.out.format("%s: type help for your new options", logout.message());
@@ -214,7 +190,7 @@ public class UserInterface {
         }
     }
 
-    private void help(PrintStream out){
+    public void help(PrintStream out){
         if (LoggedIN) {
             new DifferntScreens().logedinScreen(out);
         } else if (!LoggedIN) {
@@ -223,7 +199,7 @@ public class UserInterface {
 
     }
 
-    private void login(ServerFacade server){
+    public void login(ServerFacade server){
         Scanner input = new Scanner(System.in);
         System.out.print("Username: ");
         String username = input.nextLine();
@@ -243,7 +219,7 @@ public class UserInterface {
         }
     }
 
-    private void register(ServerFacade server){
+    public void register(ServerFacade server){
         Scanner input = new Scanner(System.in);
         System.out.print("Username: ");
         String username1 = input.nextLine();
@@ -262,7 +238,7 @@ public class UserInterface {
             System.out.println("Data access exeption, quiting the program");
         }
     }
-    private static String[][] intialBoard(String[][] chessarray){
+    public static String[][] intialBoard(String[][] chessarray){
         for (int i = 1; i <= 8; i++) {
             chessarray[2][i - 1] = " ";
         }
@@ -319,5 +295,31 @@ public class UserInterface {
         // Black King
         chessarray[7][4] = "K Black";
         return chessarray;
+    }
+
+    @Override
+    public void notifyy(String message) {
+        System.out.println(message);
+    }
+
+    @Override
+    public void laodGame(GameData game) {
+        ChessPiece[][] board = new ChessPiece[8][8];
+        board = game.game().getBoard().getChessarray();
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(EscapeSequences.ERASE_SCREEN);
+
+
+        MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+        chess.MakeHeader(out);
+        chess.drawBoard(out);
+        MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+        chess1.MakeHeader(out);
+        chess1.drawBoard(out);
+    }
+
+    @Override
+    public void error(String errormessage) {
+        System.out.println(errormessage);
     }
 }

@@ -24,7 +24,7 @@ public class Server {
         AuthDAO auth = new SQLAuthDAO();
         UserDAO user = new SQLUserDAO();
         GameDAO game = new SQLGameDAO();
-        WebsocketHandler handler = new WebsocketHandler();
+        WebsocketHandler handler = new WebsocketHandler(auth,game,user);
 
         // all the endpoints, the new classes are the handler classes
         Spark.webSocket("/connect", WebsocketHandler.class);

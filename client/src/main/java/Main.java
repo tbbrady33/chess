@@ -2,6 +2,7 @@ import chess.*;
 import ui.EscapeSequences;
 import ui.MakeBoard;
 import ui.UserInterface;
+import ui.UserInterfaceSwitch;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -16,17 +17,19 @@ public class Main {
         System.out.println();
         System.out.println("Welcome type, \"Help\" to see the options");
         String[][] board = new String[8][8];
-        UserInterface inter = new UserInterface(false);
+        UserInterfaceSwitch inter = new UserInterfaceSwitch(false);
         inter.request();
 
     }
 
-    private static void printBoard(String[][] board, ChessGame.TeamColor team){
+    public static void printBoard(String[][] board, ChessGame.TeamColor team){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
 
+        ChessBoard Initial = new ChessBoard();
+        Initial.resetBoard();
 
-        MakeBoard chess = new MakeBoard(board, team);
+        MakeBoard chess = new MakeBoard(Initial.getChessarray(), team);
         chess.MakeHeader(out);
         chess.drawBoard(out);
     }

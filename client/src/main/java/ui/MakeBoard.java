@@ -16,20 +16,82 @@ public class MakeBoard {
     private static final int Square_Size = 3;
     private static ChessGame.TeamColor team;
     private static final String Black_King = EscapeSequences.SET_TEXT_COLOR_BLACK + "K";
-    public MakeBoard(String[][] board, ChessGame.TeamColor team){
+    public MakeBoard(ChessPiece[][] board, ChessGame.TeamColor team){
 
         if (team == ChessGame.TeamColor.BLACK){
             for(int j = 0; j < board.length; j++){
                 for(int i = 0; i < board.length / 2; i++) {
-                    String temp = board[j][i];
+                    ChessPiece temp = board[j][i];
                     board[j][i] = board[j][board.length - i -1];
                     board[j][board.length - i - 1] = temp;
                 }
             }
-            this.board = board;
+            this.board = new String[8][8];
+            for(int j = 0; j < board.length; j++){
+                for(int i = 0; i < board.length; i++){
+                    if(board[j][i] == null){
+                        this.board[j][i] = " ";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.PAWN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "P Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.PAWN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "P White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.ROOK) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "R Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.ROOK) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "R White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KNIGHT) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "N White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KNIGHT) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "N Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.BISHOP) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "B Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.BISHOP) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "B White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.QUEEN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "Q White";
+                    }else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.QUEEN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "Q Black";
+                    }else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KING) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "K Black";
+                    }else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KING) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "K White";
+                    }
+                }
+            }
         } else if (team == ChessGame.TeamColor.WHITE) {
 
-            this.board = board;
+            this.board = new String[8][8];
+            for(int j = 0; j < board.length; j++){
+                for(int i = 0; i < board.length; i++){
+                    if(board[j][i] == null){
+                        this.board[j][i] = " ";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.PAWN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "P Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.PAWN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "P White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.ROOK) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "R Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.ROOK) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "R White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KNIGHT) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "N White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KNIGHT) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "N Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.BISHOP) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "B Black";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.BISHOP) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "B White";
+                    } else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.QUEEN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "Q White";
+                    }else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.QUEEN) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "Q Black";
+                    }else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KING) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                        this.board[j][i] = "K Black";
+                    }else if (board[j][i].getPieceType().equals(ChessPiece.PieceType.KING) && board[j][i].getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                        this.board[j][i] = "K White";
+                    }
+                }
+            }
         }
         this.team = team;
     }
