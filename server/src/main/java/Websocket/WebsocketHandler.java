@@ -8,10 +8,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import Model.AuthData;
 import Model.GameData;
-import userCommands.Join_Observer;
-import userCommands.Join_Player;
-import userCommands.Make_Move;
-import userCommands.Resign;
+import userCommands.*;
 import webSocketMessages.LoadMessage;
 import webSocketMessages.NotificationMessage;
 import webSocketMessages.ServerMessage;
@@ -48,7 +45,9 @@ public class WebsocketHandler {
             case JOIN_PLAYER:
                 Join_Player actualAction1 = new Gson().fromJson(message,Join_Player.class);
                 joinPlayer(actualAction1);
-            //case LEAVE -> ;
+            case LEAVE:
+                Leave actualAction5 = new Gson().fromJson(message,Leave.class);
+                leave(actualAction5);
             case MAKE_MOVE:
                 Make_Move actualAction2 = new Gson().fromJson(message,Make_Move.class);
                 makeMove(actualAction2);
@@ -56,6 +55,30 @@ public class WebsocketHandler {
                 Resign actualAction3 = new Gson().fromJson(message,Resign.class);
                 resign(actualAction3);
         }
+    }
+    private void leave(Leave action) throws  DataAccessException, IOException{
+        int gameID = action.getGameID();
+        String authToken = action.getAuthString();
+        AuthData user = authorization.getAuth(authToken);
+        String username = user.username();
+        GameData game = gameization.getGame(gameID);
+        // update the user in the database
+        if (game.blackUsername().equals(username)) {
+            gameization.changeUsername(gameID,null, ChessGame.TeamColor.BLACK);
+        } else if (game.whiteUsername().equals(username)) {
+            gameization.changeUsername(gameID,null, ChessGame.TeamColor.WHITE);
+        }
+        // update websocket stuff
+        for(SingleGame game1: games.getGames()){
+            if(game1.getGameID() == gameID){
+                game1.remove(authToken);
+                game1.broadcast(null,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,username + "left the game"));
+            }
+
+        }
+
+
+
     }
     private void join_observer(Join_Observer action) throws IOException, DataAccessException{
 
@@ -149,8 +172,12 @@ public class WebsocketHandler {
         }
     }
 
-    private void resign(Resign action){
-        int gameID = action.get
+    private void resign(Resign action) throws DataAccessException, IOException{
+        int gameID = action.getGameID();
+        String authToken = action.getAuthString();
+        AuthData user = authorization.getAuth(authToken);
+        String username = user.username();
+
 
         // mark game as over
         ........
@@ -158,7 +185,7 @@ public class WebsocketHandler {
         // send message that game is over by resignation
         for(SingleGame game1: games.getGames()) {
             if (game1.getGameID() == gameID) {
-
+                game1.broadcast(null,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned, the game is over."));
             }
         }
     }
