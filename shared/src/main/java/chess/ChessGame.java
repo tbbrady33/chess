@@ -14,6 +14,17 @@ public class ChessGame {
 
     private TeamColor team;
     private ChessBoard board;
+
+    public boolean gameOver = false;
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     public ChessGame() {
 
     }
@@ -54,6 +65,9 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        if(gameOver == true){
+            return null;
+        }
         Collection<ChessMove> moves = new HashSet<ChessMove>();
         moves = board.getPiece(startPosition).pieceMoves(board,startPosition);
         ChessGame.TeamColor curteam = board.getPiece(startPosition).getTeamColor();

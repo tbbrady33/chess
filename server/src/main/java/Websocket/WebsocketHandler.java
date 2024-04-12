@@ -177,10 +177,15 @@ public class WebsocketHandler {
         String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
+        GameData game = gameization.getGame(gameID);
 
 
         // mark game as over
-        ........
+        //change game
+        game.game().setGameOver(true);
+        //update database
+        gameization.updateGame(game);
+
 
         // send message that game is over by resignation
         for(SingleGame game1: games.getGames()) {
