@@ -1,11 +1,8 @@
 package dataAccess;
 
-import com.google.gson.Gson;
-import server.UserData;
+import Model.UserData;
 
-import javax.lang.model.type.NullType;
 import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 
 public class SQLUserDAO implements UserDAO {

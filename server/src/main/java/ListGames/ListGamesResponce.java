@@ -1,6 +1,6 @@
 package ListGames;
 
-import server.GameData;
+import Model.GameData;
 
 import java.util.Collection;
 

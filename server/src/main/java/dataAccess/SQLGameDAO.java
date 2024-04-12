@@ -1,14 +1,13 @@
 package dataAccess;
 
 import com.google.gson.Gson;
-import server.GameData;
+import Model.GameData;
 import chess.ChessGame;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -45,6 +44,13 @@ public class SQLGameDAO implements GameDAO {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
+    }
+
+
+    @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        var statement = "UPDATE game SET game = ? WHERE gameID = ?";
+        executeUpdate(statement,game.game(),game.gameID());
     }
 
     private GameData readGame(ResultSet rs) throws SQLException{
@@ -138,6 +144,7 @@ public class SQLGameDAO implements GameDAO {
                 )
             """
     };
+
 
 
     private void configureDatabase() throws DataAccessException {

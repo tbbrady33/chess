@@ -1,6 +1,6 @@
 package dataAccess;
 
-import server.GameData;
+import Model.GameData;
 import chess.ChessGame;
 
 import java.util.Collection;
@@ -15,4 +15,5 @@ public interface GameDAO {
     Collection<GameData> listGames(String authToken) throws dataAccess.DataAccessException;
 
     public void  changeUsername(int gameID, String username, ChessGame.TeamColor teamColor) throws dataAccess.DataAccessException;
+    public void updateGame(GameData game) throws DataAccessException;
 }

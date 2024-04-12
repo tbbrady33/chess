@@ -1,22 +1,22 @@
 package Websocket;
 
 
-import chess.ChessGame;
+import chess.*;
 import com.google.gson.Gson;
 import dataAccess.*;
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.client.io.ConnectionManager;
-import server.AuthData;
+import Model.AuthData;
+import Model.GameData;
 import userCommands.Join_Observer;
-import userCommands.Leave;
-import webSocketMessages.serverMessages.LoadMessage;
-import webSocketMessages.serverMessages.NotificationMessage;
-import webSocketMessages.serverMessages.ServerMessage;
+import userCommands.Join_Player;
+import userCommands.Make_Move;
+import userCommands.Resign;
+import webSocketMessages.LoadMessage;
+import webSocketMessages.NotificationMessage;
+import webSocketMessages.ServerMessage;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 @WebSocket
 public class WebsocketHandler {
@@ -38,27 +38,33 @@ public class WebsocketHandler {
 
     static GameManager games;
     @OnWebSocketMessage
-    public void onMessage(Conection session, String message) throws IOException, DataAccessException {
+    public void onMessage(Conection session, String message) throws IOException, DataAccessException, InvalidMoveException{
         this.session = session;
         webSocketMessages.userCommands.UserGameCommand action = new Gson().fromJson(message, webSocketMessages.userCommands.UserGameCommand.class);
 
         switch (action.getCommandType()) {
             case JOIN_OBSERVER: Join_Observer actualAction = new Gson().fromJson(message, Join_Observer.class);
                 join_observer(actualAction);
-            //case JOIN_PLAYER ->;
+            case JOIN_PLAYER:
+                Join_Player actualAction1 = new Gson().fromJson(message,Join_Player.class);
+                joinPlayer(actualAction1);
             //case LEAVE -> ;
-            //case MAKE_MOVE -> ;
-            //case RESIGN -> ;
+            case MAKE_MOVE:
+                Make_Move actualAction2 = new Gson().fromJson(message,Make_Move.class);
+                makeMove(actualAction2);
+            case RESIGN:
+                Resign actualAction3 = new Gson().fromJson(message,Resign.class);
+                resign(actualAction3);
         }
     }
     private void join_observer(Join_Observer action) throws IOException, DataAccessException{
 
         int gameID = action.getGameID();
-        String authToken = session.authToken;
+        String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
         // send load game to root
-        var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID).game());//what game
+        var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID));//what game
         var lgame = new Gson().toJson(load);
         session.send(lgame);
         // send message to other people
@@ -71,4 +77,121 @@ public class WebsocketHandler {
 
         }
     }
+
+    private void joinPlayer(Join_Player action) throws IOException, DataAccessException{
+
+        int gameID = action.getGameID();
+        String authToken = action.getAuthString();
+        AuthData user = authorization.getAuth(authToken);
+        String username = user.username();
+
+        // send load game to root
+        var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID));//what game
+        var lgame = new Gson().toJson(load);
+        session.send(lgame);
+
+        // Send message to other people
+        for(SingleGame game: games.getGames()){
+            if(game.getGameID() == gameID){
+                game.add(authToken, session.session);
+                if(action.getColor() == ChessGame.TeamColor.BLACK) {
+                    game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
+                } else if (action.getColor() == ChessGame.TeamColor.WHITE) {
+                    game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
+                }
+            }
+
+        }
+    }
+
+    private void makeMove(Make_Move action) throws IOException, DataAccessException, InvalidMoveException {
+        int gameID = action.getGameID();
+        String authToken = action.getAuthString();
+        AuthData user = authorization.getAuth(authToken);
+        String username = user.username();
+        ChessMove move = action.getMove();
+        boolean works;
+
+        // check to see if move is valid
+        GameData game = gameization.getGame(gameID);
+        if (game.game().validMoves(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn())).contains(move)){
+            works = true;
+        }
+        else {
+            works = false;
+            System.out.print("Didnt work try again");
+        }
+
+        // update the game
+
+        if (works){
+            game.game().makeMove(move);
+        }
+        // update the database
+        gameization.updateGame(game);
+
+
+
+        // send load game to everyone and send move to everyone exept root
+        for(SingleGame game1: games.getGames()) {
+            if (game1.getGameID() == gameID) {
+                game1.broadcast(null,new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, game));
+                switch (game.game().getBoard().chessarray[move.getEndPosition().getRow()][move.getEndPosition().getColumn()].getPieceType()){
+                    case ChessPiece.PieceType.KING: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
+                    case ChessPiece.PieceType.ROOK:game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
+                    case ChessPiece.PieceType.PAWN:game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
+                    case QUEEN: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
+                    case BISHOP: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
+                    case KNIGHT: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
+
+                }
+            }
+        }
+    }
+
+    private void resign(Resign action){
+        int gameID = action.get
+
+        // mark game as over
+        ........
+
+        // send message that game is over by resignation
+        for(SingleGame game1: games.getGames()) {
+            if (game1.getGameID() == gameID) {
+
+            }
+        }
+    }
+
+
+
+    private String endPosString(ChessMove move){
+        // make string for end pos
+        String Col = "";
+        String Row = "";
+        switch (move.getEndPosition().getColumn()){
+            case 1: Col = "A";
+            case 2: Col = "B";
+            case 3: Col = "C";
+            case 4: Col = "D";
+            case 5: Col = "E";
+            case 6: Col = "F";
+            case 7 : Col = "G";
+            case 8: Col = "H";
+        }
+        switch (move.getEndPosition().getRow()){
+            case 1: Row = "1";
+            case 2: Row = "2";
+            case 3: Row = "3";
+            case 4: Row = "4";
+            case 5: Row = "5";
+            case 6: Row = "6";
+            case 7 : Row = "7";
+            case 8: Row = "8";
+        }
+        return Col + Row;
+
+    }
+
+
 }

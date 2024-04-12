@@ -1,4 +1,4 @@
-package server;
+package Model;
 
 import java.util.Objects;
 

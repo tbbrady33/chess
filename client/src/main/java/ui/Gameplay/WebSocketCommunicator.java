@@ -4,20 +4,16 @@ import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 
-import com.sun.nio.sctp.Notification;
-import com.sun.nio.sctp.NotificationHandler;
 import dataAccess.DataAccessException;
-import server.GameData;
 import userCommands.*;
 
 
-import webSocketMessages.serverMessages.ErrorMessage;
-import webSocketMessages.serverMessages.LoadMessage;
-import webSocketMessages.serverMessages.NotificationMessage;
-import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.ErrorMessage;
+import webSocketMessages.LoadMessage;
+import webSocketMessages.NotificationMessage;
+import webSocketMessages.ServerMessage;
 import webSocketMessages.userCommands.UserGameCommand;
 
-import javax.swing.*;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;

@@ -10,7 +10,7 @@ import chess.ChessGame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.ClearService;
-import server.GameData;
+import Model.GameData;
 import server.GameService;
 import server.UserService;
 

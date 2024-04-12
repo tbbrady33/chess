@@ -1,10 +1,7 @@
 package ui;
 
-import server.GameData;
-
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Scanner;
 
 public class UserInterfaceSwitch extends UserInterface {

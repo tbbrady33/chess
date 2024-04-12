@@ -1,7 +1,7 @@
 package serviceTests;
 
 import dataAccess.MemoryAuthDAO;
-import server.UserData;
+import Model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

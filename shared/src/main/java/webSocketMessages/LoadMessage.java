@@ -1,8 +1,7 @@
-package webSocketMessages.serverMessages;
+package webSocketMessages;
 
-import chess.ChessGame;
 
-import GameData;
+import Model.GameData;
 
 public class LoadMessage extends ServerMessage{
     private GameData game;
@@ -11,11 +10,11 @@ public class LoadMessage extends ServerMessage{
         this.game = game;
     }
 
-    public ChessGame getGame() {
+    public GameData getGame() {
         return game;
     }
 
-    public void setGame(ChessGame game) {
+    public void setGame(GameData game) {
         this.game = game;
     }
 }

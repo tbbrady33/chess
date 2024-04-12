@@ -1,5 +1,7 @@
 package server;
 
+import Model.AuthData;
+import Model.UserData;
 import dataAccess.*;
 import Login.LoginRequest;
 import Login.LoginResponce;

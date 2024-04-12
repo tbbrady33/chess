@@ -2,6 +2,8 @@ package server;
 
 import CreateGame.CreateGameRequest;
 import CreateGame.CreateGameResponce;
+import Model.AuthData;
+import Model.GameData;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
 import JoinGame.JoinGameRequest;

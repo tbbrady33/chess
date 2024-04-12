@@ -1,6 +1,6 @@
 package dataAccess;
 
-import server.AuthData;
+import Model.AuthData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

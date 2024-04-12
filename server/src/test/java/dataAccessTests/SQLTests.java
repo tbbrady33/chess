@@ -3,13 +3,11 @@ package dataAccessTests;
 import CreateGame.CreateGameResponce;
 import chess.ChessGame;
 import dataAccess.*;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.ImportRuntimeHints;
-import server.AuthData;
-import server.GameData;
-import server.UserData;
+import Model.AuthData;
+import Model.GameData;
+import Model.UserData;
 
 import static org.junit.jupiter.api.Assertions.*;
 

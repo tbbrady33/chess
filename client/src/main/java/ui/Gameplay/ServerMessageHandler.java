@@ -1,6 +1,6 @@
 package ui.Gameplay;
 
-import server.GameData;
+import Model.GameData;
 
 public interface ServerMessageHandler {
     void notifyy(String message);

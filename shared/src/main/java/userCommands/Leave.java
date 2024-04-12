@@ -7,4 +7,12 @@ public class Leave extends webSocketMessages.userCommands.UserGameCommand {
         super(commandType, authToken);
         this.gameID = gameID;
     }
+
+    public int getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
+    }
 }

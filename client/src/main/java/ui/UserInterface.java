@@ -15,15 +15,12 @@ import Register.RegisterResponce;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
-import com.sun.tools.javac.Main;
 import dataAccess.DataAccessException;
-import server.GameData;
+import Model.GameData;
 import ui.Gameplay.ServerMessageHandler;
 import ui.Gameplay.WebSocketCommunicator;
-import userCommands.Join_Observer;
 import webSocketMessages.userCommands.UserGameCommand;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -77,19 +74,7 @@ public class UserInterface implements ServerMessageHandler {
                 System.out.println("That didnt work sorry, that game doesnt exist");
             }
            websocket.Join_Observer(UserGameCommand.CommandType.JOIN_OBSERVER, ID, authtoken);
-//            JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, ID), authtoken);
-//            ChessBoard board = new ChessBoard();
-//            board.resetBoard();
-//            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-//            out.print(EscapeSequences.ERASE_SCREEN);
 //
-//
-//            MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
-//            chess.MakeHeader(out);
-//            chess.drawBoard(out);
-//            MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
-//            chess1.MakeHeader(out);
-//            chess1.drawBoard(out);
         }catch(DataAccessException ex){
 
         }
@@ -112,7 +97,12 @@ public class UserInterface implements ServerMessageHandler {
                 String team = input.nextLine();
 
                 if (team.equals("Black")){
+
+
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
+                    websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.BLACK);
+
+
                     if(join.message().isEmpty()){
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
@@ -132,6 +122,8 @@ public class UserInterface implements ServerMessageHandler {
                 } else if (team.equals("White")){
 
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
+                    websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.WHITE);
+
                     if (join.message().isEmpty()) {
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();

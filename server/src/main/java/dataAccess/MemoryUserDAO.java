@@ -1,6 +1,6 @@
 package dataAccess;
 
-import server.UserData;
+import Model.UserData;
 
 import java.util.Objects;
 import java.util.Vector;

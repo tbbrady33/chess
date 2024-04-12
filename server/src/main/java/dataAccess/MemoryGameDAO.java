@@ -1,6 +1,6 @@
 package dataAccess;
 
-import server.GameData;
+import Model.GameData;
 import chess.ChessGame;
 
 import java.util.Collection;
@@ -74,5 +74,10 @@ public class MemoryGameDAO implements GameDAO {
                 }
             }
         }
+    }
+
+    @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        System.out.print("Not implemented");
     }
 }
