@@ -1,5 +1,7 @@
 package ui;
 
+import ui.Gameplay.WebSocketCommunicator;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -15,7 +17,7 @@ public class UserInterfaceSwitch extends UserInterface {
         // Case statement and do the stuff that the user would like
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         boolean go = true;
-        String url = "http://localhost:" + "8080/";
+        String url = "http://localhost:" + "8081/";
         ServerFacade server = new ServerFacade(url);
         while (go) {
             Scanner input = new Scanner(System.in);

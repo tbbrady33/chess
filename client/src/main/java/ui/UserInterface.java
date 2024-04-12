@@ -35,7 +35,7 @@ public class UserInterface implements ServerMessageHandler {
     private WebSocketCommunicator websocket;
 
 
-    private String url = "http://localhost:" + "8080/";
+    private String url = "http://localhost:" + "8081/";
 
     public Collection<GameData> games;
     public UserInterface(boolean loggedIN){

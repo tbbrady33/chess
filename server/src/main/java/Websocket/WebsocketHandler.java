@@ -4,6 +4,7 @@ package Websocket;
 import chess.*;
 import com.google.gson.Gson;
 import dataAccess.*;
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import Model.AuthData;
@@ -35,10 +36,11 @@ public class WebsocketHandler {
 
     static GameManager games;
     @OnWebSocketMessage
-    public void onMessage(Conection session, String message) throws IOException, DataAccessException, InvalidMoveException{
-        this.session = session;
+    public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException{
+
         webSocketMessages.userCommands.UserGameCommand action = new Gson().fromJson(message, webSocketMessages.userCommands.UserGameCommand.class);
 
+        this.session = new Conection(action.getAuthString(),session);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER: Join_Observer actualAction = new Gson().fromJson(message, Join_Observer.class);
                 join_observer(actualAction);

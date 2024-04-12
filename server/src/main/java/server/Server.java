@@ -14,7 +14,7 @@ import spark.*;
 
 public class Server {
     public static void main(String args[]){
-        new Server().run(8080);
+        new Server().run(8081);
     }
 
     public int run(int desiredPort) {
@@ -27,7 +27,7 @@ public class Server {
         WebsocketHandler handler = new WebsocketHandler(auth,game,user);
 
         // all the endpoints, the new classes are the handler classes
-        Spark.webSocket("/connect", WebsocketHandler.class);
+        Spark.webSocket("/connect", handler);
         Spark.delete("/db", (req,res) -> new ClearApp().clearApp(req, res,user,auth,game));
         Spark.post("/user",(req,res) -> new Register().register(req,res,user,auth));
         Spark.post("/session" , (req,res) -> new Login().login(req, res,user,auth));

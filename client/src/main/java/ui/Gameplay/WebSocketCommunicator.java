@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class WebSocketCommunicator {
+
+public class WebSocketCommunicator extends Endpoint{
     Session session;
     ServerMessageHandler notificationHandler;
 
@@ -27,7 +28,7 @@ public class WebSocketCommunicator {
     public WebSocketCommunicator(String url, ServerMessageHandler notificationHandler) throws DataAccessException {
         try {
             url = url.replace("http", "ws");
-            URI socketURI = new URI(url + "/connect");
+            URI socketURI = new URI(url + "connect");
             this.notificationHandler = notificationHandler;
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -61,6 +62,7 @@ public class WebSocketCommunicator {
     }
 
     //Endpoint requires this method, but you don't have to do anything
+    @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
