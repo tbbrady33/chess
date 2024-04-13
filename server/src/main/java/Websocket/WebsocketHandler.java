@@ -10,6 +10,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import Model.AuthData;
 import Model.GameData;
 import userCommands.*;
+import webSocketMessages.ErrorMessage;
 import webSocketMessages.LoadMessage;
 import webSocketMessages.NotificationMessage;
 import webSocketMessages.ServerMessage;
@@ -39,7 +40,7 @@ public class WebsocketHandler {
     public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException{
 
         webSocketMessages.userCommands.UserGameCommand action = new Gson().fromJson(message, webSocketMessages.userCommands.UserGameCommand.class);
-
+        games = new GameManager();
         this.session = new Conection(action.getAuthString(),session);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER: Join_Observer actualAction = new Gson().fromJson(message, Join_Observer.class);
@@ -65,9 +66,9 @@ public class WebsocketHandler {
         String username = user.username();
         GameData game = gameization.getGame(gameID);
         // update the user in the database
-        if (game.blackUsername().equals(username)) {
+        if (game.blackUsername() != null && game.blackUsername().equals(username)) {
             gameization.changeUsername(gameID,null, ChessGame.TeamColor.BLACK);
-        } else if (game.whiteUsername().equals(username)) {
+        } else if (game.whiteUsername() != null && game.whiteUsername().equals(username)) {
             gameization.changeUsername(gameID,null, ChessGame.TeamColor.WHITE);
         }
         // update websocket stuff
@@ -109,23 +110,30 @@ public class WebsocketHandler {
         String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
+        if(gameization.getGame(gameID).game().getBoard() == null){
+            System.out.print("Game is null");
+        }else {
+            // send load game to root
+            var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
+            var lgame = new Gson().toJson(load);
+            session.send(lgame);
 
-        // send load game to root
-        var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID));//what game
-        var lgame = new Gson().toJson(load);
-        session.send(lgame);
-
-        // Send message to other people
-        for(SingleGame game: games.getGames()){
-            if(game.getGameID() == gameID){
-                game.add(authToken, session.session);
-                if(action.getColor() == ChessGame.TeamColor.BLACK) {
-                    game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
-                } else if (action.getColor() == ChessGame.TeamColor.WHITE) {
-                    game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
-                }
+            if (games.getGames() == null) {
+                games.addGame(new SingleGame(gameID));
             }
 
+            // Send message to other people
+            for (SingleGame game : games.getGames()) {
+                if (game.getGameID() == gameID) {
+                    game.add(authToken, session.session);
+                    if (action.getColor() == ChessGame.TeamColor.BLACK) {
+                        game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
+                    } else if (action.getColor() == ChessGame.TeamColor.WHITE) {
+                        game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
+                    }
+                }
+
+            }
         }
     }
 
@@ -138,63 +146,80 @@ public class WebsocketHandler {
         boolean works;
 
         // check to see if move is valid
-        GameData game = gameization.getGame(gameID);
-        if (game.game().validMoves(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn())).contains(move)){
-            works = true;
-        }
-        else {
-            works = false;
-            System.out.print("Didnt work try again");
-        }
+        if (move == null) {
+            for (SingleGame game1 : games.getGames()) {
+                if (game1.getGameID() == gameID) {
+                    game1.broadcast(null, new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Move is null"));
+                }
+            }
+        } else {
+            GameData game = gameization.getGame(gameID);
+            if (game.game().validMoves(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn())).contains(move)) {
+                works = true;
+            } else {
+                works = false;
+                System.out.print("Didnt work try again");
+            }
 
-        // update the game
+            // update the game
 
-        if (works){
-            game.game().makeMove(move);
-        }
-        // update the database
-        gameization.updateGame(game);
+            if (works) {
+                game.game().makeMove(move);
+            }
+            // update the database
+            gameization.updateGame(game);
 
 
+            // send load game to everyone and send move to everyone exept root
+            for (SingleGame game1 : games.getGames()) {
+                if (game1.getGameID() == gameID) {
+                    game1.broadcast(null, new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, game));
+                    switch (game.game().getBoard().chessarray[move.getEndPosition().getRow()][move.getEndPosition().getColumn()].getPieceType()) {
+                        case ChessPiece.PieceType.KING:
+                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
+                        case ChessPiece.PieceType.ROOK:
+                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
+                        case ChessPiece.PieceType.PAWN:
+                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
+                        case QUEEN:
+                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
+                        case BISHOP:
+                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
+                        case KNIGHT:
+                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
 
-        // send load game to everyone and send move to everyone exept root
-        for(SingleGame game1: games.getGames()) {
-            if (game1.getGameID() == gameID) {
-                game1.broadcast(null,new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, game));
-                switch (game.game().getBoard().chessarray[move.getEndPosition().getRow()][move.getEndPosition().getColumn()].getPieceType()){
-                    case ChessPiece.PieceType.KING: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
-                    case ChessPiece.PieceType.ROOK:game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
-                    case ChessPiece.PieceType.PAWN:game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
-                    case QUEEN: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
-                    case BISHOP: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
-                    case KNIGHT: game1.broadcast(authToken,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
-
+                    }
                 }
             }
         }
     }
 
-    private void resign(Resign action) throws DataAccessException, IOException{
-        int gameID = action.getGameID();
-        String authToken = action.getAuthString();
-        AuthData user = authorization.getAuth(authToken);
-        String username = user.username();
-        GameData game = gameization.getGame(gameID);
+    private void resign(Resign action) throws DataAccessException, IOException {
+            int gameID = action.getGameID();
+            String authToken = action.getAuthString();
+            AuthData user = authorization.getAuth(authToken);
+            String username = user.username();
+            GameData game = gameization.getGame(gameID);
 
 
-        // mark game as over
-        //change game
-        game.game().setGameOver(true);
-        //update database
-        gameization.updateGame(game);
-
-
-        // send message that game is over by resignation
-        for(SingleGame game1: games.getGames()) {
-            if (game1.getGameID() == gameID) {
-                game1.broadcast(null,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned, the game is over."));
+            if(game.game().getBoard() == null){
+                System.out.print("Cant find board");
             }
-        }
+            else {
+                // mark game as over
+                //change game
+                game.game().setGameOver(true);
+                //update database
+                gameization.updateGame(game);
+
+
+                // send message that game is over by resignation
+                for (SingleGame game1 : games.getGames()) {
+                    if (game1.getGameID() == gameID) {
+                        game1.broadcast(null, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned, the game is over."));
+                    }
+                }
+            }
     }
 
 

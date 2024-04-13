@@ -53,7 +53,9 @@ public class UserInterface implements ServerMessageHandler {
             System.out.print("Give me a game name: ");
             String name = input.nextLine();
             CreateGameResponce create = server.createGame(new CreateGameRequest(name), authtoken);
-            System.out.println(create.message());
+            if(create.message() != null) {
+                System.out.println(create.message());
+            }
         }catch (DataAccessException ex){
             ex.printStackTrace();
         }
@@ -99,45 +101,45 @@ public class UserInterface implements ServerMessageHandler {
                 if (team.equals("Black")){
 
 
-                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
+//                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
                     websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.BLACK);
 
 
-                    if(join.message().isEmpty()){
-                        ChessBoard board = new ChessBoard();
-                        board.resetBoard();
-                        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-                        out.print(EscapeSequences.ERASE_SCREEN);
-
-
-                        MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
-                        chess.MakeHeader(out);
-                        chess.drawBoard(out);
-                        MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
-                        chess1.MakeHeader(out);
-                        chess1.drawBoard(out);
-                    }
+//                    if(join.message().isEmpty()){
+//                        ChessBoard board = new ChessBoard();
+//                        board.resetBoard();
+//                        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//                        out.print(EscapeSequences.ERASE_SCREEN);
+//
+//
+//                        MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
+//                        chess.MakeHeader(out);
+//                        chess.drawBoard(out);
+//                        MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
+//                        chess1.MakeHeader(out);
+//                        chess1.drawBoard(out);
+//                    }
 
 
                 } else if (team.equals("White")){
 
-                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
+//                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
                     websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.WHITE);
 
-                    if (join.message().isEmpty()) {
-                        ChessBoard board = new ChessBoard();
-                        board.resetBoard();
-                        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-                        out.print(EscapeSequences.ERASE_SCREEN);
-
-
-                        MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
-                        chess.MakeHeader(out);
-                        chess.drawBoard(out);
-                        MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
-                        chess1.MakeHeader(out);
-                        chess1.drawBoard(out);
-                    }
+//                    if (join.message().isEmpty()) {
+//                        ChessBoard board = new ChessBoard();
+//                        board.resetBoard();
+//                        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//                        out.print(EscapeSequences.ERASE_SCREEN);
+//
+//
+//                        MakeBoard chess = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.WHITE);
+//                        chess.MakeHeader(out);
+//                        chess.drawBoard(out);
+//                        MakeBoard chess1 = new MakeBoard(board.getChessarray(), ChessGame.TeamColor.BLACK);
+//                        chess1.MakeHeader(out);
+//                        chess1.drawBoard(out);
+//                    }
 
 
                 } else{

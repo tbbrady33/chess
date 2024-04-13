@@ -30,27 +30,41 @@ public class UserInterfaceSwitch extends UserInterface {
                     go = false;
                     break;
                 case "Login":
-                    login(server);
-                    break;
+                    if(LoggedIN == false) {
+                        login(server);
+                        break;
+                    }
 
                 case "Register":
-                    register(server);
-                    break;
+                    if(LoggedIN == false) {
+                        register(server);
+                        break;
+                    }
                 case "Logout":
-                    logout(server);
-                    break;
+                    if(LoggedIN == true) {
+                        logout(server);
+                        break;
+                    }
                 case "CreateGame":
-                    createGame(server);
-                    break;
+                    if(LoggedIN == true) {
+                        createGame(server);
+                        break;
+                    }
                 case "ListGames":
-                    listGames(server);
-                    break;
+                    if(LoggedIN == true) {
+                        listGames(server);
+                        break;
+                    }
                 case "JoinGame":
-                    joinGame(server);
-                    break;
+                    if(LoggedIN == true) {
+                        joinGame(server);
+                        break;
+                    }
                 case "JoinObserver":
-                    joinObserver(server);
-                    break;
+                    if(LoggedIN == true) {
+                        joinObserver(server);
+                        break;
+                    }
                 default:
                     System.out.println("Not an option, type \"Help\" for a list of options");
 
