@@ -17,6 +17,7 @@ public class UserInterfaceSwitch extends UserInterface {
         // Case statement and do the stuff that the user would like
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         boolean go = true;
+        boolean inGame = false;
         String url = "http://localhost:" + "8081/";
         ServerFacade server = new ServerFacade(url);
         while (go) {
@@ -63,6 +64,21 @@ public class UserInterfaceSwitch extends UserInterface {
                 case "JoinObserver":
                     if(LoggedIN == true) {
                         joinObserver(server);
+                        break;
+                    }
+                case "RedrawBoard":
+                    if(LoggedIN && inGame){
+                        redrawBoard(out);
+                        break;
+                    }
+                case "Leave":
+                    if(LoggedIN && inGame){
+                        leave();
+                        break;
+                    }
+                case "MakeMove":
+                    if(LoggedIN && inGame){
+                        makeMove();
                         break;
                     }
                 default:

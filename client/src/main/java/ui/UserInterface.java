@@ -29,10 +29,17 @@ import java.util.Scanner;
 public class UserInterface implements ServerMessageHandler {
 
     public boolean LoggedIN;
+
+    public boolean inGame;
+    public boolean mainUser = false;
     public String authtoken;
     public String username;
 
+    private GameData gamePrivate;
+
     private WebSocketCommunicator websocket;
+
+    private ChessGame.TeamColor teamColor = null;
 
 
     private String url = "http://localhost:" + "8081/";
@@ -75,7 +82,8 @@ public class UserInterface implements ServerMessageHandler {
             if (exists == false){
                 System.out.println("That didnt work sorry, that game doesnt exist");
             }
-           websocket.Join_Observer(UserGameCommand.CommandType.JOIN_OBSERVER, ID, authtoken);
+            websocket.Join_Observer(UserGameCommand.CommandType.JOIN_OBSERVER, ID, authtoken);
+            inGame = true;
 //
         }catch(DataAccessException ex){
 
@@ -102,8 +110,10 @@ public class UserInterface implements ServerMessageHandler {
 
 
 //                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
-                    websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.BLACK);
-
+                      websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.BLACK);
+                      inGame = true;
+                      mainUser = true;
+                      teamColor = ChessGame.TeamColor.BLACK;
 
 //                    if(join.message().isEmpty()){
 //                        ChessBoard board = new ChessBoard();
@@ -125,7 +135,9 @@ public class UserInterface implements ServerMessageHandler {
 
 //                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
                     websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.WHITE);
-
+                    inGame = true;
+                    mainUser = true;
+                    teamColor = ChessGame.TeamColor.WHITE;
 //                    if (join.message().isEmpty()) {
 //                        ChessBoard board = new ChessBoard();
 //                        board.resetBoard();
@@ -184,11 +196,36 @@ public class UserInterface implements ServerMessageHandler {
         }
     }
 
+    public void leave(){
+        try {
+            websocket.Leave(UserGameCommand.CommandType.LEAVE, gamePrivate.gameID(), authtoken);
+            inGame = false;
+            mainUser = false;
+        }catch (DataAccessException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void makeMove(){
+        try {
+            Scanner input = new Scanner(System.in);
+            System.out.print("What is the Game ID of the game you want to join: ");
+            int ID = Integer.parseInt(input.nextLine());
+            websocket.Make_Move(UserGameCommand.CommandType.MAKE_MOVE, gamePrivate.gameID(), authtoken,move);
+
+        }catch (DataAccessException e){
+            e.printStackTrace();
+        }
+    }
+
+
     public void help(PrintStream out){
-        if (LoggedIN) {
+        if (LoggedIN  && inGame== false) {
             new DifferntScreens().logedinScreen(out);
         } else if (!LoggedIN) {
             new DifferntScreens().initialScreen(out);
+        }else if(LoggedIN && inGame == true){
+            new DifferntScreens().inGameScreen(out);
         }
 
     }
@@ -291,6 +328,38 @@ public class UserInterface implements ServerMessageHandler {
         return chessarray;
     }
 
+    public void redrawBoard(PrintStream out){
+        if(teamColor == null){
+            out.print(EscapeSequences.ERASE_SCREEN);
+
+            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            chess.MakeHeader(out);
+            chess.drawBoard(out);
+            MakeBoard chess1 = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            chess1.MakeHeader(out);
+            chess1.drawBoard(out);
+        } else if (teamColor == ChessGame.TeamColor.BLACK) {
+            out.print(EscapeSequences.ERASE_SCREEN);
+
+
+            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            chess.MakeHeader(out);
+            chess.drawBoard(out);
+            MakeBoard chess1 = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            chess1.MakeHeader(out);
+            chess1.drawBoard(out);
+        }else if(teamColor == ChessGame.TeamColor.WHITE){
+            out.print(EscapeSequences.ERASE_SCREEN);
+
+
+            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            chess.MakeHeader(out);
+            chess.drawBoard(out);
+            MakeBoard chess1 = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            chess1.MakeHeader(out);
+            chess1.drawBoard(out);
+        }
+    }
     @Override
     public void notifyy(String message) {
         System.out.println(message);
@@ -300,6 +369,7 @@ public class UserInterface implements ServerMessageHandler {
     public void laodGame(GameData game) {
         ChessPiece[][] board = new ChessPiece[8][8];
         board = game.game().getBoard().getChessarray();
+        this.gamePrivate = game;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
 

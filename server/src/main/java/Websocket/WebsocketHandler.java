@@ -113,6 +113,10 @@ public class WebsocketHandler {
         if(gameization.getGame(gameID).game().getBoard() == null){
             System.out.print("Game is null");
         }else {
+            //update game and database
+
+            GameData game = gameization.getGame(gameID);
+            gameization.changeUsername(gameID,username,action.getColor());
             // send load game to root
             var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
             var lgame = new Gson().toJson(load);
@@ -123,13 +127,13 @@ public class WebsocketHandler {
             }
 
             // Send message to other people
-            for (SingleGame game : games.getGames()) {
-                if (game.getGameID() == gameID) {
-                    game.add(authToken, session.session);
+            for (SingleGame game1 : games.getGames()) {
+                if (game1.getGameID() == gameID) {
+                    game1.add(authToken, session.session);
                     if (action.getColor() == ChessGame.TeamColor.BLACK) {
-                        game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
+                        game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
                     } else if (action.getColor() == ChessGame.TeamColor.WHITE) {
-                        game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
+                        game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
                     }
                 }
 

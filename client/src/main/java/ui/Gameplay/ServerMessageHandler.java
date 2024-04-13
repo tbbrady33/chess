@@ -8,3 +8,4 @@ public interface ServerMessageHandler {
 
     void error(String errormessage);
 }
+// when should I be closing websocket connections
