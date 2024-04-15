@@ -9,9 +9,6 @@ public class GameManager {
         return games;
     }
 
-    public void setGames(HashSet<SingleGame> games) {
-        this.games = games;
-    }
 
     public void addGame(SingleGame game){
         games.add(game);

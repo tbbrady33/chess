@@ -14,7 +14,4 @@ public class LoadGame extends ServerMessage{
         return game;
     }
 
-    public void setGame(GameData game) {
-        this.game = game;
-    }
 }

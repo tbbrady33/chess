@@ -20,9 +20,6 @@ public class SingleGame {
         return gameID;
     }
 
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
-    }
 
     public void add(String visitorName, Session session) {
         var conection = new Conection(visitorName, session);
