@@ -1,13 +1,10 @@
 import chess.*;
 import ui.EscapeSequences;
-import ui.MakeBoard;
-import ui.UserInterface;
+import ui.makeBoard;
 import ui.UserInterfaceSwitch;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
 
 
 public class Main {
@@ -26,10 +23,10 @@ public class Main {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
 
-        ChessBoard Initial = new ChessBoard();
-        Initial.resetBoard();
+        ChessBoard initial = new ChessBoard();
+        initial.resetBoard();
 
-        MakeBoard chess = new MakeBoard(Initial.getChessarray(), team);
+        makeBoard chess = new makeBoard(initial.getChessarray(), team);
         chess.MakeHeader(out);
         chess.drawBoard(out);
     }

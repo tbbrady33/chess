@@ -61,9 +61,9 @@ public class SQLGameDAO implements GameDAO {
         var blackUsername = rs.getString("blackUsername");
         var gameName = rs.getString("gameName");
         var game = rs.getString("game");
-        ChessGame Game = new Gson().fromJson(game,ChessGame.class);
+        ChessGame game1 = new Gson().fromJson(game,ChessGame.class);
 
-        return new GameData(gameID,whiteUsername,blackUsername,gameName,Game);
+        return new GameData(gameID,whiteUsername,blackUsername,gameName,game1);
     }
 
     @Override

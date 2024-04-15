@@ -46,7 +46,7 @@ public class WebsocketHandler {
         this.session = new Conection(action.getAuthString(),session);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER: JoinObserver actualAction = new Gson().fromJson(message, JoinObserver.class);
-                join_observer(actualAction);
+                joinObserver(actualAction);
                 break;
             case JOIN_PLAYER:
                 JoinPlayer actualAction1 = new Gson().fromJson(message, JoinPlayer.class);
@@ -90,7 +90,7 @@ public class WebsocketHandler {
 
 
     }
-    private void join_observer(JoinObserver action) throws IOException, DataAccessException{
+    private void joinObserver(JoinObserver action) throws IOException, DataAccessException{
 
         int gameID = action.getGameID();
         String authToken = action.getAuthString();
@@ -237,29 +237,29 @@ public class WebsocketHandler {
 
     private String endPosString(ChessMove move){
         // make string for end pos
-        String Col = "";
-        String Row = "";
+        String col = "";
+        String row = "";
         switch (move.getEndPosition().getColumn()){
-            case 1: Col = "A";
-            case 2: Col = "B";
-            case 3: Col = "C";
-            case 4: Col = "D";
-            case 5: Col = "E";
-            case 6: Col = "F";
-            case 7 : Col = "G";
-            case 8: Col = "H";
+            case 1: col = "A";
+            case 2: col = "B";
+            case 3: col = "C";
+            case 4: col = "D";
+            case 5: col = "E";
+            case 6: col = "F";
+            case 7 : col = "G";
+            case 8: col = "H";
         }
         switch (move.getEndPosition().getRow()){
-            case 1: Row = "1";
-            case 2: Row = "2";
-            case 3: Row = "3";
-            case 4: Row = "4";
-            case 5: Row = "5";
-            case 6: Row = "6";
-            case 7 : Row = "7";
-            case 8: Row = "8";
+            case 1: row = "1";
+            case 2: row = "2";
+            case 3: row = "3";
+            case 4: row = "4";
+            case 5: row = "5";
+            case 6: row = "6";
+            case 7 : row = "7";
+            case 8: row = "8";
         }
-        return Col + Row;
+        return col + row;
 
     }
 

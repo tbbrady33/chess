@@ -7,18 +7,17 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
-public class MakeBoard {
+public class makeBoard {
     private String[][] board = new String[8][8];
 
     private static final int Board_Size = 8;
     private static final int Square_Size = 3;
     private static ChessGame.TeamColor team;
     private static final String Black_King = EscapeSequences.SET_TEXT_COLOR_BLACK + "K";
-    public MakeBoard(ChessPiece[][] board, ChessGame.TeamColor team){
+    public makeBoard(ChessPiece[][] board, ChessGame.TeamColor team){
 
         if (team == ChessGame.TeamColor.BLACK){
             for(int j = 0; j < board.length; j++){
