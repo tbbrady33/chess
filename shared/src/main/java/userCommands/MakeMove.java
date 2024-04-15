@@ -23,7 +23,4 @@ public class MakeMove extends UserGameCommand {
         return move;
     }
 
-    public void setMove(ChessMove move) {
-        this.move = move;
-    }
 }

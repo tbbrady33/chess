@@ -10,14 +10,14 @@ import java.util.ArrayList;
 
 import static ui.EscapeSequences.*;
 
-public class makeboard {
+public class makeBoard {
     private String[][] board = new String[8][8];
 
     private static final int Board_Size = 8;
     private static final int Square_Size = 3;
     private static ChessGame.TeamColor team;
     private static final String Black_King = EscapeSequences.SET_TEXT_COLOR_BLACK + "K";
-    public makeboard(ChessPiece[][] board, ChessGame.TeamColor team){
+    public makeBoard(ChessPiece[][] board, ChessGame.TeamColor team){
 
         if (team == ChessGame.TeamColor.BLACK){
             for(int j = 0; j < board.length; j++){
@@ -118,18 +118,7 @@ public class makeboard {
         for(int boardRow = 0; boardRow < Board_Size; boardRow++){
             int prefixLength = Square_Size / 2;
             int suffixLength = Square_Size - prefixLength - 1;
-
-            out.print(SET_BG_COLOR_DARK_GREY);
-            out.print(SET_TEXT_ITALIC);
-            out.print(SET_TEXT_BOLD);
-            out.print(SET_TEXT_COLOR_WHITE);
-            out.print("  ");
-            if (team == ChessGame.TeamColor.WHITE) {
-                out.print(8 -boardRow);
-            } else if (team == ChessGame.TeamColor.BLACK) {
-                out.print(boardRow + 1);
-            }
-            out.print("  ");
+            setupDrawBoard(out,boardRow);
             if(team == ChessGame.TeamColor.WHITE){
                 drawRowHighlight(out,7 -boardRow,moves);
             } else if (team == ChessGame.TeamColor.BLACK) {
@@ -139,6 +128,20 @@ public class makeboard {
             out.println();
             out.print(SET_BG_COLOR_LIGHT_GREY);
         }
+    }
+
+    private void setupDrawBoard(PrintStream out, int boardRow){
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_TEXT_ITALIC);
+        out.print(SET_TEXT_BOLD);
+        out.print(SET_TEXT_COLOR_WHITE);
+        out.print("  ");
+        if (team == ChessGame.TeamColor.WHITE) {
+            out.print(8 -boardRow);
+        } else if (team == ChessGame.TeamColor.BLACK) {
+            out.print(boardRow + 1);
+        }
+        out.print("  ");
     }
 
     public void drawRowHighlight(PrintStream out, int row, ArrayList<ChessMove> moves){
@@ -177,18 +180,7 @@ public class makeboard {
         for(int boardRow = 0; boardRow < Board_Size; boardRow++){
             int prefixLength = Square_Size / 2;
             int suffixLength = Square_Size - prefixLength - 1;
-
-            out.print(SET_BG_COLOR_DARK_GREY);
-            out.print(SET_TEXT_ITALIC);
-            out.print(SET_TEXT_BOLD);
-            out.print(SET_TEXT_COLOR_WHITE);
-            out.print("  ");
-            if (team == ChessGame.TeamColor.WHITE) {
-                out.print(8 -boardRow);
-            } else if (team == ChessGame.TeamColor.BLACK) {
-                out.print(boardRow + 1);
-            }
-            out.print("  ");
+            setupDrawBoard(out,boardRow);
             if(team == ChessGame.TeamColor.WHITE){
                 drawRow(out,7 -boardRow);
             } else if (team == ChessGame.TeamColor.BLACK) {

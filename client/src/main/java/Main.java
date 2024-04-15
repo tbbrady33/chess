@@ -1,10 +1,5 @@
 import chess.*;
-import ui.EscapeSequences;
-import ui.makeboard;
 import ui.UserInterfaceSwitch;
-
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 
 
 public class Main {

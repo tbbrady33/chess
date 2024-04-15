@@ -378,15 +378,34 @@ public class UserInterface implements ServerMessageHandler {
     }
 
     public void higlightMoves(PrintStream out){
+
+        int row = 0;
+        String col = "";
         boolean goodRow = false;
         while (goodRow == false) {
             Scanner input1 = new Scanner(System.in);
             System.out.print("What is the row of the piece you want to highlight the moves of: (1-8)");
-            String row = input1.nextLine();
-//            if(1 <= row && row <= 8){
-//
-//            }
+            row = Integer.parseInt(input1.nextLine());
+            if(row >= 1 && row <= 8 ){
+                goodRow = true;
+                break;
+            }else {
+                System.out.println("Not a number between 1 and 8 try again.");
+            }
         }
+
+        boolean goodCol = false;
+        while (goodCol == false){
+            Scanner input2 = new Scanner(System.in);
+            System.out.print("What is the col of the piece you want to highlight the moves of: (A-H)");
+            String col = input2.nextLine();
+            if(col.equals("A") || col.equals("B") || col.equals("C") || col.equals("D") || col.equals("E") || col.equals("F") || col.equals("G") || col.equals("H")){
+                goodCol = true;
+                break;
+            }
+        }
+        int rightCol = letterToNum(col);
+
         //gamePrivate.game().validMoves(new ChessPosition());
         //new MakeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor).drawBoardHighlight(out, moves);
 
@@ -418,30 +437,30 @@ public class UserInterface implements ServerMessageHandler {
         if(teamColor == null){
             out.print(EscapeSequences.ERASE_SCREEN);
 
-            makeboard chess = new makeboard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
-            makeboard chess1 = new makeboard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            makeBoard chess1 = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
             chess1.makeHeader(out);
             chess1.drawBoard(out);
         } else if (teamColor == ChessGame.TeamColor.BLACK) {
             out.print(EscapeSequences.ERASE_SCREEN);
 
 
-            makeboard chess = new makeboard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
             chess.makeHeader(out);
             chess.drawBoard(out);
-            makeboard chess1 = new makeboard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            makeBoard chess1 = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess1.makeHeader(out);
             chess1.drawBoard(out);
         }else if(teamColor == ChessGame.TeamColor.WHITE){
             out.print(EscapeSequences.ERASE_SCREEN);
 
 
-            makeboard chess = new makeboard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
-            makeboard chess1 = new makeboard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            makeBoard chess1 = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
             chess1.makeHeader(out);
             chess1.drawBoard(out);
         }
@@ -459,18 +478,18 @@ public class UserInterface implements ServerMessageHandler {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         if(teamColor == null){
-            makeboard chess = new makeboard(board, ChessGame.TeamColor.WHITE);
+            makeBoard chess = new makeBoard(board, ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
             // change colors back at the end of each of these
         }
         else if(teamColor == ChessGame.TeamColor.WHITE) {
-            makeboard chess = new makeboard(board, ChessGame.TeamColor.WHITE);
+            makeBoard chess = new makeBoard(board, ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
         }
         else if(teamColor == ChessGame.TeamColor.BLACK) {
-            makeboard chess1 = new makeboard(board, ChessGame.TeamColor.BLACK);
+            makeBoard chess1 = new makeBoard(board, ChessGame.TeamColor.BLACK);
             chess1.makeHeader(out);
             chess1.drawBoard(out);
         }

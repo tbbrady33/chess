@@ -24,7 +24,4 @@ public class JoinPlayer extends UserGameCommand {
         return playerColor;
     }
 
-    public void setColor(ChessGame.TeamColor color) {
-        this.playerColor = color;
-    }
 }

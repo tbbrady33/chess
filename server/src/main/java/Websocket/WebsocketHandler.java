@@ -124,7 +124,19 @@ public class WebsocketHandler {
             var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
             var lgame = new Gson().toJson(load);
             session.send(lgame);
-            if (games.getGames() == null) {
+
+            boolean exists = false;
+            if (games.getGames().isEmpty()) {
+                games.addGame(new SingleGame(gameID));
+                exists = true;
+            } else{
+                for(SingleGame game2: games.getGames()){
+                    if(game2.getGameID() == gameID){
+                        exists = true;
+                    }
+                }
+            }
+            if(!exists){
                 games.addGame(new SingleGame(gameID));
             }
 
