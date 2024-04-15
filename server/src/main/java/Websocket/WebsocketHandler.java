@@ -9,11 +9,11 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import Model.AuthData;
 import Model.GameData;
-import userCommands.*;
-import webSocketMessages.ErrorMessage;
-import webSocketMessages.LoadMessage;
-import webSocketMessages.NotificationMessage;
+import webSocketMessages.Error;
+import webSocketMessages.LoadGame;
+import webSocketMessages.Notification;
 import webSocketMessages.ServerMessage;
+import userCommands.*;
 
 import java.io.IOException;
 
@@ -39,20 +39,20 @@ public class WebsocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException{
 
-        webSocketMessages.userCommands.UserGameCommand action = new Gson().fromJson(message, webSocketMessages.userCommands.UserGameCommand.class);
+        UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         games = new GameManager();
         this.session = new Conection(action.getAuthString(),session);
         switch (action.getCommandType()) {
-            case JOIN_OBSERVER: Join_Observer actualAction = new Gson().fromJson(message, Join_Observer.class);
+            case JOIN_OBSERVER: JoinObserver actualAction = new Gson().fromJson(message, JoinObserver.class);
                 join_observer(actualAction);
             case JOIN_PLAYER:
-                Join_Player actualAction1 = new Gson().fromJson(message,Join_Player.class);
+                JoinPlayer actualAction1 = new Gson().fromJson(message, JoinPlayer.class);
                 joinPlayer(actualAction1);
             case LEAVE:
                 Leave actualAction5 = new Gson().fromJson(message,Leave.class);
                 leave(actualAction5);
             case MAKE_MOVE:
-                Make_Move actualAction2 = new Gson().fromJson(message,Make_Move.class);
+                MakeMove actualAction2 = new Gson().fromJson(message, MakeMove.class);
                 makeMove(actualAction2);
             case RESIGN:
                 Resign actualAction3 = new Gson().fromJson(message,Resign.class);
@@ -75,7 +75,7 @@ public class WebsocketHandler {
         for(SingleGame game1: games.getGames()){
             if(game1.getGameID() == gameID){
                 game1.remove(authToken);
-                game1.broadcast(null,new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,username + "left the game"));
+                game1.broadcast(null,new Notification(ServerMessage.ServerMessageType.NOTIFICATION,username + "left the game"));
             }
 
         }
@@ -83,14 +83,14 @@ public class WebsocketHandler {
 
 
     }
-    private void join_observer(Join_Observer action) throws IOException, DataAccessException{
+    private void join_observer(JoinObserver action) throws IOException, DataAccessException{
 
         int gameID = action.getGameID();
         String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
         // send load game to root
-        var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID));//what game
+        var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID));//what game
         var lgame = new Gson().toJson(load);
         session.send(lgame);
         // send message to other people
@@ -98,19 +98,18 @@ public class WebsocketHandler {
         for(SingleGame game: games.getGames()){
             if(game.getGameID() == gameID){
                 game.add(authToken, session.session);
-                game.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,username + "has joined the game as an observer"));
+                game.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION,username + "has joined the game as an observer"));
             }
 
         }
     }
 
-    private void joinPlayer(Join_Player action) throws IOException, DataAccessException{
-
+    private void joinPlayer(JoinPlayer action) throws IOException, DataAccessException{
         int gameID = action.getGameID();
         String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
-        if(gameization.getGame(gameID).game().getBoard() == null){
+        if(gameization.getGame(gameID).game() == null){
             System.out.print("Game is null");
         }else {
             //update game and database
@@ -118,22 +117,24 @@ public class WebsocketHandler {
             GameData game = gameization.getGame(gameID);
             gameization.changeUsername(gameID,username,action.getColor());
             // send load game to root
-            var load = new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
+            var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
             var lgame = new Gson().toJson(load);
             session.send(lgame);
-
             if (games.getGames() == null) {
                 games.addGame(new SingleGame(gameID));
             }
+
 
             // Send message to other people
             for (SingleGame game1 : games.getGames()) {
                 if (game1.getGameID() == gameID) {
                     game1.add(authToken, session.session);
                     if (action.getColor() == ChessGame.TeamColor.BLACK) {
-                        game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
+                        System.out.print("Sending to user");
+                        game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
                     } else if (action.getColor() == ChessGame.TeamColor.WHITE) {
-                        game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
+                        System.out.print("Sending to user");
+                        game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
                     }
                 }
 
@@ -141,7 +142,9 @@ public class WebsocketHandler {
         }
     }
 
-    private void makeMove(Make_Move action) throws IOException, DataAccessException, InvalidMoveException {
+
+
+    private void makeMove(MakeMove action) throws IOException, DataAccessException, InvalidMoveException {
         int gameID = action.getGameID();
         String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
@@ -153,7 +156,7 @@ public class WebsocketHandler {
         if (move == null) {
             for (SingleGame game1 : games.getGames()) {
                 if (game1.getGameID() == gameID) {
-                    game1.broadcast(null, new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Move is null"));
+                    game1.broadcast(null, new Error(ServerMessage.ServerMessageType.ERROR, "Move is null"));
                 }
             }
         } else {
@@ -177,20 +180,20 @@ public class WebsocketHandler {
             // send load game to everyone and send move to everyone exept root
             for (SingleGame game1 : games.getGames()) {
                 if (game1.getGameID() == gameID) {
-                    game1.broadcast(null, new LoadMessage(ServerMessage.ServerMessageType.LOAD_GAME, game));
+                    game1.broadcast(null, new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game));
                     switch (game.game().getBoard().chessarray[move.getEndPosition().getRow()][move.getEndPosition().getColumn()].getPieceType()) {
                         case ChessPiece.PieceType.KING:
-                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
+                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
                         case ChessPiece.PieceType.ROOK:
-                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
+                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
                         case ChessPiece.PieceType.PAWN:
-                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
+                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
                         case QUEEN:
-                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
+                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
                         case BISHOP:
-                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
+                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
                         case KNIGHT:
-                            game1.broadcast(authToken, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
+                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
 
                     }
                 }
@@ -220,7 +223,7 @@ public class WebsocketHandler {
                 // send message that game is over by resignation
                 for (SingleGame game1 : games.getGames()) {
                     if (game1.getGameID() == gameID) {
-                        game1.broadcast(null, new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned, the game is over."));
+                        game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned, the game is over."));
                     }
                 }
             }

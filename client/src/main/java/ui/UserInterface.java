@@ -10,16 +10,15 @@ import Login.LoginRequest;
 import Login.LoginResponce;
 import Logout.LogoutRequest;
 import Logout.LogoutResponce;
+import Moves.RookMoves;
 import Register.RegisterRequest;
 import Register.RegisterResponce;
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
+import chess.*;
 import dataAccess.DataAccessException;
 import Model.GameData;
 import ui.Gameplay.ServerMessageHandler;
 import ui.Gameplay.WebSocketCommunicator;
-import webSocketMessages.userCommands.UserGameCommand;
+import userCommands.UserGameCommand;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -167,6 +166,7 @@ public class UserInterface implements ServerMessageHandler {
         }catch (DataAccessException ex){
             ex.printStackTrace();
         }
+        System.out.println("Success what next");
 
     }
     public void listGames(ServerFacade server){
@@ -208,14 +208,130 @@ public class UserInterface implements ServerMessageHandler {
 
     public void makeMove(){
         try {
-            Scanner input = new Scanner(System.in);
-            System.out.print("What is the Game ID of the game you want to join: ");
-            int ID = Integer.parseInt(input.nextLine());
+            boolean firstRow = false;
+            String initalRow = "";
+            while(firstRow == false) {
+                Scanner input = new Scanner(System.in);
+                System.out.print("What is the row of the piece you want to move: A-H");
+                String row = input.nextLine();
+                if(row.equals("A") || row.equals("B") || row.equals("C") || row.equals("D") || row.equals("E") || row.equals("F") || row.equals("G") || row.equals("H")){
+                    initalRow = row;
+                    firstRow = true;
+                    break;
+                }else {
+                    System.out.println("That wasn't a row try again");
+                }
+            }
+            boolean firstCol = false;
+            int initialCol = 0;
+            while(!firstCol){
+                Scanner input = new Scanner(System.in);
+                System.out.print("What is the col you want to move from: (1-8)");
+                int col = Integer.parseInt(input.nextLine());
+                if(1 <= col && col >= 8){
+                    initialCol = col;
+                    firstCol = true;
+                    break;
+                }else {
+                    System.out.println("That's not a number between 1 and 8");
+                }
+            }
+            boolean rowGood = false;
+            String FinalRow = "";
+            while(rowGood == false){
+                Scanner input = new Scanner(System.in);
+                System.out.print("What is the row you want to move to: (A/B/C/D/E/F/G/H)");
+                String row = input.nextLine();
+                if(row.equals("A") || row.equals("B") || row.equals("C") || row.equals("D") || row.equals("E") || row.equals("F") || row.equals("G") || row.equals("H")){
+                    FinalRow = row;
+                    rowGood = true;
+                    break;
+                }else {
+                    System.out.println("That didnt work try selecting a row again.");
+                }
+            }
+            boolean colGood = false;
+            int actualCol = 0;
+            while(!colGood){
+                Scanner input = new Scanner(System.in);
+                System.out.print("What is the col you want to move to: (1-8)");
+                int col = Integer.parseInt(input.nextLine());
+                if(1 <= col && col >= 8){
+                    actualCol = col;
+                    colGood = true;
+                    break;
+                }else {
+                    System.out.println("That's not a number between 1 and 8");
+                }
+            }
+
+            ChessPiece.PieceType piece = null;
+            if(actualCol == 8){
+                Scanner input = new Scanner(System.in);
+                System.out.println("Is the piece moving here a pawn that is being promoted: (yes/no)");
+                String answer = input.nextLine();
+
+                if(answer.equals("yes")){
+                    boolean goodPiece = false;
+                    while(!goodPiece) {
+                        Scanner input1 = new Scanner(System.in);
+                        System.out.println("What piece do you want to promote to? (Queen/Rook/Bishop/Knight)");
+                        String answer1 = input.nextLine();
+
+                        switch (answer1){
+                            case "Queen":
+                                piece = ChessPiece.PieceType.QUEEN;
+                                goodPiece = true;
+                                break;
+                            case "Rook":
+                                piece = ChessPiece.PieceType.ROOK;
+                                goodPiece = true;
+                                break;
+                            case "Bishop":
+                                piece = ChessPiece.PieceType.BISHOP;
+                                goodPiece = true;
+                                break;
+                            case "Knight":
+                                piece = ChessPiece.PieceType.KNIGHT;
+                                goodPiece = true;
+                                break;
+                            default:
+                                System.out.println("Not a piece type try again");
+                        }
+                    }
+
+                }
+            }
+
+            var move = new ChessMove(new ChessPosition(initialCol,letterToNum(initalRow)),new ChessPosition(actualCol,letterToNum(FinalRow)), piece);
+
             websocket.Make_Move(UserGameCommand.CommandType.MAKE_MOVE, gamePrivate.gameID(), authtoken,move);
 
         }catch (DataAccessException e){
             e.printStackTrace();
         }
+    }
+
+    private int letterToNum(String letter){
+        switch (letter){
+            case "A":
+                return 1;
+            case "B":
+                return 2;
+            case "C":
+                return 3;
+            case "D":
+                return 4;
+            case "E":
+                return 5;
+            case "F":
+                return 6;
+            case "G":
+                return 7;
+            case "H":
+                return 8;
+        }
+        return 0;
     }
 
 
@@ -248,6 +364,46 @@ public class UserInterface implements ServerMessageHandler {
         }catch (DataAccessException ex){
             System.out.println("Didnt work, Try again, type \"Login\" to try again");
         }
+    }
+
+    public void resign(){
+        boolean resign = false;
+        while(resign == false) {
+            Scanner input1 = new Scanner(System.in);
+            System.out.println("Are you sure you would like to resign?");
+            String answer = input1.nextLine();
+            if (answer.equals("Yes")) {
+                try {
+
+                    websocket.Resign(UserGameCommand.CommandType.RESIGN, gamePrivate.gameID(), authtoken);
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                }
+                resign = true;
+            } else if (answer.equals("No")) {
+                System.out.println("Ok pick another option then");
+                resign = true;
+            } else {
+                System.out.println("That wasn't an option, tey again");
+            }
+        }
+
+    }
+
+    public void higlightMoves(PrintStream out){
+        boolean goodRow = false;
+        while (goodRow == false) {
+            Scanner input1 = new Scanner(System.in);
+            System.out.print("What is the row of the piece you want to highlight the moves of: (1-8)");
+            String row = input1.nextLine();
+//            if(1 <= row && row <= 8){
+//
+//            }
+        }
+        //gamePrivate.game().validMoves(new ChessPosition());
+        //new MakeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor).drawBoardHighlight(out, moves);
+
+
     }
 
     public void register(ServerFacade server){

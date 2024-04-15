@@ -49,8 +49,9 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        var newGame = new Gson().toJson(game);
         var statement = "UPDATE game SET game = ? WHERE gameID = ?";
-        executeUpdate(statement,game.game(),game.gameID());
+        executeUpdate(statement,newGame,game.gameID());
     }
 
     private GameData readGame(ResultSet rs) throws SQLException{
@@ -139,7 +140,7 @@ public class SQLGameDAO implements GameDAO {
                 `whiteUsername` varchar(64),
                 `blackUsername` varchar(64),
                 `gameName` varchar(64) NOT NULL,
-                `game`TEXT NOT NULL,
+                `game` varchar(256) NOT NULL,
                 primary key(gameID)
                 )
             """

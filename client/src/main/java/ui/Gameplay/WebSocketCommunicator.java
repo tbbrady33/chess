@@ -5,14 +5,14 @@ import chess.ChessMove;
 import com.google.gson.Gson;
 
 import dataAccess.DataAccessException;
+import ui.UserInterface;
 import userCommands.*;
 
 
-import webSocketMessages.ErrorMessage;
-import webSocketMessages.LoadMessage;
-import webSocketMessages.NotificationMessage;
+import webSocketMessages.Error;
+import webSocketMessages.LoadGame;
+import webSocketMessages.Notification;
 import webSocketMessages.ServerMessage;
-import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -22,10 +22,10 @@ import java.net.URISyntaxException;
 
 public class WebSocketCommunicator extends Endpoint{
     Session session;
-    ServerMessageHandler notificationHandler;
+    UserInterface notificationHandler;
 
 
-    public WebSocketCommunicator(String url, ServerMessageHandler notificationHandler) throws DataAccessException {
+    public WebSocketCommunicator(String url, ServerMessageHandler notification) throws DataAccessException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "connect");
@@ -41,13 +41,13 @@ public class WebSocketCommunicator extends Endpoint{
                     ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
                     switch(notification.getServerMessageType()){
                         case NOTIFICATION:
-                            NotificationMessage actual = new Gson().fromJson(message,NotificationMessage.class);
+                            Notification actual = new Gson().fromJson(message, Notification.class);
                             notificationHandler.notifyy(actual.getMessage());
                         case ERROR:
-                            ErrorMessage actual1 = new Gson().fromJson(message,ErrorMessage.class);
+                            Error actual1 = new Gson().fromJson(message, Error.class);
                             notificationHandler.error(actual1.getErrorMessage());
                         case LOAD_GAME:
-                            LoadMessage actual2 = new Gson().fromJson(message,LoadMessage.class);
+                            LoadGame actual2 = new Gson().fromJson(message, LoadGame.class);
                             notificationHandler.laodGame(actual2.getGame());
                     }
                     // message handler
@@ -70,7 +70,7 @@ public class WebSocketCommunicator extends Endpoint{
 
     public void Join_Player(UserGameCommand.CommandType comand, String authToken, int gameID, ChessGame.TeamColor color) throws DataAccessException{
         try{
-            var action = new Join_Player(comand, authToken, gameID, color);
+            var action = new JoinPlayer(comand, authToken, gameID, color);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex){
             ex.printStackTrace();
@@ -80,7 +80,7 @@ public class WebSocketCommunicator extends Endpoint{
 
     public void Join_Observer(UserGameCommand.CommandType comand,int gameID, String authToken) throws DataAccessException{
         try{
-            var action = new Join_Observer(comand,authToken,gameID);
+            var action = new JoinObserver(comand,authToken,gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex){
             ex.printStackTrace();
@@ -90,7 +90,7 @@ public class WebSocketCommunicator extends Endpoint{
 
     public void Make_Move(UserGameCommand.CommandType command, int gameID, String authToken, ChessMove move) throws DataAccessException{
         try{
-            var action = new Make_Move(command, authToken, gameID, move);
+            var action = new MakeMove(command, authToken, gameID, move);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex){
             ex.printStackTrace();

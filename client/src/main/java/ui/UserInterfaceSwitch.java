@@ -81,6 +81,16 @@ public class UserInterfaceSwitch extends UserInterface {
                         makeMove();
                         break;
                     }
+                case "Resign":
+                    if(LoggedIN && inGame){
+                        resign();
+                        break;
+                    }
+                case "HighlightMoves":
+                    if(LoggedIN && inGame){
+                        higlightMoves(out);
+                        break;
+                    }
                 default:
                     System.out.println("Not an option, type \"Help\" for a list of options");
 
