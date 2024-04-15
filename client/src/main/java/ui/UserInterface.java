@@ -398,7 +398,7 @@ public class UserInterface implements ServerMessageHandler {
         while (goodCol == false){
             Scanner input2 = new Scanner(System.in);
             System.out.print("What is the col of the piece you want to highlight the moves of: (A-H)");
-            String col = input2.nextLine();
+            col = input2.nextLine();
             if(col.equals("A") || col.equals("B") || col.equals("C") || col.equals("D") || col.equals("E") || col.equals("F") || col.equals("G") || col.equals("H")){
                 goodCol = true;
                 break;
