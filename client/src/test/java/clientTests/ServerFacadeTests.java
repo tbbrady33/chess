@@ -7,7 +7,7 @@ import Login.LoginRequest;
 import Logout.LogoutRequest;
 import Register.RegisterRequest;
 import chess.ChessGame;
-import dataAccess.DataAccessException;
+import DataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ServerFacade;

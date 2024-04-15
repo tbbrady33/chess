@@ -1,6 +1,7 @@
 package Websocket;
 
 
+import DataAccess.DataAccessException;
 import chess.*;
 import com.google.gson.Gson;
 import dataAccess.*;
@@ -38,7 +39,8 @@ public class WebsocketHandler {
     static GameManager games;
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException{
-
+        System.out.println("Hello");
+        session.getRemote().sendString(new Gson().toJson(new Notification(ServerMessage.ServerMessageType.NOTIFICATION,"Hello")));
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         games = new GameManager();
         this.session = new Conection(action.getAuthString(),session);

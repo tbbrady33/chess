@@ -1,5 +1,6 @@
 package serviceTests;
 
+import DataAccess.DataAccessException;
 import dataAccess.MemoryUserDAO;
 import Model.UserData;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,7 @@ public class UserInterfaceTests {
             objec.insertUser(new UserData("NO","NO","NO"));
             objec.clear();
         }
-        catch (dataAccess.DataAccessException e ){
+        catch (DataAccessException e ){
             System.out.println("Data acess error");
         }
 
@@ -37,7 +38,7 @@ public class UserInterfaceTests {
         try{
             objec.insertUser(new UserData("HI","HI","HI"));
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data acess error");
         }
         expected.add(new UserData("HI","HI","HI"));
@@ -54,7 +55,7 @@ public class UserInterfaceTests {
             expected.add(new UserData("NO","NO","NO"));
             assertEquals(result,expected.elementAt(0), "failed to find user");
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data acess error");
         }
 
@@ -69,7 +70,7 @@ public class UserInterfaceTests {
             expected.add(null);
             assertEquals(result,expected.elementAt(0), "failed to find user");
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data acess error");
         }
     }

@@ -1,5 +1,6 @@
 package server;
 
+import DataAccess.DataAccessException;
 import Model.AuthData;
 import Model.UserData;
 import dataAccess.*;
@@ -47,7 +48,7 @@ public class UserService {
             return new RegisterResponce(request.username(),token,null);
 
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access exeption");
         }
         return null;
@@ -59,7 +60,7 @@ public class UserService {
             try {
                 nuser = user.getUser(request.username());
             }
-            catch (dataAccess.DataAccessException e){
+            catch (DataAccessException e){
                 System.out.println("Data access error");
             }
         }else {
@@ -74,7 +75,7 @@ public class UserService {
                 String token = auth.createAuth(request.username());
                 return new LoginResponce(nuser.username(),token,null);
             }
-            catch (dataAccess.DataAccessException e){
+            catch (DataAccessException e){
                 System.out.println("Data access error");
             }
 
@@ -93,7 +94,7 @@ public class UserService {
                 auth.deleteAuth(data.authToken());
                 return new LogoutResponce("Success");
             }
-            catch (dataAccess.DataAccessException e){
+            catch (DataAccessException e){
                 System.out.println("Data access");
             }
         }
@@ -110,7 +111,7 @@ public class UserService {
 
             }
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Dataaccess exeption");
         }
         return false;
@@ -127,7 +128,7 @@ public class UserService {
             }
 
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access stuff");
 
         }

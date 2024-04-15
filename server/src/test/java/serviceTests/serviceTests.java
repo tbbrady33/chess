@@ -1,5 +1,6 @@
 package serviceTests;
 import CreateGame.*;
+import DataAccess.DataAccessException;
 import dataAccess.*;
 import JoinGame.*;
 import ListGames.*;
@@ -139,7 +140,7 @@ public class serviceTests {
         Vector<GameData> l = new Vector<GameData>();
         try {
             l.add(new GameData(actual.gameID(), null, null, request.gameName(), game.getGame(actual.gameID()).game()));
-        } catch (dataAccess.DataAccessException e) {
+        } catch (DataAccessException e) {
         }
         ListGamesResponce wrong = new ListGamesResponce(l, null);
         assertEquals(list, wrong);

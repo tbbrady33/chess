@@ -2,6 +2,7 @@ package server;
 
 import CreateGame.CreateGameRequest;
 import CreateGame.CreateGameResponce;
+import DataAccess.DataAccessException;
 import Model.AuthData;
 import Model.GameData;
 import dataAccess.AuthDAO;
@@ -28,7 +29,7 @@ public class GameService {
                 return new ListGamesResponce(null,"Error: unauthorized");
             }
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access");
         }
         return null;
@@ -44,7 +45,7 @@ public class GameService {
                 return new CreateGameResponce(null,"Error: unauthorized");
             }
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access");
         }
         return null;
@@ -70,7 +71,7 @@ public class GameService {
                 return new JoinGameResponce("Error: bad request");
             }
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data Access");
         }
 
@@ -86,7 +87,7 @@ public class GameService {
             }
             return false;
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("data access");
         }
         return null;
@@ -101,7 +102,7 @@ public class GameService {
                 return false;
             }
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access");
         }
         return false;

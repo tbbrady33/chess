@@ -1,5 +1,6 @@
 package serviceTests;
 
+import DataAccess.DataAccessException;
 import dataAccess.MemoryAuthDAO;
 import Model.UserData;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ public class AuthinterfaceTests {
             object.clear();
             assertEquals(expected, object.data, "Didt clear");
 
-        } catch (dataAccess.DataAccessException e) {
+        } catch (DataAccessException e) {
             System.out.println("data access exeption");
         }
     }

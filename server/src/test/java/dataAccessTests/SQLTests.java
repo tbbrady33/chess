@@ -1,6 +1,7 @@
 package dataAccessTests;
 
 import CreateGame.CreateGameResponce;
+import DataAccess.DataAccessException;
 import chess.ChessGame;
 import dataAccess.*;
 import org.junit.jupiter.api.BeforeEach;

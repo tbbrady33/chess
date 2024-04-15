@@ -20,10 +20,7 @@ import Logout.LogoutResponce;
 import Register.RegisterRequest;
 import Register.RegisterResponce;
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
+import DataAccess.DataAccessException;
 
 
 public class ServerFacade {

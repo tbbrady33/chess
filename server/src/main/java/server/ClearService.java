@@ -1,6 +1,7 @@
 package server;
 
 import ClearApp.ClearAppResponce;
+import DataAccess.DataAccessException;
 import dataAccess.AuthDAO;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
@@ -23,7 +24,7 @@ public class ClearService {
             user.clear();
             return new ClearAppResponce("Success");
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access");
         }
         return null;

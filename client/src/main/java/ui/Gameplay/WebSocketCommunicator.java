@@ -4,7 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 
-import dataAccess.DataAccessException;
+import DataAccess.DataAccessException;
 import ui.UserInterface;
 import userCommands.*;
 
@@ -38,6 +38,7 @@ public class WebSocketCommunicator extends Endpoint{
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
+                    System.out.println("Client");
                     ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
                     switch(notification.getServerMessageType()){
                         case NOTIFICATION:

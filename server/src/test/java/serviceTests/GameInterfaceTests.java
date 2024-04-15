@@ -1,5 +1,6 @@
 package serviceTests;
 
+import DataAccess.DataAccessException;
 import dataAccess.MemoryGameDAO;
 import Model.GameData;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ public class GameInterfaceTests {
             expected.add(new GameData(ID,null,null,"Hello",game.game()));
             assertEquals(expected,objec.data,"I dunno");
         }
-        catch (dataAccess.DataAccessException e){
+        catch (DataAccessException e){
             System.out.println("Data access");
         }
     }
