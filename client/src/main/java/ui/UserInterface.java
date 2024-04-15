@@ -21,14 +21,16 @@ import userCommands.UserGameCommand;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class UserInterface implements ServerMessageHandler {
 
     public boolean loggedIN;
 
-    public boolean inGame;
+    public boolean inGame = false;
     public boolean mainUser = false;
     public String authtoken;
     public String username;
@@ -108,7 +110,7 @@ public class UserInterface implements ServerMessageHandler {
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,id), authtoken);
 
 
-                    if(join.message().isEmpty()){
+                    if(join.message().equals("Success")){
                         try {
                             this.websocket = new WebSocketCommunicator(url, this);
                         }catch (DataAccessException e){
@@ -127,7 +129,7 @@ public class UserInterface implements ServerMessageHandler {
 
                     JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,id), authtoken);
 
-                    if (join.message().isEmpty()) {
+                    if (join.message().equals("Success")) {
                         try {
                             this.websocket = new WebSocketCommunicator(url, this);
                         }catch (DataAccessException e){
@@ -153,7 +155,7 @@ public class UserInterface implements ServerMessageHandler {
         }catch (DataAccessException ex){
             ex.printStackTrace();
         }
-        System.out.println("Success what next");
+
 
     }
     public void listGames(ServerFacade server){
@@ -327,7 +329,7 @@ public class UserInterface implements ServerMessageHandler {
             new DifferntScreens().logedinScreen(out);
         } else if (!loggedIN) {
             new DifferntScreens().initialScreen(out);
-        }else if(loggedIN && inGame == true){
+        }else if(loggedIN && inGame){
             new DifferntScreens().inGameScreen(out);
         }
 
@@ -406,8 +408,11 @@ public class UserInterface implements ServerMessageHandler {
         }
         int rightCol = letterToNum(col);
 
-        //gamePrivate.game().validMoves(new ChessPosition());
-        //new MakeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor).drawBoardHighlight(out, moves);
+        Collection<ChessMove> moves = new ArrayList<>();
+        moves = gamePrivate.game().validMoves(new ChessPosition(row,rightCol));
+        var board = new makeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor);
+        board.makeHeader(out);
+        board.drawBoardHighlight(out,moves);
 
 
     }
@@ -440,9 +445,7 @@ public class UserInterface implements ServerMessageHandler {
             makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
-            makeBoard chess1 = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
-            chess1.makeHeader(out);
-            chess1.drawBoard(out);
+
         } else if (teamColor == ChessGame.TeamColor.BLACK) {
             out.print(EscapeSequences.ERASE_SCREEN);
 
@@ -450,9 +453,7 @@ public class UserInterface implements ServerMessageHandler {
             makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
             chess.makeHeader(out);
             chess.drawBoard(out);
-            makeBoard chess1 = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
-            chess1.makeHeader(out);
-            chess1.drawBoard(out);
+
         }else if(teamColor == ChessGame.TeamColor.WHITE){
             out.print(EscapeSequences.ERASE_SCREEN);
 
@@ -460,9 +461,7 @@ public class UserInterface implements ServerMessageHandler {
             makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
-            makeBoard chess1 = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
-            chess1.makeHeader(out);
-            chess1.drawBoard(out);
+
         }
     }
     @Override
