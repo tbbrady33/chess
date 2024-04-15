@@ -27,38 +27,43 @@ public class WebsocketHandler {
 
     private UserDAO userization;
 
-
+    static GameManager games;
 
     public WebsocketHandler(AuthDAO authorization, GameDAO gameization, UserDAO userization){
         this.authorization = authorization;
         this.gameization = gameization;
         this.userization = userization;
+        this.games = new GameManager();
     }
 
 
-    static GameManager games;
+
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException{
-        System.out.println("Hello");
-        session.getRemote().sendString(new Gson().toJson(new Notification(ServerMessage.ServerMessageType.NOTIFICATION,"Hello")));
+
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
-        games = new GameManager();
+
         this.session = new Conection(action.getAuthString(),session);
         switch (action.getCommandType()) {
             case JOIN_OBSERVER: JoinObserver actualAction = new Gson().fromJson(message, JoinObserver.class);
                 join_observer(actualAction);
+                break;
             case JOIN_PLAYER:
                 JoinPlayer actualAction1 = new Gson().fromJson(message, JoinPlayer.class);
                 joinPlayer(actualAction1);
+                break;
             case LEAVE:
                 Leave actualAction5 = new Gson().fromJson(message,Leave.class);
                 leave(actualAction5);
+                break;
             case MAKE_MOVE:
                 MakeMove actualAction2 = new Gson().fromJson(message, MakeMove.class);
                 makeMove(actualAction2);
+                break;
             case RESIGN:
                 Resign actualAction3 = new Gson().fromJson(message,Resign.class);
                 resign(actualAction3);
+                break;
         }
     }
     private void leave(Leave action) throws  DataAccessException, IOException{
@@ -109,15 +114,12 @@ public class WebsocketHandler {
     private void joinPlayer(JoinPlayer action) throws IOException, DataAccessException{
         int gameID = action.getGameID();
         String authToken = action.getAuthString();
+        GameData game = gameization.getGame(gameID);
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
         if(gameization.getGame(gameID).game() == null){
             System.out.print("Game is null");
         }else {
-            //update game and database
-
-            GameData game = gameization.getGame(gameID);
-            gameization.changeUsername(gameID,username,action.getColor());
             // send load game to root
             var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
             var lgame = new Gson().toJson(load);

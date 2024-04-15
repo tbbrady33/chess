@@ -2,6 +2,8 @@ package ui;
 
 import CreateGame.CreateGameRequest;
 import CreateGame.CreateGameResponce;
+import JoinGame.JoinGameRequest;
+import JoinGame.JoinGameResponce;
 import ListGames.ListGamesRequest;
 import ListGames.ListGamesResponce;
 import Login.LoginRequest;
@@ -24,7 +26,7 @@ import java.util.Scanner;
 
 public class UserInterface implements ServerMessageHandler {
 
-    public boolean LoggedIN;
+    public boolean loggedIN;
 
     public boolean inGame;
     public boolean mainUser = false;
@@ -38,16 +40,12 @@ public class UserInterface implements ServerMessageHandler {
     private ChessGame.TeamColor teamColor = null;
 
 
-    private String url = "http://localhost:" + "8081/";
+    private String url = "http://localhost:" + "8081";
 
     public Collection<GameData> games;
     public UserInterface(boolean loggedIN){
-        try {
-            this.websocket = new WebSocketCommunicator(url, this);
-        }catch (DataAccessException e){
-            System.out.print(e.getMessage());
-        }
-        this.LoggedIN = loggedIN;
+
+        this.loggedIN = loggedIN;
     }
 
     public void createGame(ServerFacade server){
@@ -78,8 +76,11 @@ public class UserInterface implements ServerMessageHandler {
             if (exists == false){
                 System.out.println("That didnt work sorry, that game doesnt exist");
             }
-            websocket.Join_Observer(UserGameCommand.CommandType.JOIN_OBSERVER, ID, authtoken);
-            inGame = true;
+            else {
+                this.websocket = new WebSocketCommunicator(url, this);
+                websocket.joinObserver(UserGameCommand.CommandType.JOIN_OBSERVER, ID, authtoken);
+                inGame = true;
+            }
 //
         }catch(DataAccessException ex){
 
@@ -103,13 +104,16 @@ public class UserInterface implements ServerMessageHandler {
                 String team = input.nextLine();
 
                 if (team.equals("Black")){
-
-
-//                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
-                      websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.BLACK);
-                      inGame = true;
-                      mainUser = true;
-                      teamColor = ChessGame.TeamColor.BLACK;
+                    try {
+                        this.websocket = new WebSocketCommunicator(url, this);
+                    }catch (DataAccessException e){
+                        System.out.print(e.getMessage());
+                    }
+                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK,ID), authtoken);
+                    websocket.joinPlayer(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.BLACK);
+                    inGame = true;
+                    mainUser = true;
+                    teamColor = ChessGame.TeamColor.BLACK;
 
 //                    if(join.message().isEmpty()){
 //                        ChessBoard board = new ChessBoard();
@@ -128,9 +132,14 @@ public class UserInterface implements ServerMessageHandler {
 
 
                 } else if (team.equals("White")){
+                    try {
+                        this.websocket = new WebSocketCommunicator(url, this);
+                    }catch (DataAccessException e){
+                        System.out.print(e.getMessage());
+                    }
 
-//                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
-                    websocket.Join_Player(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.WHITE);
+                    JoinGameResponce join = server.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE,ID), authtoken);
+                    websocket.joinPlayer(UserGameCommand.CommandType.JOIN_PLAYER,authtoken,ID, ChessGame.TeamColor.WHITE);
                     inGame = true;
                     mainUser = true;
                     teamColor = ChessGame.TeamColor.WHITE;
@@ -187,7 +196,7 @@ public class UserInterface implements ServerMessageHandler {
             LogoutResponce logout = server.logout(new LogoutRequest(authtoken));
             System.out.format("%s: type help for your new options", logout.message());
             System.out.println();
-            LoggedIN = false;
+            loggedIN = false;
         }catch (DataAccessException ex){
             ex.printStackTrace();
         }
@@ -195,7 +204,7 @@ public class UserInterface implements ServerMessageHandler {
 
     public void leave(){
         try {
-            websocket.Leave(UserGameCommand.CommandType.LEAVE, gamePrivate.gameID(), authtoken);
+            websocket.leave(UserGameCommand.CommandType.LEAVE, gamePrivate.gameID(), authtoken);
             inGame = false;
             mainUser = false;
         }catch (DataAccessException e){
@@ -302,7 +311,7 @@ public class UserInterface implements ServerMessageHandler {
 
             var move = new ChessMove(new ChessPosition(initialCol,letterToNum(initalRow)),new ChessPosition(actualCol,letterToNum(FinalRow)), piece);
 
-            websocket.Make_Move(UserGameCommand.CommandType.MAKE_MOVE, gamePrivate.gameID(), authtoken,move);
+            websocket.makeMove(UserGameCommand.CommandType.MAKE_MOVE, gamePrivate.gameID(), authtoken,move);
 
         }catch (DataAccessException e){
             e.printStackTrace();
@@ -333,11 +342,11 @@ public class UserInterface implements ServerMessageHandler {
 
 
     public void help(PrintStream out){
-        if (LoggedIN  && inGame== false) {
+        if (loggedIN  && inGame== false) {
             new DifferntScreens().logedinScreen(out);
-        } else if (!LoggedIN) {
+        } else if (!loggedIN) {
             new DifferntScreens().initialScreen(out);
-        }else if(LoggedIN && inGame == true){
+        }else if(loggedIN && inGame == true){
             new DifferntScreens().inGameScreen(out);
         }
 
@@ -353,7 +362,7 @@ public class UserInterface implements ServerMessageHandler {
             LoginResponce login = server.login(new LoginRequest(username, password));
             if (login.authToken() != null){
                 System.out.println("Successfull, type help to list the options");
-                LoggedIN = true;
+                loggedIN = true;
                 this.authtoken = login.authToken();
                 this.username = login.username();
             }
@@ -372,7 +381,7 @@ public class UserInterface implements ServerMessageHandler {
             if (answer.equals("Yes")) {
                 try {
 
-                    websocket.Resign(UserGameCommand.CommandType.RESIGN, gamePrivate.gameID(), authtoken);
+                    websocket.resign(UserGameCommand.CommandType.RESIGN, gamePrivate.gameID(), authtoken);
                 } catch (DataAccessException e) {
                     e.printStackTrace();
                 }
@@ -413,7 +422,7 @@ public class UserInterface implements ServerMessageHandler {
         String email = input.nextLine();
         try {
             RegisterResponce register = server.register(new RegisterRequest(username1,password1,email));
-            LoggedIN = true;
+            loggedIN = true;
             System.out.println("Successfull, type help to list the options");
             this.authtoken = register.authToken();
             this.username = register.username();
@@ -525,14 +534,22 @@ public class UserInterface implements ServerMessageHandler {
         this.gamePrivate = game;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
-
-
-        MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
-        chess.MakeHeader(out);
-        chess.drawBoard(out);
-        MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
-        chess1.MakeHeader(out);
-        chess1.drawBoard(out);
+        if(teamColor == null){
+            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+            chess.MakeHeader(out);
+            chess.drawBoard(out);
+            // change colors back at the end of each of these
+        }
+        else if(teamColor == ChessGame.TeamColor.WHITE) {
+            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
+            chess.MakeHeader(out);
+            chess.drawBoard(out);
+        }
+        else if(teamColor == ChessGame.TeamColor.BLACK) {
+            MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
+            chess1.MakeHeader(out);
+            chess1.drawBoard(out);
+        }
     }
 
     @Override

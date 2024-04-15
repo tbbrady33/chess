@@ -31,63 +31,63 @@ public class UserInterfaceSwitch extends UserInterface {
                     go = false;
                     break;
                 case "Login":
-                    if(LoggedIN == false) {
+                    if(loggedIN == false) {
                         login(server);
                         break;
                     }
 
                 case "Register":
-                    if(LoggedIN == false) {
+                    if(loggedIN == false) {
                         register(server);
                         break;
                     }
                 case "Logout":
-                    if(LoggedIN == true) {
+                    if(loggedIN == true) {
                         logout(server);
                         break;
                     }
                 case "CreateGame":
-                    if(LoggedIN == true) {
+                    if(loggedIN == true) {
                         createGame(server);
                         break;
                     }
                 case "ListGames":
-                    if(LoggedIN == true) {
+                    if(loggedIN == true) {
                         listGames(server);
                         break;
                     }
                 case "JoinGame":
-                    if(LoggedIN == true) {
+                    if(loggedIN == true) {
                         joinGame(server);
                         break;
                     }
                 case "JoinObserver":
-                    if(LoggedIN == true) {
+                    if(loggedIN == true) {
                         joinObserver(server);
                         break;
                     }
                 case "RedrawBoard":
-                    if(LoggedIN && inGame){
+                    if(loggedIN && inGame){
                         redrawBoard(out);
                         break;
                     }
                 case "Leave":
-                    if(LoggedIN && inGame){
+                    if(loggedIN && inGame){
                         leave();
                         break;
                     }
                 case "MakeMove":
-                    if(LoggedIN && inGame){
+                    if(loggedIN && inGame){
                         makeMove();
                         break;
                     }
                 case "Resign":
-                    if(LoggedIN && inGame){
+                    if(loggedIN && inGame){
                         resign();
                         break;
                     }
                 case "HighlightMoves":
-                    if(LoggedIN && inGame){
+                    if(loggedIN && inGame){
                         higlightMoves(out);
                         break;
                     }
