@@ -12,8 +12,8 @@ import java.util.Objects;
  */
 public class ChessGame {
 
-    private TeamColor team;
-    private ChessBoard board;
+    public TeamColor team;
+    public ChessBoard board;
 
     public boolean gameOver = false;
 

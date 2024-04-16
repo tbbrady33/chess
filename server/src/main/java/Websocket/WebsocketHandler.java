@@ -204,7 +204,7 @@ public class WebsocketHandler {
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
         ChessMove move = action.getMove();
-        GameData game2 = gameization.getGame(gameID);
+        GameData game = gameization.getGame(gameID);
         boolean works;
 
         // check to see if move is valid
@@ -214,23 +214,23 @@ public class WebsocketHandler {
                     game1.broadcast(null, new Error(ServerMessage.ServerMessageType.ERROR, "Move is null"));
                 }
             }
-        }else if (game2.game().isGameOver()) {
+        }else if (game.game().isGameOver()) {
             works = false;
             var error = new Error(ServerMessage.ServerMessageType.ERROR, "Game is over");
             var lerror = new Gson().toJson(error);
             session.send(lerror);
-        } else if (!username.equals(game2.blackUsername()) && game2.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
+        } else if (!username.equals(game.blackUsername()) && game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
             var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
             var lerror = new Gson().toJson(error);
             session.send(lerror);
 
-        } else if (!username.equals(game2.whiteUsername()) && game2.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+        } else if (!username.equals(game.whiteUsername()) && game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
             var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
             var lerror = new Gson().toJson(error);
             session.send(lerror);
         } else {
 
-            GameData game = gameization.getGame(gameID);
+
             ChessPiece.PieceType piece = game.game().getBoard().chessarray[move.getStartPosition().getRow() - 1][move.getStartPosition().getColumn() - 1].getPieceType();
             if (game.game().validMoves(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn())).contains(move)) {
                 works = true;

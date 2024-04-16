@@ -107,7 +107,7 @@ public class SQLGameDAO implements GameDAO {
         var statment = "INSERT into game (gameName,game) VALUES (?,?)";
         int iD = executeUpdate(statment,gameName,json);
         ChessGame game = new ChessGame();
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+
         GameData objec = new GameData(iD, null, null, gameName, game);
         return objec;
     }
