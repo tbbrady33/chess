@@ -251,7 +251,7 @@ public class WebsocketHandler {
                     game.game().setGameOver(true);
                 }
                 // update the database
-                gameization.updateGame(game);
+                gameization.updateGame(game.game(), gameID);
 
 
                 // send load game to everyone and send move to everyone exept root
@@ -297,13 +297,21 @@ public class WebsocketHandler {
 
             if(game.game().getBoard() == null){
                 System.out.print("Cant find board");
-            }
-            else {
+            } else if (game.game().isGameOver()) {
+                var error = new Error(ServerMessage.ServerMessageType.ERROR, "Cant resign twice");
+                var lerror = new Gson().toJson(error);
+                session.send(lerror);
+            } else if (!(username.equals(game.blackUsername()) || username.equals(game.whiteUsername()))) {
+                var error = new Error(ServerMessage.ServerMessageType.ERROR, "Observers cant Resign");
+                var lerror = new Gson().toJson(error);
+                session.send(lerror);
+                
+            } else {
                 // mark game as over
                 //change game
                 game.game().setGameOver(true);
                 //update database
-                gameization.updateGame(game);
+                gameization.updateGame(game.game(), gameID);
 
 
                 // send message that game is over by resignation

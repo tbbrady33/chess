@@ -49,10 +49,10 @@ public class SQLGameDAO implements GameDAO {
 
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(ChessGame game, int iD) throws DataAccessException{
         var newGame = new Gson().toJson(game);
         var statement = "UPDATE game SET game = ? WHERE gameID = ?";
-        executeUpdate(statement,newGame,game.gameID());
+        executeUpdate(statement,newGame,iD);
     }
 
     private GameData readGame(ResultSet rs) throws SQLException{
@@ -109,6 +109,7 @@ public class SQLGameDAO implements GameDAO {
         ChessGame game = new ChessGame();
 
         GameData objec = new GameData(iD, null, null, gameName, game);
+
         return objec;
     }
 

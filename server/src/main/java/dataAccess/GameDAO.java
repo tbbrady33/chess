@@ -16,5 +16,5 @@ public interface GameDAO {
     Collection<GameData> listGames(String authToken) throws DataAccessException;
 
     public void  changeUsername(int gameID, String username, ChessGame.TeamColor teamColor) throws DataAccessException;
-    public void updateGame(GameData game) throws DataAccessException;
+    public void updateGame(ChessGame game, int iD) throws DataAccessException;
 }

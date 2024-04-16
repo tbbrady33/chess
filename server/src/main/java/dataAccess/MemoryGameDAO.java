@@ -78,7 +78,7 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(ChessGame game, int iD) throws DataAccessException {
         System.out.print("Not implemented");
     }
 }
