@@ -23,7 +23,6 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Scanner;
 
 public class UserInterface implements ServerMessageHandler {
@@ -410,7 +409,7 @@ public class UserInterface implements ServerMessageHandler {
 
         Collection<ChessMove> moves = new ArrayList<>();
         moves = gamePrivate.game().validMoves(new ChessPosition(row,rightCol));
-        var board = new makeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor);
+        var board = new MakeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor);
         board.makeHeader(out);
         board.drawBoardHighlight(out,moves);
 
@@ -442,7 +441,7 @@ public class UserInterface implements ServerMessageHandler {
         if(teamColor == null){
             out.print(EscapeSequences.ERASE_SCREEN);
 
-            makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
 
@@ -450,7 +449,7 @@ public class UserInterface implements ServerMessageHandler {
             out.print(EscapeSequences.ERASE_SCREEN);
 
 
-            makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
+            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
             chess.makeHeader(out);
             chess.drawBoard(out);
 
@@ -458,7 +457,7 @@ public class UserInterface implements ServerMessageHandler {
             out.print(EscapeSequences.ERASE_SCREEN);
 
 
-            makeBoard chess = new makeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
+            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
 
@@ -477,18 +476,18 @@ public class UserInterface implements ServerMessageHandler {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         if(teamColor == null){
-            makeBoard chess = new makeBoard(board, ChessGame.TeamColor.WHITE);
+            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
             // change colors back at the end of each of these
         }
         else if(teamColor == ChessGame.TeamColor.WHITE) {
-            makeBoard chess = new makeBoard(board, ChessGame.TeamColor.WHITE);
+            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
         }
         else if(teamColor == ChessGame.TeamColor.BLACK) {
-            makeBoard chess1 = new makeBoard(board, ChessGame.TeamColor.BLACK);
+            MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
             chess1.makeHeader(out);
             chess1.drawBoard(out);
         }
