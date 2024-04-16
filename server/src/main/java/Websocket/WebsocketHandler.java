@@ -206,7 +206,6 @@ public class WebsocketHandler {
         ChessMove move = action.getMove();
         GameData game = gameization.getGame(gameID);
         boolean works;
-
         // check to see if move is valid
         if (move == null) {
             for (SingleGame game1 : games.getGames()) {
@@ -223,14 +222,11 @@ public class WebsocketHandler {
             var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
             var lerror = new Gson().toJson(error);
             session.send(lerror);
-
         } else if (!username.equals(game.whiteUsername()) && game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
             var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
             var lerror = new Gson().toJson(error);
             session.send(lerror);
         } else {
-
-
             ChessPiece.PieceType piece = game.game().getBoard().chessarray[move.getStartPosition().getRow() - 1][move.getStartPosition().getColumn() - 1].getPieceType();
             if (game.game().validMoves(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn())).contains(move)) {
                 works = true;
@@ -240,37 +236,13 @@ public class WebsocketHandler {
                 var lerror = new Gson().toJson(error);
                 session.send(lerror);
             }
-
             // update the game
-
             if (works) {
                 game.game().makeMove(move);
-
-
                 if (game.game().isInCheckmate(game.game().getTeamTurn())) {
-                    game.game().setGameOver(true);
-                    for (SingleGame game1 : games.getGames()) {
-                        if (game1.getGameID() == gameID) {
-                            if(game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
-                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.whiteUsername() + " Is in checkMate!"));
-                            } else if (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
-                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.blackUsername() + " Is in checkMate!"));
-
-                            }
-                        }
-                    }
+                    sendCheckMateMessage(game,gameID);
                 } else if (game.game().isInCheck(game.game().getTeamTurn())) {
-                    for (SingleGame game1 : games.getGames()) {
-                        if (game1.getGameID() == gameID) {
-                            if(game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
-                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.whiteUsername() + " Is in check!"));
-                            } else if (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
-                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.blackUsername() + " Is in check!"));
-
-                            }
-                        }
-                    }
-
+                    sendCheckMessage(game,gameID);
                 } else if (game.game().isInStalemate(game.game().getTeamTurn())) {
                     for (SingleGame game1 : games.getGames()) {
                         if (game1.getGameID() == gameID) {
@@ -278,14 +250,9 @@ public class WebsocketHandler {
                         }
                     }
                     game.game().setGameOver(true);
-
                 }
-
-
                 // update the database
                 gameization.updateGame(game.game(), gameID);
-
-
                 // send load game to everyone and send move to everyone exept root
                 for (SingleGame game1 : games.getGames()) {
                     if (game1.getGameID() == gameID) {
@@ -309,14 +276,36 @@ public class WebsocketHandler {
                             case KNIGHT:
                                 game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
                                 break;
-
                         }
                     }
                 }
             }
         }
+    }
+    private void sendCheckMessage(GameData game, int gameID) throws IOException {
+        for (SingleGame game1 : games.getGames()) {
+            if (game1.getGameID() == gameID) {
+                if(game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+                    game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.whiteUsername() + " Is in check!"));
+                } else if (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
+                    game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.blackUsername() + " Is in check!"));
 
+                }
+            }
+        }
+    }
+    private void sendCheckMateMessage(GameData game, int gameID) throws IOException {
+        game.game().setGameOver(true);
+        for (SingleGame game1 : games.getGames()) {
+            if (game1.getGameID() == gameID) {
+                if (game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+                    game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.whiteUsername() + " Is in checkMate!"));
+                } else if (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
+                    game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.blackUsername() + " Is in checkMate!"));
 
+                }
+            }
+        }
     }
 
     private void resign(Resign action) throws DataAccessException, IOException {

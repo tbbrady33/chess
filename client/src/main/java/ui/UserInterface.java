@@ -444,27 +444,19 @@ public class UserInterface implements ServerMessageHandler {
     public void redrawBoard(PrintStream out){
         if(teamColor == null){
             out.print(EscapeSequences.ERASE_SCREEN);
-
             MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
-
         } else if (teamColor == ChessGame.TeamColor.BLACK) {
             out.print(EscapeSequences.ERASE_SCREEN);
-
-
             MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
             chess.makeHeader(out);
             chess.drawBoard(out);
-
         }else if(teamColor == ChessGame.TeamColor.WHITE){
             out.print(EscapeSequences.ERASE_SCREEN);
-
-
             MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
             chess.makeHeader(out);
             chess.drawBoard(out);
-
         }
         out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
@@ -482,8 +474,7 @@ public class UserInterface implements ServerMessageHandler {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         redrawBoard(out);
-        out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
-        out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+
     }
 
     @Override
