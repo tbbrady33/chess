@@ -218,7 +218,7 @@ public class UserInterface implements ServerMessageHandler {
                 Scanner input = new Scanner(System.in);
                 System.out.print("What is the col you want to move from: (1-8)");
                 int col = Integer.parseInt(input.nextLine());
-                if(1 <= col && col >= 8){
+                if(col >= 1 && col <= 8){
                     initialCol = col;
                     firstCol = true;
                     break;
@@ -246,7 +246,7 @@ public class UserInterface implements ServerMessageHandler {
                 Scanner input = new Scanner(System.in);
                 System.out.print("What is the col you want to move to: (1-8)");
                 int col = Integer.parseInt(input.nextLine());
-                if(1 <= col && col >= 8){
+                if(col >= 1 && col <= 8){
                     actualCol = col;
                     colGood = true;
                     break;
@@ -407,10 +407,15 @@ public class UserInterface implements ServerMessageHandler {
         int rightCol = letterToNum(col);
 
         Collection<ChessMove> moves = new ArrayList<>();
-        moves = gamePrivate.game().validMoves(new ChessPosition(row,rightCol));
+        moves = gamePrivate.game().validMoves(new ChessPosition(row ,rightCol ));
         var board = new MakeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor);
         board.makeHeader(out);
-        board.drawBoardHighlight(out,moves);
+        if (moves.size() == 0){
+            board.drawBoard(out);
+        } else{
+            board.drawBoardHighlight(out,moves, teamColor);
+        }
+
 
 
     }
@@ -461,9 +466,8 @@ public class UserInterface implements ServerMessageHandler {
             chess.drawBoard(out);
 
         }
-        out.print(EscapeSequences.RESET_TEXT_ITALIC);
-        out.print(EscapeSequences.RESET_BG_COLOR);
-        out.print(EscapeSequences.RESET_TEXT_COLOR);
+        out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+        out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
     @Override
     public void notifyy(String message) {
@@ -478,6 +482,8 @@ public class UserInterface implements ServerMessageHandler {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         redrawBoard(out);
+        out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+        out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
 
     @Override

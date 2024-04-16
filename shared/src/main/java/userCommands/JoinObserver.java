@@ -11,7 +11,4 @@ public class JoinObserver extends UserGameCommand {
         return gameID;
     }
 
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
-    }
 }

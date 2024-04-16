@@ -249,7 +249,39 @@ public class WebsocketHandler {
 
                 if (game.game().isInCheckmate(game.game().getTeamTurn())) {
                     game.game().setGameOver(true);
+                    for (SingleGame game1 : games.getGames()) {
+                        if (game1.getGameID() == gameID) {
+                            if(game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.whiteUsername() + " Is in checkMate!"));
+                            } else if (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
+                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.blackUsername() + " Is in checkMate!"));
+
+                            }
+                        }
+                    }
+                } else if (game.game().isInCheck(game.game().getTeamTurn())) {
+                    for (SingleGame game1 : games.getGames()) {
+                        if (game1.getGameID() == gameID) {
+                            if(game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.whiteUsername() + " Is in check!"));
+                            } else if (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
+                                game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, game.blackUsername() + " Is in check!"));
+
+                            }
+                        }
+                    }
+
+                } else if (game.game().isInStalemate(game.game().getTeamTurn())) {
+                    for (SingleGame game1 : games.getGames()) {
+                        if (game1.getGameID() == gameID) {
+                            game1.broadcast(null, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, "Game is over by stalemate"));
+                        }
+                    }
+                    game.game().setGameOver(true);
+
                 }
+
+
                 // update the database
                 gameization.updateGame(game.game(), gameID);
 
@@ -330,24 +362,24 @@ public class WebsocketHandler {
         String col = "";
         String row = "";
         switch (move.getEndPosition().getColumn()){
-            case 1: col = "A";
-            case 2: col = "B";
-            case 3: col = "C";
-            case 4: col = "D";
-            case 5: col = "E";
-            case 6: col = "F";
-            case 7 : col = "G";
-            case 8: col = "H";
+            case 0: col = "A";
+            case 1: col = "B";
+            case 2: col = "C";
+            case 3: col = "D";
+            case 4: col = "E";
+            case 5: col = "F";
+            case 6 : col = "G";
+            case 7: col = "H";
         }
         switch (move.getEndPosition().getRow()){
-            case 1: row = "1";
-            case 2: row = "2";
-            case 3: row = "3";
-            case 4: row = "4";
-            case 5: row = "5";
-            case 6: row = "6";
-            case 7 : row = "7";
-            case 8: row = "8";
+            case 0: row = "1";
+            case 1: row = "2";
+            case 2: row = "3";
+            case 3: row = "4";
+            case 4: row = "5";
+            case 5: row = "6";
+            case 6 : row = "7";
+            case 7: row = "8";
         }
         return col + row;
 

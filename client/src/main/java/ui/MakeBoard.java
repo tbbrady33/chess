@@ -115,15 +115,15 @@ public class MakeBoard {
 
     }
 
-    public void drawBoardHighlight(PrintStream out, Collection<ChessMove> moves){
+    public void drawBoardHighlight(PrintStream out, Collection<ChessMove> moves, ChessGame.TeamColor team){
         for(int boardRow = 0; boardRow < Board_Size; boardRow++){
             int prefixLength = Square_Size / 2;
             int suffixLength = Square_Size - prefixLength - 1;
             setupDrawBoard(out,boardRow);
             if(team == ChessGame.TeamColor.WHITE){
-                drawRowHighlight(out,7 -boardRow,moves);
+                drawRowHighlight(out,7 - boardRow,moves, ChessGame.TeamColor.WHITE);
             } else if (team == ChessGame.TeamColor.BLACK) {
-                drawRowHighlight(out,boardRow,moves);
+                drawRowHighlight(out,boardRow,moves, ChessGame.TeamColor.BLACK);
             }
 
             out.println();
@@ -148,23 +148,22 @@ public class MakeBoard {
         out.print("  ");
     }
 
-    public void drawRowHighlight(PrintStream out, int row, Collection<ChessMove> moves){
+    public void drawRowHighlight(PrintStream out, int row, Collection<ChessMove> moves, ChessGame.TeamColor team){
         int count = 0;
-        row -= 1;
         Collection<ChessPosition> end = new ArrayList<>();
         for (ChessMove move: moves){
-            end.add(move.getEndPosition());
+            end.add(new ChessPosition(move.getEndPosition().getRow() - 1,move.getEndPosition().getColumn() - 1));
         }
         for (int boardCol = 0; boardCol < Board_Size/2; boardCol++) {
             if (team == ChessGame.TeamColor.BLACK) {
                 if (row % 2 != 0) {
-                    decideColor(out, row, count, end);
+                    decideColor(out, row,count, end, team, boardCol);
                 } else {
-                    decideColor2(out, row, count, end);
+                    decideColor2(out, row,count, end, team, boardCol);
                 }
                 count += 2;
             } else if (team == ChessGame.TeamColor.WHITE) {
-                whatToPrint(out,row,count,end);
+                whatToPrint(out,row,count,end, team, boardCol);
                 count += 2;
             }
         }
@@ -172,35 +171,35 @@ public class MakeBoard {
 
     }
 
-    private void decideColor2(PrintStream out, int row, int count, Collection<ChessPosition> end) {
-        if(end.contains(new ChessPosition(row,count ))) {
+    private void decideColor2(PrintStream out, int row, int count, Collection<ChessPosition> end, ChessGame.TeamColor team, int col) {
+        if(end.contains(new ChessPosition(row,col  ))) {
             printPurpleSquarequare(out, row, count );
         }else {
             printWhiteSquare(out,row,count);
         }
-        if(end.contains(new ChessPosition(row,count + 1))){
+        if(end.contains(new ChessPosition(row,col + 1))){
             printPurpleSquarequare(out, row, count + 1);
         }else {
             printBlackSquare(out, row, count + 1);
         }
     }
 
-    private void whatToPrint(PrintStream out, int row, int count, Collection end){
+    private void whatToPrint(PrintStream out, int row, int count, Collection end, ChessGame.TeamColor team, int col){
         if (row % 2 == 0) {
-            decideColor(out, row, count, end);
+            decideColor(out, row, count, end, team, col);
         } else {
-            decideColor2(out, row, count, end);
+            decideColor2(out, row, count, end, team, col);
         }
 
     }
 
-    private void decideColor(PrintStream out, int row, int count, Collection end) {
-        if(end.contains(new ChessPosition(row,count ))){
+    private void decideColor(PrintStream out, int row, int count, Collection end, ChessGame.TeamColor team, int col) {
+        if(end.contains(new ChessPosition(row,col ))){
             printPurpleSquarequare(out, row, count);
         }else {
             printBlackSquare(out, row, count );
         }
-        if(end.contains(new ChessPosition(row,count + 1))) {
+        if(end.contains(new ChessPosition(row,col + 1))) {
             printPurpleSquarequare(out, row, count + 1);
         }else {
             printWhiteSquare(out,row,count + 1);

@@ -22,6 +22,8 @@ public class UserInterfaceSwitch extends UserInterface {
         while (go) {
             Scanner input = new Scanner(System.in);
             String request = input.nextLine();
+            out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+            out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
             switch (request) {
                 case "Help":
                     help(out);
