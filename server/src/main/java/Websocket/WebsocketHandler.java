@@ -204,6 +204,7 @@ public class WebsocketHandler {
         AuthData user = authorization.getAuth(authToken);
         String username = user.username();
         ChessMove move = action.getMove();
+        GameData game2 = gameization.getGame(gameID);
         boolean works;
 
         // check to see if move is valid
@@ -213,8 +214,19 @@ public class WebsocketHandler {
                     game1.broadcast(null, new Error(ServerMessage.ServerMessageType.ERROR, "Move is null"));
                 }
             }
+        } else if (!username.equals(game2.blackUsername()) && game2.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+
+        } else if (!username.equals(game2.whiteUsername()) && game2.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
         } else {
+
             GameData game = gameization.getGame(gameID);
+            ChessPiece.PieceType piece = game.game().getBoard().chessarray[move.getStartPosition().getRow() - 1][move.getStartPosition().getColumn() - 1].getPieceType();
             if (game.game().validMoves(new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn())).contains(move)) {
                 works = true;
             } else {
@@ -226,29 +238,38 @@ public class WebsocketHandler {
 
             if (works) {
                 game.game().makeMove(move);
-            }
-            // update the database
-            gameization.updateGame(game);
 
 
-            // send load game to everyone and send move to everyone exept root
-            for (SingleGame game1 : games.getGames()) {
-                if (game1.getGameID() == gameID) {
-                    game1.broadcast(null, new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game));
-                    switch (game.game().getBoard().chessarray[move.getEndPosition().getRow()][move.getEndPosition().getColumn()].getPieceType()) {
-                        case ChessPiece.PieceType.KING:
-                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
-                        case ChessPiece.PieceType.ROOK:
-                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
-                        case ChessPiece.PieceType.PAWN:
-                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
-                        case QUEEN:
-                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
-                        case BISHOP:
-                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
-                        case KNIGHT:
-                            game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
 
+                // update the database
+                gameization.updateGame(game);
+
+
+                // send load game to everyone and send move to everyone exept root
+                for (SingleGame game1 : games.getGames()) {
+                    if (game1.getGameID() == gameID) {
+                        game1.broadcast(null, new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game));
+                        switch (piece) {
+                            case ChessPiece.PieceType.KING:
+                                game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move King to " + endPosString(move)));
+                                break;
+                            case ChessPiece.PieceType.ROOK:
+                                game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Rook to " + endPosString(move)));
+                                break;
+                            case ChessPiece.PieceType.PAWN:
+                                game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Pawn to " + endPosString(move)));
+                                break;
+                            case QUEEN:
+                                game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Queen to " + endPosString(move)));
+                                break;
+                            case BISHOP:
+                                game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Bishop to " + endPosString(move)));
+                                break;
+                            case KNIGHT:
+                                game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + " made the move Knight to " + endPosString(move)));
+                                break;
+
+                        }
                     }
                 }
             }

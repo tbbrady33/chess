@@ -103,9 +103,12 @@ public class SQLGameDAO implements GameDAO {
     public GameData createGame(String gameName) throws DataAccessException {
 
         String json = new Gson().toJson(new ChessGame());
+
         var statment = "INSERT into game (gameName,game) VALUES (?,?)";
         int iD = executeUpdate(statment,gameName,json);
-        GameData objec = new GameData(iD, null, null, gameName, new ChessGame());
+        ChessGame game = new ChessGame();
+        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        GameData objec = new GameData(iD, null, null, gameName, game);
         return objec;
     }
 
