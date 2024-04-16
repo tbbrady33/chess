@@ -129,6 +129,9 @@ public class makeBoard {
             out.println();
             out.print(SET_BG_COLOR_LIGHT_GREY);
         }
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.print(RESET_TEXT_ITALIC);
     }
 
     private void setupDrawBoard(PrintStream out, int boardRow){
@@ -147,6 +150,7 @@ public class makeBoard {
 
     public void drawRowHighlight(PrintStream out, int row, Collection<ChessMove> moves){
         int count = 0;
+        row -= 1;
         Collection<ChessPosition> end = new ArrayList<>();
         for (ChessMove move: moves){
             end.add(move.getEndPosition());
@@ -221,6 +225,9 @@ public class makeBoard {
             out.println();
             out.print(SET_BG_COLOR_LIGHT_GREY);
         }
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.print(RESET_TEXT_ITALIC);
     }
 
     private void drawRow(PrintStream out, int row){

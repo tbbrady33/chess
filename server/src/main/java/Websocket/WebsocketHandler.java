@@ -95,19 +95,30 @@ public class WebsocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuthString();
         AuthData user = authorization.getAuth(authToken);
-        String username = user.username();
-        // send load game to root
-        var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME,gameization.getGame(gameID));//what game
-        var lgame = new Gson().toJson(load);
-        session.send(lgame);
-        // send message to other people
+        GameData game1 = gameization.getGame(gameID);
+        if (user == null){
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Coudlnt find user");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        } else if (game1 == null) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Coudlnt find game");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        } else {
+            String username = user.username();
+            // send load game to root
+            var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
+            var lgame = new Gson().toJson(load);
+            session.send(lgame);
+            // send message to other people
 
-        for(SingleGame game: games.getGames()){
-            if(game.getGameID() == gameID){
-                game.add(authToken, session.session);
-                game.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION,username + "has joined the game as an observer"));
+            for (SingleGame game : games.getGames()) {
+                if (game.getGameID() == gameID) {
+                    game.add(authToken, session.session);
+                    game.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as an observer"));
+                }
+
             }
-
         }
     }
 
@@ -116,10 +127,37 @@ public class WebsocketHandler {
         String authToken = action.getAuthString();
         GameData game = gameization.getGame(gameID);
         AuthData user = authorization.getAuth(authToken);
-        String username = user.username();
-        if(gameization.getGame(gameID).game() == null){
+
+        if(game == null) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Coudlnt find game");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        } else if (user == null) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Coudlnt find game");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+
+        } else if(gameization.getGame(gameID).game() == null){
             System.out.print("Game is null");
-        }else {
+        } else if (action.getColor() == ChessGame.TeamColor.BLACK && game.blackUsername() == null) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "not taken");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        } else if (action.getColor() == ChessGame.TeamColor.WHITE && game.whiteUsername() == null) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "not taken");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        } else if (!user.username().equals(game.blackUsername()) && action.getColor() == ChessGame.TeamColor.BLACK ) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "wrong team");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        } else if (!user.username().equals(game.whiteUsername()) && action.getColor() == ChessGame.TeamColor.WHITE ) {
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "wrong team");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
+        }
+        else {
+            String username = user.username();
             // send load game to root
             var load = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameization.getGame(gameID));//what game
             var lgame = new Gson().toJson(load);

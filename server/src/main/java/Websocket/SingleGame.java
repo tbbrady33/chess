@@ -1,5 +1,6 @@
 package Websocket;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.ServerMessage;
 
@@ -35,7 +36,8 @@ public class SingleGame {
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (!c.authToken.equals(excludeVisitorName)) {
-                    c.send(notification.toString());
+                    String message = new Gson().toJson(notification);
+                    c.send(message);
                 }
             } else {
                 removeList.add(c);
