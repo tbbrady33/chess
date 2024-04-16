@@ -104,8 +104,8 @@ public class WebSocketCommunicator extends Endpoint{
 
     public void leave(UserGameCommand.CommandType command, int gameID, String authToken) throws  DataAccessException{
         try{
-            var action = new Leave(command, authToken, gameID);
-            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+            var actionsing = new Leave(command, authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(actionsing));
         } catch (IOException ex){
             ex.printStackTrace();
             throw new DataAccessException(ex.getMessage());
@@ -114,8 +114,9 @@ public class WebSocketCommunicator extends Endpoint{
 
     public void resign(UserGameCommand.CommandType command,int gameID, String authToken) throws DataAccessException{
         try{
-            var action = new Resign(command, authToken,gameID);
-            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+            var actions = new Resign(command, authToken,gameID);
+            var text = new Gson().toJson(actions);
+            this.session.getBasicRemote().sendText(text);
         } catch (IOException ex){
             ex.printStackTrace();
             throw new DataAccessException(ex.getMessage());

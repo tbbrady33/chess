@@ -461,6 +461,9 @@ public class UserInterface implements ServerMessageHandler {
             chess.drawBoard(out);
 
         }
+        out.print(EscapeSequences.RESET_TEXT_ITALIC);
+        out.print(EscapeSequences.RESET_BG_COLOR);
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
     }
     @Override
     public void notifyy(String message) {
@@ -474,22 +477,7 @@ public class UserInterface implements ServerMessageHandler {
         this.gamePrivate = game;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
-        if(teamColor == null){
-            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
-            chess.makeHeader(out);
-            chess.drawBoard(out);
-            // change colors back at the end of each of these
-        }
-        else if(teamColor == ChessGame.TeamColor.WHITE) {
-            MakeBoard chess = new MakeBoard(board, ChessGame.TeamColor.WHITE);
-            chess.makeHeader(out);
-            chess.drawBoard(out);
-        }
-        else if(teamColor == ChessGame.TeamColor.BLACK) {
-            MakeBoard chess1 = new MakeBoard(board, ChessGame.TeamColor.BLACK);
-            chess1.makeHeader(out);
-            chess1.drawBoard(out);
-        }
+        redrawBoard(out);
     }
 
     @Override

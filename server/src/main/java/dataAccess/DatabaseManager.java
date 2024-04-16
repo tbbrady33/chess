@@ -5,6 +5,8 @@ import DataAccess.DataAccessException;
 import java.sql.*;
 import java.util.Properties;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class DatabaseManager {
     private static final String databaseName;
     private static final String user;
@@ -84,9 +86,9 @@ public class DatabaseManager {
         }
     }
 
-    public static void executeUpdate(String statement, Object... params) throws DataAccessException {
+    public static int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
                     if (param instanceof String p) ps.setString(i + 1, p);
@@ -94,6 +96,13 @@ public class DatabaseManager {
                     else if (param == null) ps.setNull(i + 1, 0);
                 }
                 ps.executeUpdate();
+
+                var rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+
+                return 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();

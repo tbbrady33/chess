@@ -20,13 +20,13 @@ public class SQLUserDAO implements UserDAO {
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE user";
-        DatabaseManager.executeUpdate(statement);
+        int thing = DatabaseManager.executeUpdate(statement);
     }
 
     @Override
     public void insertUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
-        DatabaseManager.executeUpdate(statement, user.username(), user.password(),user.email());
+        int thin = DatabaseManager.executeUpdate(statement, user.username(), user.password(),user.email());
     }
 
     @Override

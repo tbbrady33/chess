@@ -20,14 +20,14 @@ public class SQLAuthDAO implements AuthDAO {
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE auth";
-        DatabaseManager.executeUpdate(statement);
+        int thing = DatabaseManager.executeUpdate(statement);
     }
 
     @Override
     public String createAuth(String username) throws DataAccessException {
         var token = UUID.randomUUID().toString();
         var statement = "INSERT into auth (authtoken,username) VALUES (?,?)";
-        DatabaseManager.executeUpdate(statement,token,username);
+        int thing = DatabaseManager.executeUpdate(statement,token,username);
         return token;
     }
 
@@ -59,7 +59,7 @@ public class SQLAuthDAO implements AuthDAO {
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
         var statement = "DELETE FROM auth WHERE authtoken=?";
-        DatabaseManager.executeUpdate(statement,authToken);
+        int thing = DatabaseManager.executeUpdate(statement,authToken);
     }
 
 
