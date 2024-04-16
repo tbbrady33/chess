@@ -194,22 +194,24 @@ public class UserInterface implements ServerMessageHandler {
         }
     }
 
+    private String getRow(){
+        boolean firstRow = false;
+        String initalRow = "";
+        while(firstRow == false) {
+            Scanner input = new Scanner(System.in);
+            System.out.print("What is the row of the piece you want to move: A-H");
+            String row = input.nextLine();
+            if(row.equals("A") || row.equals("B") || row.equals("C") || row.equals("D") || row.equals("E") || row.equals("F") || row.equals("G") || row.equals("H")){
+                return row;
+            }else {
+                System.out.println("That wasn't a row try again");
+            }
+        }
+        return null;
+    }
     public void makeMove(){
         try {
-            boolean firstRow = false;
-            String initalRow = "";
-            while(firstRow == false) {
-                Scanner input = new Scanner(System.in);
-                System.out.print("What is the row of the piece you want to move: A-H");
-                String row = input.nextLine();
-                if(row.equals("A") || row.equals("B") || row.equals("C") || row.equals("D") || row.equals("E") || row.equals("F") || row.equals("G") || row.equals("H")){
-                    initalRow = row;
-                    firstRow = true;
-                    break;
-                }else {
-                    System.out.println("That wasn't a row try again");
-                }
-            }
+            String initialRow = getRow();
             boolean firstCol = false;
             int initialCol = 0;
             while(!firstCol){
@@ -252,13 +254,11 @@ public class UserInterface implements ServerMessageHandler {
                     System.out.println("That's not a number between 1 and 8");
                 }
             }
-
             ChessPiece.PieceType piece = null;
             if(actualCol == 8){
                 Scanner input = new Scanner(System.in);
                 System.out.println("Is the piece moving here a pawn that is being promoted: (yes/no)");
                 String answer = input.nextLine();
-
                 if(answer.equals("yes")){
                     boolean goodPiece = false;
                     while(!goodPiece) {
@@ -287,11 +287,10 @@ public class UserInterface implements ServerMessageHandler {
                                 System.out.println("Not a piece type try again");
                         }
                     }
-
                 }
             }
 
-            var move = new ChessMove(new ChessPosition(initialCol,letterToNum(initalRow)),new ChessPosition(actualCol,letterToNum(finalRow)), piece);
+            var move = new ChessMove(new ChessPosition(initialCol,letterToNum(initialRow)),new ChessPosition(actualCol,letterToNum(finalRow)), piece);
 
             websocket.makeMove(UserGameCommand.CommandType.MAKE_MOVE, gamePrivate.gameID(), authtoken,move);
 

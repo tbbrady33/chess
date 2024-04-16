@@ -135,12 +135,5 @@ public class UserService {
         return false;
     }
 
-    private boolean isrightPass(String reqpass, String password){
-        if(reqpass.equals(password)){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }

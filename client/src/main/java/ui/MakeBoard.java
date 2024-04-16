@@ -158,59 +158,55 @@ public class MakeBoard {
         for (int boardCol = 0; boardCol < Board_Size/2; boardCol++) {
             if (team == ChessGame.TeamColor.BLACK) {
                 if (row % 2 != 0) {
-                    if(end.contains(new ChessPosition(row,count))){
-                        printPurpleSquarequare(out, row, count);
-                    }else {
-                        printBlackSquare(out, row, count);
-                    }
-                    if(end.contains(new ChessPosition(row,count + 1))) {
-                        printPurpleSquarequare(out, row, count + 1);
-                    }else {
-                        printWhiteSquare(out,row,count + 1);
-                    }
+                    decideColor(out, row, count, end);
                 } else {
-                    if(end.contains(new ChessPosition(row,count ))) {
-                        printPurpleSquarequare(out, row, count );
-                    }else {
-                        printWhiteSquare(out,row,count);
-                    }
-                    if(end.contains(new ChessPosition(row,count + 1))){
-                        printPurpleSquarequare(out, row, count + 1);
-                    }else {
-                        printBlackSquare(out, row, count + 1);
-                    }
+                    decideColor2(out, row, count, end);
                 }
                 count += 2;
             } else if (team == ChessGame.TeamColor.WHITE) {
-                if (row % 2 == 0) {
-                    if(end.contains(new ChessPosition(row,count ))){
-                        printPurpleSquarequare(out, row, count);
-                    }else {
-                        printBlackSquare(out, row, count );
-                    }
-                    if(end.contains(new ChessPosition(row,count + 1))) {
-                        printPurpleSquarequare(out, row, count + 1);
-                    }else {
-                        printWhiteSquare(out,row,count + 1);
-                    }
-                } else {
-                    if(end.contains(new ChessPosition(row,count))) {
-                        printPurpleSquarequare(out, row, count );
-                    }else {
-                        printWhiteSquare(out,row,count );
-                    }
-                    if(end.contains(new ChessPosition(row,count + 1))){
-                        printPurpleSquarequare(out, row, count + 1);
-                    }else {
-                        printBlackSquare(out, row, count + 1);
-                    }
-                }
+                whatToPrint(out,row,count,end);
                 count += 2;
             }
         }
         out.print(SET_BG_COLOR_BLACK);
 
     }
+
+    private void decideColor2(PrintStream out, int row, int count, Collection<ChessPosition> end) {
+        if(end.contains(new ChessPosition(row,count ))) {
+            printPurpleSquarequare(out, row, count );
+        }else {
+            printWhiteSquare(out,row,count);
+        }
+        if(end.contains(new ChessPosition(row,count + 1))){
+            printPurpleSquarequare(out, row, count + 1);
+        }else {
+            printBlackSquare(out, row, count + 1);
+        }
+    }
+
+    private void whatToPrint(PrintStream out, int row, int count, Collection end){
+        if (row % 2 == 0) {
+            decideColor(out, row, count, end);
+        } else {
+            decideColor2(out, row, count, end);
+        }
+
+    }
+
+    private void decideColor(PrintStream out, int row, int count, Collection end) {
+        if(end.contains(new ChessPosition(row,count ))){
+            printPurpleSquarequare(out, row, count);
+        }else {
+            printBlackSquare(out, row, count );
+        }
+        if(end.contains(new ChessPosition(row,count + 1))) {
+            printPurpleSquarequare(out, row, count + 1);
+        }else {
+            printWhiteSquare(out,row,count + 1);
+        }
+    }
+
     public void drawBoard(PrintStream out){
         for(int boardRow = 0; boardRow < Board_Size; boardRow++){
             int prefixLength = Square_Size / 2;
