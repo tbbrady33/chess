@@ -184,10 +184,10 @@ public class WebsocketHandler {
                 if (game1.getGameID() == gameID) {
                     game1.add(authToken, session.session);
                     if (action.getColor() == ChessGame.TeamColor.BLACK) {
-                        System.out.print("Sending to user");
+
                         game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as Black!"));
                     } else if (action.getColor() == ChessGame.TeamColor.WHITE) {
-                        System.out.print("Sending to user");
+
                         game1.broadcast(authToken, new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username + "has joined the game as White!"));
                     }
                 }
@@ -214,6 +214,11 @@ public class WebsocketHandler {
                     game1.broadcast(null, new Error(ServerMessage.ServerMessageType.ERROR, "Move is null"));
                 }
             }
+        }else if (game2.game().isGameOver()) {
+            works = false;
+            var error = new Error(ServerMessage.ServerMessageType.ERROR, "Game is over");
+            var lerror = new Gson().toJson(error);
+            session.send(lerror);
         } else if (!username.equals(game2.blackUsername()) && game2.game().getTeamTurn() == ChessGame.TeamColor.BLACK) {
             var error = new Error(ServerMessage.ServerMessageType.ERROR, "Wrong team or som");
             var lerror = new Gson().toJson(error);
@@ -231,7 +236,9 @@ public class WebsocketHandler {
                 works = true;
             } else {
                 works = false;
-                System.out.print("Didnt work try again");
+                var error = new Error(ServerMessage.ServerMessageType.ERROR, "Not a valid move");
+                var lerror = new Gson().toJson(error);
+                session.send(lerror);
             }
 
             // update the game
@@ -240,7 +247,9 @@ public class WebsocketHandler {
                 game.game().makeMove(move);
 
 
-
+                if (game.game().isInCheckmate(game.game().getTeamTurn())) {
+                    game.game().setGameOver(true);
+                }
                 // update the database
                 gameization.updateGame(game);
 
@@ -274,6 +283,8 @@ public class WebsocketHandler {
                 }
             }
         }
+
+
     }
 
     private void resign(Resign action) throws DataAccessException, IOException {

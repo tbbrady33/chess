@@ -9,15 +9,15 @@ import java.util.Arrays;
  * signature of the existing methods.
  */
 public class ChessBoard {
+
+    public ChessBoard() {
+    }
     public ChessPiece[][] chessarray = new ChessPiece[8][8];
 
     public ChessPiece[][] getChessarray() {
         return chessarray;
     }
 
-    public ChessBoard() {
-        this.resetBoard();
-    }
 
     /**
      * Adds a chess piece to the chessboard
