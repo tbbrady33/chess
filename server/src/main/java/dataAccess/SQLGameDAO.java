@@ -25,7 +25,7 @@ public class SQLGameDAO implements GameDAO {
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE game";
-        executeUpdate(statement);
+        DatabaseManager.executeUpdate(statement);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SQLGameDAO implements GameDAO {
     public void updateGame(ChessGame game, int iD) throws DataAccessException{
         var newGame = new Gson().toJson(game);
         var statement = "UPDATE game SET game = ? WHERE gameID = ?";
-        executeUpdate(statement,newGame,iD);
+        DatabaseManager.executeUpdate(statement,newGame,iD);
     }
 
     private GameData readGame(ResultSet rs) throws SQLException{
@@ -90,10 +90,10 @@ public class SQLGameDAO implements GameDAO {
 
         if (teamColor == ChessGame.TeamColor.BLACK){
             var statement = "UPDATE game SET blackUsername = ? WHERE gameID = ?";
-            executeUpdate(statement,username,gameID);
+            DatabaseManager.executeUpdate(statement,username,gameID);
         } else if (teamColor == ChessGame.TeamColor.WHITE) {
             var statement = "UPDATE game SET whiteUsername = ? WHERE gameID = ?";
-            executeUpdate(statement,username,gameID);
+            DatabaseManager.executeUpdate(statement,username,gameID);
 
         }
 
@@ -105,7 +105,7 @@ public class SQLGameDAO implements GameDAO {
         String json = new Gson().toJson(new ChessGame());
 
         var statment = "INSERT into game (gameName,game) VALUES (?,?)";
-        int iD = executeUpdate(statment,gameName,json);
+        int iD = DatabaseManager.executeUpdate(statment,gameName,json);
         ChessGame game = new ChessGame();
 
         GameData objec = new GameData(iD, null, null, gameName, game);
@@ -115,29 +115,7 @@ public class SQLGameDAO implements GameDAO {
 
 
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, 0);
-                }
-                ps.executeUpdate();
 
-                var rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-
-                return 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
-        }
-    }
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS game (

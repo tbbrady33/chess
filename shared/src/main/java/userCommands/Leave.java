@@ -12,7 +12,4 @@ public class Leave extends UserGameCommand {
         return gameID;
     }
 
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
-    }
 }
