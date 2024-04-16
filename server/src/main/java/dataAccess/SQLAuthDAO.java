@@ -11,7 +11,7 @@ public class SQLAuthDAO implements AuthDAO {
 
     public SQLAuthDAO(){
         try {
-            configureDatabase();
+            DatabaseManager.configureDatabase(createStatements);
         }
         catch (DataAccessException e){
 
@@ -73,17 +73,5 @@ public class SQLAuthDAO implements AuthDAO {
             """
     };
 
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException("Couldn't configure a database");
-        }
-    }
+
 }

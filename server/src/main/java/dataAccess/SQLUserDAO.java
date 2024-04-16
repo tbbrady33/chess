@@ -10,7 +10,7 @@ public class SQLUserDAO implements UserDAO {
 
     public SQLUserDAO(){
         try {
-            configureDatabase();
+            DatabaseManager.configureDatabase(createStatements);
         }
         catch (DataAccessException e){
 
@@ -54,7 +54,7 @@ public class SQLUserDAO implements UserDAO {
         return new UserData(username,password,email);
     }
 
-    private final String[] createStatements = {
+    public final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS user (
               `username` varchar(64) NOT NULL,
@@ -63,18 +63,6 @@ public class SQLUserDAO implements UserDAO {
             )
             """
     };
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException("Couldn't configure a database");
-        }
-    }
+
 
 }
