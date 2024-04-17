@@ -163,7 +163,11 @@ public class MakeBoard {
                 }
                 count += 2;
             } else if (team == ChessGame.TeamColor.WHITE) {
-                whatToPrint(out,row,count,end, team, boardCol);
+                if (row % 2 == 0) {
+                    decideColor(out, row, count, end, team, boardCol);
+                } else {
+                    decideColor2(out, row, count, end, team, boardCol);
+                }
                 count += 2;
             }
         }
@@ -172,34 +176,25 @@ public class MakeBoard {
     }
 
     private void decideColor2(PrintStream out, int row, int count, Collection<ChessPosition> end, ChessGame.TeamColor team, int col) {
-        if(end.contains(new ChessPosition(row,col  ))) {
+        if(end.contains(new ChessPosition(row,count  ))) {
             printPurpleSquarequare(out, row, count );
         }else {
             printWhiteSquare(out,row,count);
         }
-        if(end.contains(new ChessPosition(row,col + 1))){
+        if(end.contains(new ChessPosition(row,count + 1))){
             printPurpleSquarequare(out, row, count + 1);
         }else {
             printBlackSquare(out, row, count + 1);
         }
     }
 
-    private void whatToPrint(PrintStream out, int row, int count, Collection end, ChessGame.TeamColor team, int col){
-        if (row % 2 == 0) {
-            decideColor(out, row, count, end, team, col);
-        } else {
-            decideColor2(out, row, count, end, team, col);
-        }
-
-    }
-
     private void decideColor(PrintStream out, int row, int count, Collection end, ChessGame.TeamColor team, int col) {
-        if(end.contains(new ChessPosition(row,col ))){
+        if(end.contains(new ChessPosition(row,count ))){
             printPurpleSquarequare(out, row, count);
         }else {
             printBlackSquare(out, row, count );
         }
-        if(end.contains(new ChessPosition(row,col + 1))) {
+        if(end.contains(new ChessPosition(row,count + 1))) {
             printPurpleSquarequare(out, row, count + 1);
         }else {
             printWhiteSquare(out,row,count + 1);
@@ -207,49 +202,7 @@ public class MakeBoard {
     }
 
     public void drawBoard(PrintStream out){
-        for(int boardRow = 0; boardRow < Board_Size; boardRow++){
-            int prefixLength = Square_Size / 2;
-            int suffixLength = Square_Size - prefixLength - 1;
-            setupDrawBoard(out,boardRow);
-            if(team == ChessGame.TeamColor.WHITE){
-                drawRow(out,7 -boardRow);
-            } else if (team == ChessGame.TeamColor.BLACK) {
-                drawRow(out,boardRow);
-            }
-
-            out.println();
-            out.print(SET_BG_COLOR_LIGHT_GREY);
-        }
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
-        out.print(RESET_TEXT_ITALIC);
-    }
-
-    private void drawRow(PrintStream out, int row){
-        int count = 0;
-        for (int boardCol = 0; boardCol < Board_Size/2; boardCol++){
-            if(team == ChessGame.TeamColor.BLACK) {
-                if (row % 2 != 0) {
-                    printBlackSquare(out, row, count);
-                    printWhiteSquare(out, row, count + 1);
-                } else {
-                    printWhiteSquare(out, row, count);
-                    printBlackSquare(out, row, count + 1);
-                }
-                count += 2;
-            } else if (team == ChessGame.TeamColor.WHITE) {
-                if (row % 2 == 0) {
-                    printBlackSquare(out, row, count);
-                    printWhiteSquare(out, row, count + 1);
-                } else {
-                    printWhiteSquare(out, row, count);
-                    printBlackSquare(out, row, count + 1);
-                }
-                count += 2;
-                
-            }
-        }
-        out.print(SET_BG_COLOR_BLACK);
+        drawBoardHighlight(out,new ArrayList<>(),team);
     }
 
     private void printBlackSquare(PrintStream out,int row, int col){
@@ -257,10 +210,10 @@ public class MakeBoard {
         out.print("  ");
         if(board[row][col].equals(" ")) {
             out.print(board[row][col]);
-        } else if (board[row][col].indexOf("Black") != -1) {
+        } else if (board[row][col].contains("Black")) {
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(board[row][col].charAt(0));
-        }else if(board[row][col].indexOf("White") != -1){
+        }else if(board[row][col].contains("White")){
             out.print(SET_TEXT_COLOR_RED);
             out.print(board[row][col].charAt(0));
         }

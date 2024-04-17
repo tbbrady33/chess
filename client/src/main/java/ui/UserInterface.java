@@ -407,6 +407,7 @@ public class UserInterface implements ServerMessageHandler {
         int rightCol = letterToNum(col);
 
         Collection<ChessMove> moves = new ArrayList<>();
+
         moves = gamePrivate.game().validMoves(new ChessPosition(row ,rightCol ));
         var board = new MakeBoard(gamePrivate.game().getBoard().getChessarray(),teamColor);
         board.makeHeader(out);
