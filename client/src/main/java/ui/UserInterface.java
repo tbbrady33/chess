@@ -442,22 +442,19 @@ public class UserInterface implements ServerMessageHandler {
     }
 
 
+    private void draw(PrintStream out, ChessGame.TeamColor color){
+        out.print(EscapeSequences.ERASE_SCREEN);
+        MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(),color);
+        chess.makeHeader(out);
+        chess.drawBoard(out);
+    }
     public void redrawBoard(PrintStream out){
         if(teamColor == null){
-            out.print(EscapeSequences.ERASE_SCREEN);
-            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
-            chess.makeHeader(out);
-            chess.drawBoard(out);
+            draw(out, ChessGame.TeamColor.WHITE);
         } else if (teamColor == ChessGame.TeamColor.BLACK) {
-            out.print(EscapeSequences.ERASE_SCREEN);
-            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.BLACK);
-            chess.makeHeader(out);
-            chess.drawBoard(out);
+            draw(out, ChessGame.TeamColor.BLACK);
         }else if(teamColor == ChessGame.TeamColor.WHITE){
-            out.print(EscapeSequences.ERASE_SCREEN);
-            MakeBoard chess = new MakeBoard(gamePrivate.game().getBoard().getChessarray(), ChessGame.TeamColor.WHITE);
-            chess.makeHeader(out);
-            chess.drawBoard(out);
+            draw(out, ChessGame.TeamColor.WHITE);
         }
         out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
