@@ -20,15 +20,16 @@ public class MakeBoard {
     private static final String Black_King = EscapeSequences.SET_TEXT_COLOR_BLACK + "K";
     public MakeBoard(ChessPiece[][] board, ChessGame.TeamColor team){
 
+        ChessPiece[][] temp = new ChessPiece[8][8];
         if (team == ChessGame.TeamColor.BLACK){
             for(int j = 0; j < board.length; j++){
                 for(int i = 0; i < board.length / 2; i++) {
-                    ChessPiece temp = board[j][i];
-                    board[j][i] = board[j][board.length - i -1];
-                    board[j][board.length - i - 1] = temp;
+                    ChessPiece tempy = board[j][i];
+                    temp[j][i] = board[j][board.length - i -1];
+                    temp[j][board.length - i - 1] = tempy;
                 }
             }
-            pieceToString(board);
+            pieceToString(temp);
         } else if (team == ChessGame.TeamColor.WHITE) {
             pieceToString(board);
 
@@ -154,19 +155,39 @@ public class MakeBoard {
         for (ChessMove move: moves){
             end.add(new ChessPosition(move.getEndPosition().getRow() - 1,move.getEndPosition().getColumn() - 1));
         }
-        for (int boardCol = 0; boardCol < Board_Size/2; boardCol++) {
+        for (int boardCol = 0; boardCol < Board_Size; boardCol++) {
             if (team == ChessGame.TeamColor.BLACK) {
                 if (row % 2 != 0) {
-                    decideColor(out, row,count, end, team, boardCol);
+                    if (boardCol %2  == 0){
+                        decideColor(out, row, count, end, team, boardCol);
+                    }
+                    else {
+                        decideColor2(out,row,count,end,team,boardCol);
+                    }
                 } else {
-                    decideColor2(out, row,count, end, team, boardCol);
+                    if(boardCol %2 != 0) {
+                        decideColor(out, row, count, end, team, boardCol);
+                    }
+                    else {
+                        decideColor2(out, row, count, end,team, boardCol);
+                    }
                 }
                 count += 2;
             } else if (team == ChessGame.TeamColor.WHITE) {
                 if (row % 2 == 0) {
-                    decideColor(out, row, count, end, team, boardCol);
+                    if(boardCol %2 != 0) {
+                        decideColor2(out, row, count, end, team,  boardCol);
+                    }
+                    else {
+                        decideColor(out,row,count,end,team,boardCol);
+                    }
                 } else {
-                    decideColor2(out, row, count, end, team, boardCol);
+                    if(boardCol %2 == 0) {
+                        decideColor2(out, row, count, end, team,  boardCol);
+                    }
+                    else {
+                        decideColor(out, row, count, end, team, boardCol);
+                    }
                 }
                 count += 2;
             }
@@ -176,29 +197,33 @@ public class MakeBoard {
     }
 
     private void decideColor2(PrintStream out, int row, int count, Collection<ChessPosition> end, ChessGame.TeamColor team, int col) {
-        if(end.contains(new ChessPosition(row,count  ))) {
-            printPurpleSquarequare(out, row, count );
+        ChessPosition pos = null;
+        if (team == ChessGame.TeamColor.BLACK) {
+            pos = new ChessPosition(row,7- col);
         }else {
-            printWhiteSquare(out,row,count);
+            pos = new ChessPosition(row,col);
         }
-        if(end.contains(new ChessPosition(row,count + 1))){
-            printPurpleSquarequare(out, row, count + 1);
+        if(end.contains(pos)) {
+            printPurpleSquarequare(out, row, col );
         }else {
-            printBlackSquare(out, row, count + 1);
+            printWhiteSquare(out,row,col);
         }
+
     }
 
-    private void decideColor(PrintStream out, int row, int count, Collection end, ChessGame.TeamColor team, int col) {
-        if(end.contains(new ChessPosition(row,count ))){
-            printPurpleSquarequare(out, row, count);
+    private void decideColor(PrintStream out, int row, int count, Collection<ChessPosition> end, ChessGame.TeamColor team, int col) {
+        ChessPosition pos = null;
+        if (team == ChessGame.TeamColor.BLACK) {
+            pos = new ChessPosition(row,7- col);
         }else {
-            printBlackSquare(out, row, count );
+            pos = new ChessPosition(row,col);
         }
-        if(end.contains(new ChessPosition(row,count + 1))) {
-            printPurpleSquarequare(out, row, count + 1);
+        if(end.contains(pos)){
+            printPurpleSquarequare(out, row, col);
         }else {
-            printWhiteSquare(out,row,count + 1);
+            printBlackSquare(out, row, col );
         }
+
     }
 
     public void drawBoard(PrintStream out){
